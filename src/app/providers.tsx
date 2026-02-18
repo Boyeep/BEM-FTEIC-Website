@@ -1,3 +1,5 @@
+// Global providers (React Query, etc.)
+
 "use client";
 
 import {

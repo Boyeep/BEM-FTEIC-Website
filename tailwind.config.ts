@@ -6,16 +6,23 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/layouts/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        "brand-blue": "#5172E8",
+        "brand-light-blue": "#DCE6FF",
+        "brand-gold": "#EBB85E",
+        "input-grey": "#D9D9D9",
+        "link-blue": "#4A70E2",
       },
-      fontFamily: {
-        inter: ["(var(--font-inter))"],
+      borderRadius: {
+        "auth-card": "15px",
+        "auth-input": "8px",
+      },
+      backgroundImage: {
+        "auth-gradient": "linear-gradient(to bottom, #5172E8 0%, #DCE6FF 100%)",
       },
     },
   },

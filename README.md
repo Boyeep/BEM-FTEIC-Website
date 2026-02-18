@@ -1,41 +1,56 @@
-# Next-JS Template Repository
+nama website di package.json untuk sementara aku bikin "bem-fteic-front-end"
 
-## Getting Started
+next-sitemap.config.js perlu diubah
 
-### 1. Clone this repo using one of the two ways:
+.env.example perlu diubah
 
-1. Using bash or other terminal
+- what have i done:
 
-   ```
-   git clone https://github.com/tapeds/next-template.git
-   ```
+- bikin project folder front-end:
 
-2. By clicking use this template
+1. created /app/(auth)/check-inbox/page.tsx
+2. created /app/(auth)/confirm-email/page.tsx
+3. created /app/(auth)/login/page.tsx
+4. created /app/(auth)/signup/page.tsx
+5. created /app/(auth)/layout.tsx
 
-   ![image](https://github.com/tapeds/next-template/assets/111473015/37e9ec9c-cae4-4ccf-b048-f4bf195a6bb1)
+6. created /src/components/input/Input.tsx
 
-### 2. Install dependencies
+7. created /features/auth/components/CheckInboxCard.tsx
+8. created /features/auth/components/EmailConfirmCard.tsx
+9. created /features/auth/components/LoginForm.tsx
+10. created /features/auth/components/SignupForm.tsx
 
-It is encouraged to use **pnpm** so the husky hooks can work properly.
+11. created /features/auth/hooks/useLoginMutation.ts
+12. created /features/auth/hooks/useSignupMutation.ts
+13. created /features/auth/hooks/useVerifyEmail.ts
 
-```bash
-pnpm install
-```
+14. created /features/auth/services/authService.ts
+15. created /features/auth/store/useAuthStore.ts
+16. created /features/auth/types.ts
 
-### 3. Run the development server
+17. created /public/robots.txt
+18. created /public/sitemap-0.xml
+19. created /public/sitemap.xml
+# katanya ini 3 untuk SEO idk bruh
 
-You can start the server using this command:
+# Notes: Disetiap file baru ada comment diatas for context
 
-```bash
-pnpm dev
-```
+- untuk run folder:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. You can start editing the page by modifying `src/app/page.tsx`.
+1. pnpm install
+2. pnpm dev
 
-### 4. Change all default settings marked by !CHANGETHIS
+- to check for changes (setelah run pnpm dev):
 
-You can find the settings you need to change by searching !CHANGETHIS and follow the instruction. You also need to change the name in `package.json` file.
+1. http://localhost:3000/login
+2. http://localhost:3000/signup
+3. http://localhost:3000/confirm-email
+4. http://localhost:3000/check-inbox
 
-### 5. Commit message
+- what you should done:
 
-This template uses the conventional commit specification for better readability and clarity. It is mandatory to use conventional commit messages. Read more about conventional commits [here](https://www.conventionalcommits.org/en/v1.0.0/).
+1. Bikin homepage
+2. intergrate backend dan front-end
+
+- Boy 

@@ -1,3 +1,5 @@
+// 404 page
+
 import { Metadata } from "next";
 
 import NextImage from "@/components/NextImage";
