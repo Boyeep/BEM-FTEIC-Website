@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 
 import Providers from "@/app/providers";
+import AppShell from "@/layouts/AppShell";
 
 import "./globals.css";
 
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );
