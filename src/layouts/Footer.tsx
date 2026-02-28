@@ -21,7 +21,7 @@ const departemen = [
 export default function Footer() {
   return (
     <footer className="mt-10 overflow-hidden bg-black text-white">
-      <div className="mx-auto max-w-[1460px] px-8 pb-20 pt-6 md:px-16">
+      <div className="mx-auto max-w-[1460px] px-8 pb-0 pt-6 md:px-16 md:pb-20">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           <div>
             <h2 className="text-5xl font-extrabold uppercase">BEM FTEIC ITS</h2>
@@ -104,13 +104,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="mt-8 text-lg text-white/80">
+        <p className="mt-0 text-lg text-white/80 md:mt-8">
           © Lorem ipsum dolor sit amet 2026. Consectetur adipiscing elit.
         </p>
       </div>
 
-      <div className="pointer-events-none h-40 select-none overflow-hidden">
-        <p className="-translate-y-6 -translate-x-1 whitespace-nowrap text-center text-[21.7vw] font-black uppercase leading-none tracking-[-0.045em] text-[#FCD704]">
+      <div className="pointer-events-none h-40 pt-0 select-none overflow-hidden">
+        <p className="translate-y-28 -translate-x-1 whitespace-nowrap text-center text-[21.7vw] font-black uppercase leading-none tracking-[-0.045em] text-[#FCD704] md:-translate-y-6">
           ELECTICS
         </p>
       </div>
