@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutSection() {
   return (
-    <section className="bg-black pb-24">
+    <section className="bg-black pb-24 pt-6 md:pt-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-2">
         <div className="relative h-[280px] w-full md:h-[360px]">
           <Image

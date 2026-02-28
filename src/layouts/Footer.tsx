@@ -66,7 +66,7 @@ export default function Footer() {
               </div>
 
               <div>
-                <h3 className="mb-3 text-2xl font-semibold uppercase">
+                <h3 className="mb-2 text-2xl font-semibold uppercase md:mb-3">
                   Social
                 </h3>
                 <div className="flex items-center gap-3 text-white">
@@ -104,7 +104,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="mt-0 text-lg text-white/80 md:mt-8">
+        <p className="translate-y-14 mt-5 text-lg text-white/80 md:mt-8">
           © Lorem ipsum dolor sit amet 2026. Consectetur adipiscing elit.
         </p>
       </div>
