@@ -84,7 +84,7 @@ next-sitemap.config.js perlu diubah
 
 - update progress:
 
-1. homepage udah kebikin di /src/app/page.tsx
+1. homepage udah dibikin di /src/app/page.tsx
 2. route public udah ada: /blog, /blog/[id], /departemen, /galeri
 3. layout global udah ada navbar + footer (auth pages hide navbar/footer)
 4. blog udah ada mock API internal:
@@ -97,5 +97,5 @@ next-sitemap.config.js perlu diubah
 
 1. samain kontrak API backend untuk auth endpoint (response + error shape)
 2. ganti NEXT_PUBLIC_API_URL_PROD dan SITE_URL sesuai env deploy
-3. rapihin metadata app (title/description di src/app/layout.tsx)
+3. rapikan metadata app (title/description di src/app/layout.tsx)
 4. isi link real untuk navbar/footer (sekarang beberapa masih '#')
