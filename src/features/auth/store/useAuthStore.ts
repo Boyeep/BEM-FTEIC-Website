@@ -4,6 +4,7 @@
 
 import { User } from "@/features/auth/types";
 import { create } from "zustand";
+import { setToken, removeToken } from "@/lib/cookies";
 
 interface AuthState {
   user: User | null;
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   login: (user: User, accessToken: string) => {
+    setToken(accessToken);
     set({
       user,
       accessToken,
@@ -29,6 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
+    removeToken();
     set({
       user: null,
       accessToken: null,

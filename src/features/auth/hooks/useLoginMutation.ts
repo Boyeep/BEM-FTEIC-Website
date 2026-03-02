@@ -7,16 +7,19 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { LoginRequest } from "@/features/auth/types";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export function useLoginMutation() {
+export function useLoginMutation(redirectTo: string = "/") {
   const { login } = useAuthStore();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
     onSuccess: (data) => {
       login(data.user, data.accessToken);
       toast.success("Login successful!");
+      router.push(redirectTo);
     },
     onError: (error: unknown) => {
       const message = isAxiosError<{ message?: string }>(error)
