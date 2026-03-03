@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function DepartemenPagination() {
+export default function EventPagination() {
   return (
     <nav className="mt-12 flex items-center justify-end gap-5 text-sm text-black">
       <button type="button" className="hover:text-[#1D4ED8]">

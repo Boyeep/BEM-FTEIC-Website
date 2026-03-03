@@ -8,15 +8,15 @@ const items = Array.from({ length: 10 }, (_, index) => ({
     "Etiam non enim rutrum, consequat arcu quis, venenatis nibh. Quisque porttitor nunc quis neque molestie maximus. Aenean eget tempus mauris.",
 }));
 
-export default function DepartemenCardGrid() {
+export default function EventCardGrid() {
   return (
     <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-5 md:grid-cols-2">
       {items.map((item) => (
         <article key={item.id} className="grid grid-cols-[180px_1fr] gap-4">
           <div className="relative h-48 w-full overflow-hidden bg-white">
             <Image
-              src="/images/Departemen-Rektorat-Image.png"
-              alt="Departemen Rektorat"
+              src="/images/Event-Rektorat-Image.png"
+              alt="Event Rektorat"
               fill
               className="object-cover"
             />

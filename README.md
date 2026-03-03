@@ -85,7 +85,7 @@ next-sitemap.config.js perlu diubah
 - update progress:
 
 1. homepage udah dibikin di /src/app/page.tsx
-2. route public udah ada: /blog, /blog/[id], /departemen, /galeri
+2. route public udah ada: /blog, /blog/[id], /event, /galeri
 3. layout global udah ada navbar + footer (auth pages hide navbar/footer)
 4. blog udah ada mock API internal:
    - GET /api/blogs?page=1&limit=6

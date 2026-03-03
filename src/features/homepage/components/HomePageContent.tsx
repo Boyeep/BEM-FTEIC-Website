@@ -1,7 +1,7 @@
 import AboutSection from "@/features/homepage/components/AboutSection";
 import BirokrasiSection from "@/features/homepage/components/BirokrasiSection";
 import BlogSection from "@/features/homepage/components/BlogSection";
-import DepartemenSection from "@/features/homepage/components/DepartemenSection";
+import EventSection from "@/features/homepage/components/EventSection";
 import HeroSection from "@/features/homepage/components/HeroSection";
 import HeroToAboutGradient from "@/features/homepage/components/HeroToAboutGradient";
 import LocationSection from "@/features/homepage/components/LocationSection";
@@ -15,7 +15,7 @@ export default function HomePageContent() {
       <AboutSection />
       <VisiMisiSection />
       <BirokrasiSection />
-      <DepartemenSection />
+      <EventSection />
       <BlogSection />
       <LocationSection />
     </main>

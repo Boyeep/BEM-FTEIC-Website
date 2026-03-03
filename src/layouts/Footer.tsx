@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 
 const pages = ["Blog", "Event", "Kabinet", "Galeri"];
-const departemen = [
+const event = [
   "Teknik Elektro",
   "Teknik Informatika",
   "Sistem Informasi",
@@ -55,11 +55,9 @@ export default function Footer() {
               </div>
 
               <div>
-                <h3 className="mb-3 text-2xl font-semibold uppercase">
-                  Departemen
-                </h3>
+                <h3 className="mb-3 text-2xl font-semibold uppercase">Event</h3>
                 <ul className="space-y-2 text-white/70">
-                  {departemen.map((item) => (
+                  {event.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>

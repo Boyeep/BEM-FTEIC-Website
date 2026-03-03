@@ -18,14 +18,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const isAuthRoute = AUTH_ROUTES.has(pathname);
   const isReadBlogPage = pathname.startsWith("/blog/");
   const isHomepage = pathname === "/";
-  const isDepartemenPage = pathname.startsWith("/departemen");
+  const isEventPage = pathname.startsWith("/event");
   const isGaleriPage = pathname.startsWith("/galeri");
+  const isDashboardPage = pathname.startsWith("/dashboard");
 
-  const hideNavbar = isAuthRoute;
-  const hideFooter = isAuthRoute || isReadBlogPage;
+  const hideNavbar = isAuthRoute || isDashboardPage;
+  const hideFooter = isAuthRoute || isReadBlogPage || isDashboardPage;
   const needsNavbarSpacer = !hideNavbar && !isHomepage;
-  const spacerBackground =
-    isDepartemenPage || isGaleriPage ? "#F3F3F3" : "#FFFFFF";
+  const spacerBackground = isEventPage || isGaleriPage ? "#F3F3F3" : "#FFFFFF";
 
   return (
     <>

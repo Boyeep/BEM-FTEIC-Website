@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
 
-export default function DepartemenFilters() {
+export default function EventFilters() {
   return (
     <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
