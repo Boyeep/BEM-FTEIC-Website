@@ -32,67 +32,6 @@ export default function DashboardNavbar() {
   const displayAvatarUrl = user?.avatarUrl || null;
 
   useEffect(() => {
-    const syncUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) return;
-      let profile = null;
-      try {
-        profile = await profileService.ensureForUser(data.user);
-      } catch {
-        profile = null;
-      }
-      setUser({
-        id: data.user.id,
-        email: profile?.email || data.user.email || "",
-        username:
-          profile?.username ||
-          (typeof data.user.user_metadata?.username === "string"
-            ? data.user.user_metadata.username
-            : data.user.email || ""),
-        avatarUrl:
-          profile?.avatar_url ||
-          (typeof data.user.user_metadata?.avatar_url === "string"
-            ? data.user.user_metadata.avatar_url
-            : null),
-        createdAt: data.user.created_at,
-      });
-    };
-
-    void syncUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!session?.user) return;
-      let profile = null;
-      try {
-        profile = await profileService.ensureForUser(session.user);
-      } catch {
-        profile = null;
-      }
-      setUser({
-        id: session.user.id,
-        email: profile?.email || session.user.email || "",
-        username:
-          profile?.username ||
-          (typeof session.user.user_metadata?.username === "string"
-            ? session.user.user_metadata.username
-            : session.user.email || ""),
-        avatarUrl:
-          profile?.avatar_url ||
-          (typeof session.user.user_metadata?.avatar_url === "string"
-            ? session.user.user_metadata.avatar_url
-            : null),
-        createdAt: session.user.created_at,
-      });
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [setUser]);
-
-  useEffect(() => {
     if (!isPopupOpen) return;
 
     const onClickOutside = (event: MouseEvent) => {
