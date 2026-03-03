@@ -83,6 +83,85 @@ using (
 Optional env:
 - `NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET='avatars'`
 
+## Supabase Database Setup (blogs)
+
+Run this SQL in `Supabase -> SQL Editor`:
+
+```sql
+create table if not exists public.blogs (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  excerpt text not null,
+  author text not null,
+  category text not null,
+  cover_image text not null,
+  content text not null,
+  status text not null default 'PUBLISHED',
+  published_at timestamptz not null default now(),
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.blogs enable row level security;
+
+create policy "blogs_public_read_published"
+on public.blogs
+for select
+to public
+using (status = 'PUBLISHED');
+
+create policy "blogs_auth_read_all"
+on public.blogs
+for select
+to authenticated
+using (true);
+
+create policy "blogs_auth_insert"
+on public.blogs
+for insert
+to authenticated
+with check (auth.uid() = created_by);
+
+create policy "blogs_auth_update"
+on public.blogs
+for update
+to authenticated
+using (auth.uid() = created_by)
+with check (auth.uid() = created_by);
+```
+
+Create a public storage bucket named `blog-covers`, then add storage policies:
+
+```sql
+create policy "blog_covers_select_public"
+on storage.objects
+for select
+to public
+using (bucket_id = 'blog-covers');
+
+create policy "blog_covers_insert_own"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'blog-covers'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+create policy "blog_covers_update_own"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'blog-covers'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+```
+
+Optional env:
+- `NEXT_PUBLIC_SUPABASE_BLOG_COVER_BUCKET='blog-covers'`
+
 nama website di package.json untuk sementara aku bikin "bem-fteic-front-end"
 
 next-sitemap.config.js perlu diubah

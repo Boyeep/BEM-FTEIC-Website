@@ -1,7 +1,15 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
 
+import { useBlogs } from "@/features/blog/hooks/useBlogs";
+
 export default function BlogSection() {
+  const { data } = useBlogs({ page: 1, limit: 5 });
+  const items = data?.items ?? [];
+  const highlight = items[0];
+  const rest = items.slice(1, 5);
+
   return (
     <section className="bg-[#1D4ED8] pb-36 pt-20 text-white">
       <div className="mx-auto max-w-6xl translate-y-10 px-6">
@@ -17,59 +25,65 @@ export default function BlogSection() {
           </Link>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <article className="lg:col-span-7">
-            <div className="relative h-72 w-full overflow-hidden md:h-80">
-              <Image
-                src="/images/Homepage-About-Image.png"
-                alt="Blog highlight"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <p className="mt-4 text-sm font-semibold uppercase text-[#FCD704]">
-              TEKNIK ELEKTRO
-            </p>
-            <h4 className="mt-2 text-3xl font-bold leading-tight md:text-4xl">
-              Lorem Ipsum Dolor Sit: A Famet Morbi Mollis Risus Pellentesque id
-              Orci Eget
-            </h4>
-            <p className="mt-4 text-xl leading-relaxed text-white/85 md:text-2xl">
-              Ut vel tortor quis enim facilisis tempus nec ornare dolor.
-              Maecenas rhoncus ornare dolor. Ut vel tortor quis enim facilisis
-              tempus nec...
-            </p>
-          </article>
-
-          <div className="space-y-5 lg:col-span-5">
-            {Array.from({ length: 4 }, (_, index) => (
-              <article key={`home-blog-${index}`} className="flex gap-4">
-                <div className="relative h-24 w-44 shrink-0 overflow-hidden md:h-28 md:w-48">
-                  <Image
-                    src="/images/Homepage-Hero-Image.png"
-                    alt="Blog list"
-                    fill
-                    className="object-cover"
+        {highlight ? (
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <article className="lg:col-span-7">
+              <Link href={`/blog/${highlight.id}`}>
+                <div className="relative h-72 w-full overflow-hidden md:h-80">
+                  <img
+                    src={highlight.coverImage}
+                    alt={highlight.title}
+                    className="h-full w-full object-cover"
                   />
                 </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase text-[#FCD704]">
-                    FTEIC
-                  </p>
-                  <h5 className="mt-1 text-3xl font-bold leading-tight md:text-4xl">
-                    Judul Blog
-                  </h5>
-                  <p className="mt-1 text-sm text-white/90 md:text-base">
-                    Lorem Ipsum Dolor sit Amet
-                  </p>
-                  <p className="mt-2 text-sm font-medium uppercase text-white/95">
-                    BACA ↗
-                  </p>
-                </div>
-              </article>
-            ))}
+              </Link>
+              <p className="mt-4 text-sm font-semibold uppercase text-[#FCD704]">
+                {highlight.category}
+              </p>
+              <h4 className="mt-2 text-3xl font-bold leading-tight md:text-4xl">
+                {highlight.title}
+              </h4>
+              <p className="mt-4 text-xl leading-relaxed text-white/85 md:text-2xl">
+                {highlight.excerpt}
+              </p>
+            </article>
+
+            <div className="space-y-5 lg:col-span-5">
+              {rest.map((blog) => (
+                <article key={blog.id} className="flex gap-4">
+                  <Link href={`/blog/${blog.id}`}>
+                    <div className="relative h-24 w-44 shrink-0 overflow-hidden md:h-28 md:w-48">
+                      <img
+                        src={blog.coverImage}
+                        alt={blog.title}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  </Link>
+                  <div>
+                    <p className="text-xs font-semibold uppercase text-[#FCD704]">
+                      {blog.category}
+                    </p>
+                    <h5 className="mt-1 line-clamp-2 text-3xl font-bold leading-tight md:text-4xl">
+                      {blog.title}
+                    </h5>
+                    <p className="mt-1 line-clamp-2 text-sm text-white/90 md:text-base">
+                      {blog.excerpt}
+                    </p>
+                    <Link
+                      href={`/blog/${blog.id}`}
+                      className="mt-2 inline-block text-sm font-medium uppercase text-white/95"
+                    >
+                      BACA ↗
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="mt-8 text-sm text-white/90">Belum ada blog terbaru.</p>
+        )}
       </div>
     </section>
   );

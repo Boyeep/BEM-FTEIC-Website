@@ -1,65 +1,31 @@
-import { ArrowUpRight } from "lucide-react";
+"use client";
 
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+
+import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
 import ActionTable, {
   type ActionRow,
 } from "@/features/dashboard/components/ActionTable";
 import StatCard from "@/features/dashboard/components/StatCard";
 
-const recentBlogs: ActionRow[] = [
-  {
-    id: 1,
-    title: "Judul Blog",
-    description: "Deskripsi singkat artikel blog terbaru.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "PUBLISHED",
-  },
-  {
-    id: 2,
-    title: "Judul Blog",
-    description: "Deskripsi singkat artikel blog terbaru.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "PUBLISHED",
-  },
-  {
-    id: 3,
-    title: "Judul Blog",
-    description: "Deskripsi singkat artikel blog terbaru.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "PUBLISHED",
-  },
-  {
-    id: 4,
-    title: "Judul Blog",
-    description: "Deskripsi singkat artikel blog terbaru.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "ARCHIVED",
-  },
-  {
-    id: 5,
-    title: "Judul Blog",
-    description: "Deskripsi singkat artikel blog terbaru.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "ARCHIVED",
-  },
-];
-
 const recentEvents: ActionRow[] = [
   {
-    id: 1,
+    id: "event-1",
     title: "Judul Event",
     description: "Deskripsi singkat event terkini.",
     cover: "/images/Homepage-About-Image.png",
     status: "ONGOING",
   },
   {
-    id: 2,
+    id: "event-2",
     title: "Judul Event",
     description: "Deskripsi singkat event terkini.",
     cover: "/images/Homepage-About-Image.png",
     status: "ENDED",
   },
   {
-    id: 3,
+    id: "event-3",
     title: "Judul Event",
     description: "Deskripsi singkat event terkini.",
     cover: "/images/Homepage-About-Image.png",
@@ -69,6 +35,16 @@ const recentEvents: ActionRow[] = [
 
 export default function DashboardOverviewPage() {
   const galleryCells = [true, true, true, true, true, true, true, true, false];
+  const { data } = useDashboardBlogs({ page: 1, limit: 5 });
+
+  const recentBlogs: ActionRow[] =
+    data?.items.map((blog) => ({
+      id: blog.id,
+      title: blog.title,
+      description: blog.excerpt,
+      cover: blog.coverImage,
+      status: blog.status,
+    })) || [];
 
   return (
     <main className="min-h-screen bg-[#F3F4F6] px-4 py-6 text-black md:px-8 md:py-10">
@@ -78,12 +54,12 @@ export default function DashboardOverviewPage() {
             OVERVIEW
           </h1>
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
+            <Link
+              href="/dashboard/blog/create"
               className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               + New Blog
-            </button>
+            </Link>
             <button
               type="button"
               className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
@@ -106,15 +82,18 @@ export default function DashboardOverviewPage() {
                 <h2 className="text-[31px] font-bold uppercase text-black">
                   Recent Blogs
                 </h2>
-                <button
-                  type="button"
+                <Link
+                  href="/dashboard/blog/overview"
                   className="inline-flex items-center gap-1 text-sm font-semibold uppercase text-black transition-colors hover:text-blue-600"
                 >
                   View All
                   <ArrowUpRight size={14} />
-                </button>
+                </Link>
               </div>
-              <ActionTable rows={recentBlogs} />
+              <ActionTable
+                rows={recentBlogs}
+                getEditHref={(row) => `/dashboard/blog/edit?id=${row.id}`}
+              />
             </section>
 
             <section className="space-y-3">
@@ -142,7 +121,10 @@ export default function DashboardOverviewPage() {
               <div className="space-y-4">
                 <StatCard label="Visitors" value="12.340" large />
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <StatCard label="Blogs Published" value="125" />
+                  <StatCard
+                    label="Blogs Published"
+                    value={String(data?.items.length || 0)}
+                  />
                   <StatCard label="Events Hosted" value="50" />
                 </div>
               </div>

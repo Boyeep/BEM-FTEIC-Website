@@ -1,12 +1,12 @@
 import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
+import Link from "next/link";
 
 import Badge from "@/features/dashboard/components/Badge";
 
 export type ActionStatus = "PUBLISHED" | "ARCHIVED" | "ONGOING" | "ENDED";
 
 export interface ActionRow {
-  id: number;
+  id: string;
   title: string;
   description: string;
   cover: string;
@@ -15,6 +15,7 @@ export interface ActionRow {
 
 interface ActionTableProps {
   rows: ActionRow[];
+  getEditHref?: (row: ActionRow) => string;
 }
 
 function toBadgeVariant(status: ActionStatus) {
@@ -30,7 +31,7 @@ function toBadgeVariant(status: ActionStatus) {
   }
 }
 
-export default function ActionTable({ rows }: ActionTableProps) {
+export default function ActionTable({ rows, getEditHref }: ActionTableProps) {
   return (
     <div className="overflow-x-auto border border-[#E5E7EB] bg-white">
       <table className="w-full min-w-[620px] table-fixed">
@@ -58,13 +59,15 @@ export default function ActionTable({ rows }: ActionTableProps) {
             >
               <td className="px-4 py-3 align-middle">
                 <div className="relative h-[52px] w-[66px] overflow-hidden">
-                  <Image
-                    src={row.cover}
-                    alt={row.title}
-                    fill
-                    className="object-cover"
-                    sizes="66px"
-                  />
+                  {row.cover ? (
+                    <img
+                      src={row.cover}
+                      alt={row.title}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-slate-200" />
+                  )}
                 </div>
               </td>
               <td className="px-4 py-3 align-middle">
@@ -81,13 +84,23 @@ export default function ActionTable({ rows }: ActionTableProps) {
               </td>
               <td className="px-4 py-3 align-middle">
                 <div className="flex items-center gap-3 text-black">
-                  <button
-                    type="button"
-                    aria-label={`Edit ${row.title}`}
-                    className="transition-colors hover:text-blue-600"
-                  >
-                    <Pencil size={16} />
-                  </button>
+                  {getEditHref ? (
+                    <Link
+                      href={getEditHref(row)}
+                      aria-label={`Edit ${row.title}`}
+                      className="inline-flex transition-colors hover:text-blue-600"
+                    >
+                      <Pencil size={16} />
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      aria-label={`Edit ${row.title}`}
+                      className="transition-colors hover:text-blue-600"
+                    >
+                      <Pencil size={16} />
+                    </button>
+                  )}
                   <button
                     type="button"
                     aria-label={`Delete ${row.title}`}

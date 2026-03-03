@@ -12,7 +12,7 @@ import { supabase } from "@/lib/supabase";
 
 const navItems = [
   { href: "/dashboard", label: "DASHBOARD" },
-  { href: "/blog", label: "BLOG" },
+  { href: "/dashboard/blog/overview", label: "BLOG" },
   { href: "/event", label: "EVENT" },
   { href: "/galeri", label: "GALERI" },
 ];

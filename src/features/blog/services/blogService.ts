@@ -1,0 +1,250 @@
+import { supabase } from "@/lib/supabase";
+import {
+  Blog,
+  BlogDetailResponse,
+  BlogListResponse,
+  BlogStatus,
+  BlogSummary,
+  UpsertBlogPayload,
+} from "@/features/blog/types";
+
+type BlogRow = {
+  id: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  category: string;
+  cover_image: string;
+  published_at: string;
+  content: string;
+  status: BlogStatus;
+  created_at: string;
+};
+
+const BLOG_COVER_BUCKET =
+  process.env.NEXT_PUBLIC_SUPABASE_BLOG_COVER_BUCKET || "blog-covers";
+
+function estimateReadingTimeMinutes(content: string) {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+function mapRowToSummary(row: BlogRow): BlogSummary {
+  return {
+    id: row.id,
+    title: row.title,
+    excerpt: row.excerpt,
+    author: row.author,
+    category: row.category,
+    coverImage: row.cover_image,
+    publishedAt: row.published_at,
+    readingTimeMinutes: estimateReadingTimeMinutes(row.content),
+    status: row.status,
+  };
+}
+
+function mapRowToBlog(row: BlogRow): Blog {
+  return {
+    ...mapRowToSummary(row),
+    content: row.content,
+  };
+}
+
+function buildExcerpt(content: string) {
+  const compact = content.replace(/\s+/g, " ").trim();
+  if (compact.length <= 160) return compact;
+  return `${compact.slice(0, 157)}...`;
+}
+
+export const blogService = {
+  getPublicBlogs: async (
+    page: number,
+    limit: number,
+  ): Promise<BlogListResponse> => {
+    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+    const safeLimit =
+      Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : 6;
+    const from = (safePage - 1) * safeLimit;
+    const to = from + safeLimit - 1;
+
+    const { data, count, error } = await supabase
+      .from("blogs")
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+        { count: "exact" },
+      )
+      .eq("status", "PUBLISHED")
+      .order("published_at", { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      throw new Error(error.message || "Failed to fetch blogs");
+    }
+
+    const totalItems = count || 0;
+    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
+    const normalizedPage = Math.min(safePage, totalPages);
+
+    return {
+      items: ((data || []) as BlogRow[]).map(mapRowToSummary),
+      pagination: {
+        page: normalizedPage,
+        limit: safeLimit,
+        totalItems,
+        totalPages,
+        hasNextPage: normalizedPage < totalPages,
+        hasPreviousPage: normalizedPage > 1,
+      },
+    };
+  },
+
+  getPublicBlogById: async (id: string): Promise<BlogDetailResponse> => {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+      )
+      .eq("id", id)
+      .eq("status", "PUBLISHED")
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message || "Blog post not found.");
+    }
+
+    return { item: mapRowToBlog(data as BlogRow) };
+  },
+
+  getDashboardBlogs: async (
+    page: number,
+    limit: number,
+  ): Promise<BlogListResponse> => {
+    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+    const safeLimit =
+      Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : 10;
+    const from = (safePage - 1) * safeLimit;
+    const to = from + safeLimit - 1;
+
+    const { data, count, error } = await supabase
+      .from("blogs")
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+        { count: "exact" },
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      throw new Error(error.message || "Failed to fetch dashboard blogs");
+    }
+
+    const totalItems = count || 0;
+    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
+    const normalizedPage = Math.min(safePage, totalPages);
+
+    return {
+      items: ((data || []) as BlogRow[]).map(mapRowToSummary),
+      pagination: {
+        page: normalizedPage,
+        limit: safeLimit,
+        totalItems,
+        totalPages,
+        hasNextPage: normalizedPage < totalPages,
+        hasPreviousPage: normalizedPage > 1,
+      },
+    };
+  },
+
+  getDashboardBlogById: async (id: string): Promise<BlogDetailResponse> => {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+      )
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message || "Blog post not found.");
+    }
+
+    return { item: mapRowToBlog(data as BlogRow) };
+  },
+
+  uploadCover: async (userId: string, file: File): Promise<string> => {
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const filePath = `${userId}/cover-${Date.now()}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(BLOG_COVER_BUCKET)
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      throw new Error(uploadError.message || "Failed to upload cover image");
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(BLOG_COVER_BUCKET).getPublicUrl(filePath);
+
+    return publicUrl;
+  },
+
+  createBlog: async (
+    payload: UpsertBlogPayload,
+    authorEmail: string,
+    createdBy: string,
+  ): Promise<BlogDetailResponse> => {
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from("blogs")
+      .insert({
+        title: payload.title,
+        excerpt: buildExcerpt(payload.content),
+        author: authorEmail,
+        category: payload.category,
+        cover_image: payload.coverImage || "",
+        content: payload.content,
+        status: payload.status,
+        published_at: now,
+        created_by: createdBy,
+      })
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+      )
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to create blog");
+    }
+
+    return { item: mapRowToBlog(data as BlogRow) };
+  },
+
+  updateBlog: async (
+    id: string,
+    payload: UpsertBlogPayload,
+  ): Promise<BlogDetailResponse> => {
+    const { data, error } = await supabase
+      .from("blogs")
+      .update({
+        title: payload.title,
+        excerpt: buildExcerpt(payload.content),
+        category: payload.category,
+        cover_image: payload.coverImage,
+        content: payload.content,
+        status: payload.status,
+      })
+      .eq("id", id)
+      .select(
+        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
+      )
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to update blog");
+    }
+
+    return { item: mapRowToBlog(data as BlogRow) };
+  },
+};

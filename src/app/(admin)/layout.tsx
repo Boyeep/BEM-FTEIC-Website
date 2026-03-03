@@ -7,7 +7,7 @@ import DashboardNavbar from "@/features/dashboard/components/DashboardNavbar";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const showDashboardNavbar = pathname === "/dashboard";
+  const showDashboardNavbar = pathname.startsWith("/dashboard");
 
   return (
     <>
