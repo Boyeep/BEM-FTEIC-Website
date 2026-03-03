@@ -41,6 +41,11 @@ export const authService = {
         id: data.user.id,
         email: profile?.email || data.user.email || "",
         username: profile?.username || fallbackUsername,
+        avatarUrl:
+          profile?.avatar_url ||
+          (typeof data.user.user_metadata?.avatar_url === "string"
+            ? data.user.user_metadata.avatar_url
+            : null),
         createdAt: data.user.created_at,
       },
       accessToken: data.session.access_token,
@@ -125,6 +130,11 @@ export const authService = {
         id: user.id,
         email: profile?.email || user.email || "",
         username: profile?.username || fallbackUsername,
+        avatarUrl:
+          profile?.avatar_url ||
+          (typeof user.user_metadata?.avatar_url === "string"
+            ? user.user_metadata.avatar_url
+            : null),
         createdAt: user.created_at,
       },
       accessToken: session.access_token,

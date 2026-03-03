@@ -5,6 +5,7 @@ import { ArrowLeft, SquarePen } from "lucide-react";
 type ProfileDropdownProps = {
   name: string;
   email: string;
+  avatarUrl?: string | null;
   onClose: () => void;
   onEditName: () => void;
   onEditPhoto: () => void;
@@ -13,6 +14,7 @@ type ProfileDropdownProps = {
 export default function ProfileDropdown({
   name,
   email,
+  avatarUrl,
   onClose,
   onEditName,
   onEditPhoto,
@@ -29,9 +31,17 @@ export default function ProfileDropdown({
       </button>
 
       <div className="mb-4 flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center bg-gradient-to-b from-[#4A70E2] to-[#C4CDD9]">
-          <div className="h-7 w-7 rounded-full bg-[#AFC0E7]" />
-        </div>
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt="Profile avatar"
+            className="h-14 w-14 object-cover"
+          />
+        ) : (
+          <div className="flex h-14 w-14 items-center justify-center bg-gradient-to-b from-[#4A70E2] to-[#C4CDD9]">
+            <div className="h-7 w-7 rounded-full bg-[#AFC0E7]" />
+          </div>
+        )}
         <div>
           <p className="text-[18px] font-semibold leading-none text-black">
             {name}

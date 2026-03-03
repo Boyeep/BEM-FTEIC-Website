@@ -24,6 +24,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text not null,
   username text not null,
+  avatar_url text,
   updated_at timestamptz not null default now()
 );
 
@@ -50,6 +51,37 @@ with check (auth.uid() = id);
 ```
 
 This project now reads/writes profile name + email through `public.profiles`.
+
+Create a public storage bucket named `avatars`, then add these storage policies:
+
+```sql
+create policy "avatars_select_public"
+on storage.objects
+for select
+to public
+using (bucket_id = 'avatars');
+
+create policy "avatars_insert_own"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'avatars'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+create policy "avatars_update_own"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'avatars'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+```
+
+Optional env:
+- `NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET='avatars'`
 
 nama website di package.json untuk sementara aku bikin "bem-fteic-front-end"
 
