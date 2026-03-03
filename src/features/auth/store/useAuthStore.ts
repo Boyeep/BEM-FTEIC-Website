@@ -2,8 +2,11 @@
 // Global authentication state management using Zustand.
 // Stores user data, tokens, and authentication status.
 
+"use client";
+
 import { User } from "@/features/auth/types";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface AuthState {
   user: User | null;
@@ -15,37 +18,50 @@ interface AuthState {
   setAccessToken: (token: string | null) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  isAuthenticated: false,
-
-  login: (user: User, accessToken: string) => {
-    set({
-      user,
-      accessToken,
-      isAuthenticated: true,
-    });
-  },
-
-  logout: () => {
-    set({
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
       user: null,
       accessToken: null,
       isAuthenticated: false,
-    });
-  },
 
-  setUser: (user: User | null) => {
-    set({
-      user,
-      isAuthenticated: user !== null,
-    });
-  },
+      login: (user: User, accessToken: string) => {
+        set({
+          user,
+          accessToken,
+          isAuthenticated: true,
+        });
+      },
 
-  setAccessToken: (token: string | null) => {
-    set({
-      accessToken: token,
-    });
-  },
-}));
+      logout: () => {
+        set({
+          user: null,
+          accessToken: null,
+          isAuthenticated: false,
+        });
+      },
+
+      setUser: (user: User | null) => {
+        set({
+          user,
+          isAuthenticated: user !== null,
+        });
+      },
+
+      setAccessToken: (token: string | null) => {
+        set({
+          accessToken: token,
+        });
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);
