@@ -4,38 +4,16 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
+import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
 import ActionTable, {
   type ActionRow,
 } from "@/features/dashboard/components/ActionTable";
 import StatCard from "@/features/dashboard/components/StatCard";
 
-const recentEvents: ActionRow[] = [
-  {
-    id: "event-1",
-    title: "Judul Event",
-    description: "Deskripsi singkat event terkini.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "ONGOING",
-  },
-  {
-    id: "event-2",
-    title: "Judul Event",
-    description: "Deskripsi singkat event terkini.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "ENDED",
-  },
-  {
-    id: "event-3",
-    title: "Judul Event",
-    description: "Deskripsi singkat event terkini.",
-    cover: "/images/Homepage-About-Image.png",
-    status: "ENDED",
-  },
-];
-
 export default function DashboardOverviewPage() {
   const galleryCells = [true, true, true, true, true, true, true, true, false];
   const { data } = useDashboardBlogs({ page: 1, limit: 5 });
+  const { data: eventData } = useDashboardEvents({ page: 1, limit: 5 });
 
   const recentBlogs: ActionRow[] =
     data?.items.map((blog) => ({
@@ -44,6 +22,14 @@ export default function DashboardOverviewPage() {
       description: blog.excerpt,
       cover: blog.coverImage,
       status: blog.status,
+    })) || [];
+  const recentEvents: ActionRow[] =
+    eventData?.items.map((event) => ({
+      id: event.id,
+      title: event.title,
+      description: event.description,
+      cover: event.coverImage,
+      status: event.status,
     })) || [];
 
   return (
@@ -60,12 +46,12 @@ export default function DashboardOverviewPage() {
             >
               + New Blog
             </Link>
-            <button
-              type="button"
+            <Link
+              href="/dashboard/event/create"
               className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               + New Event
-            </button>
+            </Link>
             <button
               type="button"
               className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
@@ -101,15 +87,18 @@ export default function DashboardOverviewPage() {
                 <h2 className="text-[31px] font-bold uppercase text-black">
                   Recent Events
                 </h2>
-                <button
-                  type="button"
+                <Link
+                  href="/dashboard/event/overview"
                   className="inline-flex items-center gap-1 text-sm font-semibold uppercase text-black transition-colors hover:text-blue-600"
                 >
                   View All
                   <ArrowUpRight size={14} />
-                </button>
+                </Link>
               </div>
-              <ActionTable rows={recentEvents} />
+              <ActionTable
+                rows={recentEvents}
+                getEditHref={(row) => `/dashboard/event/edit?id=${row.id}`}
+              />
             </section>
           </div>
 

@@ -13,7 +13,7 @@ import { supabase } from "@/lib/supabase";
 const navItems = [
   { href: "/dashboard", label: "DASHBOARD" },
   { href: "/dashboard/blog/overview", label: "BLOG" },
-  { href: "/event", label: "EVENT" },
+  { href: "/dashboard/event/overview", label: "EVENT" },
   { href: "/galeri", label: "GALERI" },
 ];
 

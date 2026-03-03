@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function EventHeader() {
   return (
     <header>
-      <h1 className="text-5xl font-extrabold text-black">DEPARTEMEN</h1>
+      <h1 className="text-5xl font-extrabold text-black">EVENT</h1>
       <div className="mt-6 flex items-center gap-4">
         <Image
           src="/images/Event-Logo-ITS-Image.png"
