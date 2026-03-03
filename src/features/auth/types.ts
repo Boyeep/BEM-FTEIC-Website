@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -29,7 +29,9 @@ export interface SignupResponse {
 }
 
 export interface VerifyEmailRequest {
-  token: string;
+  code?: string;
+  tokenHash?: string;
+  type?: "signup" | "email";
 }
 
 export interface VerifyEmailResponse {

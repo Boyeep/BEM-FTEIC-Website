@@ -1,5 +1,20 @@
 # Notes for you my guy
 
+## Supabase Auth Setup (current)
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+3. In Supabase Auth settings, set your redirect URL to:
+   - `http://localhost:3000/confirm-email` (development)
+4. Run:
+   - `pnpm install`
+   - `pnpm dev`
+
+Auth routes:
+- `/login` (email + password)
+- `/signup` (creates account and sends verification email)
+- `/confirm-email` (handles Supabase callback and creates session)
+
 nama website di package.json untuk sementara aku bikin "bem-fteic-front-end"
 
 next-sitemap.config.js perlu diubah

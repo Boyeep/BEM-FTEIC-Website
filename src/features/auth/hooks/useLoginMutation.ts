@@ -7,7 +7,6 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { LoginRequest } from "@/features/auth/types";
 import { setToken } from "@/lib/cookies";
 import { useMutation } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -24,9 +23,10 @@ export function useLoginMutation() {
       router.push("/dashboard");
     },
     onError: (error: unknown) => {
-      const message = isAxiosError<{ message?: string }>(error)
-        ? error.response?.data?.message || "Login failed. Please try again."
-        : "Login failed. Please try again.";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.";
       toast.error(message);
     },
   });

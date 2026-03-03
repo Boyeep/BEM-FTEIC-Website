@@ -13,7 +13,9 @@ import { useEffect, useState } from "react";
 export default function EmailConfirmCard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
   const {
     mutate: verifyEmail,
     isPending,
@@ -27,9 +29,16 @@ export default function EmailConfirmCard() {
   }, []);
 
   useEffect(() => {
-    if (!mounted || !token) return;
-    verifyEmail({ token });
-  }, [mounted, token, verifyEmail]);
+    if (!mounted) return;
+    if (code) {
+      verifyEmail({ code });
+      return;
+    }
+
+    if (tokenHash && (type === "signup" || type === "email")) {
+      verifyEmail({ tokenHash, type });
+    }
+  }, [mounted, code, tokenHash, type, verifyEmail]);
 
   const CardWrapper = ({ children }: { children: React.ReactNode }) => (
     <div className="bg-white p-10 rounded-[15px] shadow-sm w-full max-w-[420px] text-center flex flex-col items-center">
@@ -39,7 +48,7 @@ export default function EmailConfirmCard() {
 
   if (!mounted) return null;
 
-  if (!token) {
+  if (!code && !tokenHash) {
     return (
       <CardWrapper>
         <Typography as="h2" className="text-xl font-bold mb-2 text-red-500">
@@ -81,7 +90,7 @@ export default function EmailConfirmCard() {
         </Typography>
 
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/dashboard")}
           className="w-full bg-[#EBB85E] hover:brightness-95 text-black font-bold py-3 rounded-[10px] uppercase tracking-wider transition-all"
         >
           Go to Dashboard
