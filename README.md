@@ -234,6 +234,75 @@ using (
 Optional env:
 - `NEXT_PUBLIC_SUPABASE_EVENT_COVER_BUCKET='event-covers'`
 
+## Supabase Database Setup (galeri)
+
+Run this SQL in `Supabase -> SQL Editor`:
+
+```sql
+create table if not exists public.galeri (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  link text not null,
+  image_url text not null,
+  taken_at date not null,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.galeri enable row level security;
+
+create policy "galeri_public_read"
+on public.galeri
+for select
+to public
+using (true);
+
+create policy "galeri_auth_insert"
+on public.galeri
+for insert
+to authenticated
+with check (auth.uid() = created_by);
+
+create policy "galeri_auth_update"
+on public.galeri
+for update
+to authenticated
+using (auth.uid() = created_by)
+with check (auth.uid() = created_by);
+```
+
+Create a public storage bucket named `galeri-images`, then add storage policies:
+
+```sql
+create policy "galeri_images_select_public"
+on storage.objects
+for select
+to public
+using (bucket_id = 'galeri-images');
+
+create policy "galeri_images_insert_own"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'galeri-images'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+create policy "galeri_images_update_own"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'galeri-images'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+```
+
+Optional env:
+- `NEXT_PUBLIC_SUPABASE_GALERI_BUCKET='galeri-images'`
+
 nama website di package.json untuk sementara aku bikin "bem-fteic-front-end"
 
 next-sitemap.config.js perlu diubah

@@ -5,15 +5,16 @@ import Link from "next/link";
 
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
+import { useDashboardGaleri } from "@/features/galeri/hooks/useDashboardGaleri";
 import ActionTable, {
   type ActionRow,
 } from "@/features/dashboard/components/ActionTable";
 import StatCard from "@/features/dashboard/components/StatCard";
 
 export default function DashboardOverviewPage() {
-  const galleryCells = [true, true, true, true, true, true, true, true, false];
   const { data } = useDashboardBlogs({ page: 1, limit: 5 });
   const { data: eventData } = useDashboardEvents({ page: 1, limit: 5 });
+  const { data: galeriData } = useDashboardGaleri({ page: 1, limit: 9 });
 
   const recentBlogs: ActionRow[] =
     data?.items.map((blog) => ({
@@ -52,12 +53,12 @@ export default function DashboardOverviewPage() {
             >
               + New Event
             </Link>
-            <button
-              type="button"
+            <Link
+              href="/dashboard/galeri/create"
               className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               + Add Photo
-            </button>
+            </Link>
           </div>
         </header>
 
@@ -127,23 +128,25 @@ export default function DashboardOverviewPage() {
                 <h2 className="text-[31px] font-bold uppercase text-black">
                   Galeri
                 </h2>
-                <button
-                  type="button"
+                <Link
+                  href="/dashboard/galeri/overview"
                   className="inline-flex items-center gap-1 text-sm font-semibold uppercase text-black transition-colors hover:text-blue-600"
                 >
                   View All
                   <ArrowUpRight size={14} />
-                </button>
+                </Link>
               </div>
               <div className="grid grid-cols-3 gap-0 border border-[#E5E7EB] bg-white">
-                {galleryCells.map((hasGradient, index) => (
+                {(galeriData?.items || []).map((item) => (
                   <div
-                    key={`gallery-${index}`}
-                    className={`flex aspect-square items-center justify-center ${hasGradient ? "bg-gradient-to-b from-[#4C78E0] to-[#D5DBE7]" : "bg-white"}`}
+                    key={`gallery-${item.id}`}
+                    className="flex aspect-square items-center justify-center bg-white"
                   >
-                    {hasGradient ? (
-                      <div className="h-12 w-12 rounded-full bg-white/35 md:h-20 md:w-20" />
-                    ) : null}
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 ))}
               </div>

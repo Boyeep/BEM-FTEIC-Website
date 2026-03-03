@@ -14,7 +14,7 @@ const navItems = [
   { href: "/dashboard", label: "DASHBOARD" },
   { href: "/dashboard/blog/overview", label: "BLOG" },
   { href: "/dashboard/event/overview", label: "EVENT" },
-  { href: "/galeri", label: "GALERI" },
+  { href: "/dashboard/galeri/overview", label: "GALERI" },
 ];
 
 export default function DashboardNavbar() {
