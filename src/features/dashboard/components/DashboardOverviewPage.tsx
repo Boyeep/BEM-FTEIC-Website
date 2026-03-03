@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
+import { useVisitorCount } from "@/features/analytics/hooks/useVisitorCount";
 import { useDashboardGaleri } from "@/features/galeri/hooks/useDashboardGaleri";
 import ActionTable, {
   type ActionRow,
@@ -15,6 +16,7 @@ export default function DashboardOverviewPage() {
   const { data } = useDashboardBlogs({ page: 1, limit: 5 });
   const { data: eventData } = useDashboardEvents({ page: 1, limit: 5 });
   const { data: galeriData } = useDashboardGaleri({ page: 1, limit: 9 });
+  const { data: visitorCount } = useVisitorCount();
 
   const recentBlogs: ActionRow[] =
     data?.items.map((blog) => ({
@@ -109,7 +111,13 @@ export default function DashboardOverviewPage() {
                 Statistics
               </h2>
               <div className="space-y-4">
-                <StatCard label="Visitors" value="12.340" large />
+                <StatCard
+                  label="Visitors"
+                  value={new Intl.NumberFormat("id-ID").format(
+                    visitorCount || 0,
+                  )}
+                  large
+                />
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <StatCard
                     label="Blogs Published"

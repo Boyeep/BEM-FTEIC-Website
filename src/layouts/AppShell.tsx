@@ -1,8 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
+import { visitorService } from "@/features/analytics/services/visitorService";
 import Footer from "@/layouts/Footer";
 import Navbar from "@/layouts/Navbar";
 
@@ -26,6 +27,10 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const hideFooter = isAuthRoute || isReadBlogPage || isDashboardPage;
   const needsNavbarSpacer = !hideNavbar && !isHomepage;
   const spacerBackground = isEventPage || isGaleriPage ? "#F3F3F3" : "#FFFFFF";
+
+  useEffect(() => {
+    void visitorService.trackVisit(pathname);
+  }, [pathname]);
 
   return (
     <>
