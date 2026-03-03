@@ -4,14 +4,19 @@ import DashboardEditGaleriPage from "@/features/dashboard/components/DashboardEd
 
 interface EditGaleriPageProps {
   searchParams: {
-    id?: string;
+    id?: string | string[];
   };
 }
 
 export default function EditGaleriPage({ searchParams }: EditGaleriPageProps) {
-  if (!searchParams.id) {
+  const id =
+    typeof searchParams.id === "string"
+      ? searchParams.id
+      : searchParams.id?.[0];
+
+  if (!id?.trim()) {
     redirect("/dashboard/galeri/overview");
   }
 
-  return <DashboardEditGaleriPage id={searchParams.id} />;
+  return <DashboardEditGaleriPage id={id.trim()} />;
 }

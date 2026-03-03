@@ -4,14 +4,19 @@ import DashboardEditEventPage from "@/features/dashboard/components/DashboardEdi
 
 interface EditEventPageProps {
   searchParams: {
-    id?: string;
+    id?: string | string[];
   };
 }
 
 export default function EditEventPage({ searchParams }: EditEventPageProps) {
-  if (!searchParams.id) {
+  const id =
+    typeof searchParams.id === "string"
+      ? searchParams.id
+      : searchParams.id?.[0];
+
+  if (!id?.trim()) {
     redirect("/dashboard/event/overview");
   }
 
-  return <DashboardEditEventPage id={searchParams.id} />;
+  return <DashboardEditEventPage id={id.trim()} />;
 }

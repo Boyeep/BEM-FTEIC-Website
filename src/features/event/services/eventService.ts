@@ -96,13 +96,15 @@ export const eventService = {
   },
 
   getDashboardEventById: async (id: string): Promise<EventDetailResponse> => {
+    const normalizedId = id.trim();
     const { data, error } = await supabase
       .from("events")
       .select(
         "id,title,description,author,category,cover_image,event_date,status,created_at",
       )
-      .eq("id", id)
-      .single();
+      .eq("id", normalizedId)
+      .limit(1)
+      .maybeSingle();
 
     if (error || !data) {
       throw new Error(error?.message || "Event not found.");

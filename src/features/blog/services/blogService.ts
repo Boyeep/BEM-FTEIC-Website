@@ -111,14 +111,16 @@ export const blogService = {
   },
 
   getPublicBlogById: async (id: string): Promise<BlogDetailResponse> => {
+    const normalizedId = id.trim();
     const { data, error } = await supabase
       .from("blogs")
       .select(
         "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
       )
-      .eq("id", id)
+      .eq("id", normalizedId)
       .eq("status", "PUBLISHED")
-      .single();
+      .limit(1)
+      .maybeSingle();
 
     if (error || !data) {
       throw new Error(error?.message || "Blog post not found.");
@@ -168,13 +170,15 @@ export const blogService = {
   },
 
   getDashboardBlogById: async (id: string): Promise<BlogDetailResponse> => {
+    const normalizedId = id.trim();
     const { data, error } = await supabase
       .from("blogs")
       .select(
         "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at",
       )
-      .eq("id", id)
-      .single();
+      .eq("id", normalizedId)
+      .limit(1)
+      .maybeSingle();
 
     if (error || !data) {
       throw new Error(error?.message || "Blog post not found.");

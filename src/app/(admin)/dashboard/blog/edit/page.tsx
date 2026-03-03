@@ -4,14 +4,19 @@ import DashboardEditBlogPage from "@/features/dashboard/components/DashboardEdit
 
 interface EditBlogPageProps {
   searchParams: {
-    id?: string;
+    id?: string | string[];
   };
 }
 
 export default function EditBlogPage({ searchParams }: EditBlogPageProps) {
-  if (!searchParams.id) {
+  const id =
+    typeof searchParams.id === "string"
+      ? searchParams.id
+      : searchParams.id?.[0];
+
+  if (!id?.trim()) {
     redirect("/dashboard/blog/overview");
   }
 
-  return <DashboardEditBlogPage id={searchParams.id} />;
+  return <DashboardEditBlogPage id={id.trim()} />;
 }

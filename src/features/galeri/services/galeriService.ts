@@ -86,11 +86,13 @@ export const galeriService = {
   },
 
   getDashboardGaleriById: async (id: string): Promise<GaleriDetailResponse> => {
+    const normalizedId = id.trim();
     const { data, error } = await supabase
       .from("galeri")
       .select("id,title,link,image_url,taken_at,created_at")
-      .eq("id", id)
-      .single();
+      .eq("id", normalizedId)
+      .limit(1)
+      .maybeSingle();
 
     if (error || !data) {
       throw new Error(error?.message || "Galeri item not found.");
