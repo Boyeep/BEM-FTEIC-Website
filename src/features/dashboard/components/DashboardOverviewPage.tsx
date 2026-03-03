@@ -114,7 +114,10 @@ export default function DashboardOverviewPage() {
                     label="Blogs Published"
                     value={String(data?.items.length || 0)}
                   />
-                  <StatCard label="Events Hosted" value="50" />
+                  <StatCard
+                    label="Events Hosted"
+                    value={String(eventData?.pagination.totalItems || 0)}
+                  />
                 </div>
               </div>
             </section>

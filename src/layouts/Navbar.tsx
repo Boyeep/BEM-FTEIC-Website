@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import clsxm from "@/lib/clsxm";
 
 const eventItems = [
+  "EVENT",
   "FTEIC",
   "TEKNIK ELEKTRO",
   "TEKNIK INFORMATIKA",
@@ -29,13 +30,19 @@ const kabinetItems = [
   "RESEARCH TECHNOLOGY",
 ];
 
-function DropdownList({ items }: { items: string[] }) {
+function DropdownList({
+  items,
+  withEventLink = false,
+}: {
+  items: string[];
+  withEventLink?: boolean;
+}) {
   return (
     <div className="w-[320px] border border-black/20 bg-[#FCD704]">
       {items.map((item) => (
         <Link
           key={item}
-          href="#"
+          href={withEventLink && item === "EVENT" ? "/event" : "#"}
           className={clsxm(
             "flex items-center justify-between border-b border-black/20 px-5 py-3 text-sm text-black",
             "transition-colors hover:bg-[#FCEABF] last:border-b-0",
@@ -135,7 +142,7 @@ export default function Navbar() {
                       {eventItems.map((item) => (
                         <Link
                           key={`mobile-event-${item}`}
-                          href="#"
+                          href={item === "EVENT" ? "/event" : "#"}
                           className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase transition-colors hover:bg-[#FCEABF] active:bg-[#FCEABF] last:border-b-0"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -216,7 +223,7 @@ export default function Navbar() {
               </button>
               {openMenu === "event" ? (
                 <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
-                  <DropdownList items={eventItems} />
+                  <DropdownList items={eventItems} withEventLink />
                 </div>
               ) : null}
             </div>
