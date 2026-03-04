@@ -88,6 +88,115 @@ Optional bucket overrides:
   - `http://localhost:3000/confirm-email` (local)
   - production URL equivalent
 
+### 1.1 Supabase confirm email template
+Copy this into `Authentication > Email Templates > Confirm signup`:
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Konfirmasi Email</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #4f73e4 0%, #dfe3ef 100%);
+    "
+  >
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" style="padding: 56px 16px">
+          <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              max-width: 620px;
+              background: #f5f5f5;
+              border-radius: 16px;
+            "
+          >
+            <tr>
+              <td align="center" style="padding: 40px 24px 20px 24px">
+                <div style="font-size: 26px; line-height: 1; color: #e0b14d">✉</div>
+                <div
+                  style="
+                    margin-top: 10px;
+                    font-size: 34px;
+                    line-height: 1;
+                    font-weight: 800;
+                    color: #e0b14d;
+                    letter-spacing: 1px;
+                  "
+                >
+                  ELECTICS
+                </div>
+
+                <div
+                  style="
+                    margin-top: 34px;
+                    font-size: 38px;
+                    line-height: 1.15;
+                    font-weight: 800;
+                    color: #1f1f1f;
+                  "
+                >
+                  Konfirmasi Email
+                </div>
+
+                <div
+                  style="
+                    margin-top: 18px;
+                    font-size: 24px;
+                    line-height: 1.35;
+                    font-weight: 700;
+                    color: #2a2a2a;
+                  "
+                >
+                  Klik tombol <span style="color: #e0b14d">Confirm</span> untuk<br />
+                  melakukan konfirmasi akun<br />
+                  Electics - mu
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 16px 16px 16px">
+                <a
+                  href="{{ .ConfirmationURL }}"
+                  style="
+                    display: block;
+                    width: 100%;
+                    box-sizing: border-box;
+                    text-align: center;
+                    text-decoration: none;
+                    text-transform: uppercase;
+                    font-size: 40px;
+                    line-height: 1.2;
+                    font-weight: 800;
+                    color: #111111;
+                    background: #e0b14d;
+                    border-radius: 14px;
+                    padding: 20px 18px;
+                  "
+                >
+                  Confirm
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+```
+
 ### 2. Profiles table
 ```sql
 create table if not exists public.profiles (
