@@ -16,7 +16,10 @@ export default function BirokrasiSection() {
 
           <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
             {birokrasiMembers.map((person) => (
-              <article key={person.role} className="flex items-start gap-7">
+              <article
+                key={person.role}
+                className="flex flex-col items-center gap-5 rounded-2xl bg-white/5 p-4 md:flex-row md:items-start md:gap-7 md:rounded-none md:bg-transparent md:p-0"
+              >
                 <div className="h-44 w-44 shrink-0 bg-[#E6E6E6] md:h-52 md:w-52">
                   <div className="flex h-full items-center justify-center">
                     <div className="relative h-24 w-24 rounded-full bg-[#B7B7B7] md:h-32 md:w-32">
@@ -26,7 +29,7 @@ export default function BirokrasiSection() {
                   </div>
                 </div>
 
-                <div className="max-w-xs">
+                <div className="w-full max-w-xs text-center md:text-left">
                   <p className="text-3xl font-bold md:text-4xl">
                     {person.name}
                   </p>
