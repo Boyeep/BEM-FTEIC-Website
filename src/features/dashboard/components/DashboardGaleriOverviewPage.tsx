@@ -60,7 +60,7 @@ export default function DashboardGaleriOverviewPage() {
           </div>
           <Link
             href="/dashboard/galeri/create"
-            className="bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="whitespace-nowrap bg-[#2563EB] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
             + Add Photos
           </Link>
