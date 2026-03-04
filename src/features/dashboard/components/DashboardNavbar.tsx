@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { Menu } from "lucide-react";
 
 import { profileService } from "@/features/auth/services/profileService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
@@ -18,12 +19,14 @@ const navItems = [
 ];
 
 export default function DashboardNavbar() {
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMode, setPopupMode] = useState<"menu" | "edit-name">("menu");
   const [editedName, setEditedName] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const mobileNavRef = useRef<HTMLDivElement | null>(null);
   const photoInputRef = useRef<HTMLInputElement | null>(null);
   const { user, setUser } = useAuthStore();
 
@@ -32,18 +35,21 @@ export default function DashboardNavbar() {
   const displayAvatarUrl = user?.avatarUrl || null;
 
   useEffect(() => {
-    if (!isPopupOpen) return;
+    if (!isPopupOpen && !isMobileNavOpen) return;
 
     const onClickOutside = (event: MouseEvent) => {
-      if (!popupRef.current) return;
-      if (popupRef.current.contains(event.target as Node)) return;
+      const target = event.target as Node;
+      if (popupRef.current?.contains(target)) return;
+      if (mobileNavRef.current?.contains(target)) return;
+
       setIsPopupOpen(false);
       setPopupMode("menu");
+      setIsMobileNavOpen(false);
     };
 
     window.addEventListener("mousedown", onClickOutside);
     return () => window.removeEventListener("mousedown", onClickOutside);
-  }, [isPopupOpen]);
+  }, [isPopupOpen, isMobileNavOpen]);
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 bg-[#FCD704]">
@@ -101,7 +107,19 @@ export default function DashboardNavbar() {
         }}
       />
       <div className="mx-auto flex h-[56px] w-full max-w-[1600px] items-center justify-between px-4 md:px-8">
-        <nav className="flex items-center gap-7 text-[14px] font-normal text-black">
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+            className="mr-3 inline-flex h-9 w-9 items-center justify-center text-black md:hidden"
+            aria-label="Toggle dashboard navigation menu"
+            aria-expanded={isMobileNavOpen}
+          >
+            <Menu className="h-7 w-7" />
+          </button>
+        </div>
+
+        <nav className="hidden items-center gap-7 text-[14px] font-normal text-black md:flex">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="hover:opacity-75">
               {item.label}
@@ -114,12 +132,15 @@ export default function DashboardNavbar() {
           onClick={() => {
             setEditedName(displayName);
             setPopupMode("menu");
+            setIsMobileNavOpen(false);
             setIsPopupOpen((prev) => !prev);
           }}
           className="flex items-center gap-4 text-black"
           aria-label="Open profile popup"
         >
-          <span className="text-[14px] uppercase">{displayName}</span>
+          <span className="hidden text-[14px] uppercase md:block">
+            {displayName}
+          </span>
           {displayAvatarUrl ? (
             <img
               src={displayAvatarUrl}
@@ -131,6 +152,26 @@ export default function DashboardNavbar() {
           )}
         </button>
       </div>
+
+      {isMobileNavOpen ? (
+        <div
+          ref={mobileNavRef}
+          className="absolute left-4 top-[56px] w-[220px] border-b-2 border-[#365BD7] bg-[#D9D9D9] p-2 shadow-[0_10px_20px_rgba(0,0,0,0.22)] md:hidden"
+        >
+          <nav className="flex flex-col">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMobileNavOpen(false)}
+                className="px-3 py-2 text-[14px] font-semibold text-black hover:bg-[#ECECEC]"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      ) : null}
 
       {isPopupOpen ? (
         <div
