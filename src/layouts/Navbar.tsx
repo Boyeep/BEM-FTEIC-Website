@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronUp, MoveUpRight } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import clsxm from "@/lib/clsxm";
@@ -57,12 +58,14 @@ function DropdownList({
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<"event" | "kabinet" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileEventOpen, setMobileEventOpen] = useState(false);
   const [mobileKabinetOpen, setMobileKabinetOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const isTransparentState = isScrolled;
+  const isHomepage = pathname === "/";
+  const isTransparentState = isHomepage && !isScrolled;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 12);
@@ -72,11 +75,6 @@ export default function Navbar() {
   }, []);
 
   const textClass = isTransparentState ? "text-white" : "text-black";
-  const textOutlineStyle = isTransparentState
-    ? ({
-        textShadow: "-0.6px 0 #000, 0 0.6px #000, 0.6px 0 #000, 0 -0.6px #000",
-      } as const)
-    : undefined;
 
   return (
     <header
@@ -90,7 +88,6 @@ export default function Navbar() {
           <Link
             href="/"
             className={`text-3xl font-extrabold leading-none md:text-4xl ${textClass}`}
-            style={textOutlineStyle}
           >
             BEM FTEIC
           </Link>
@@ -100,7 +97,6 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className={`inline-flex items-center gap-1 text-sm font-semibold uppercase ${textClass} ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
             >
               Menu
               {mobileMenuOpen ? (
@@ -203,7 +199,6 @@ export default function Navbar() {
             <Link
               href="/blog"
               className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
             >
               Blog
             </Link>
@@ -216,7 +211,6 @@ export default function Navbar() {
               <button
                 type="button"
                 className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-                style={textOutlineStyle}
               >
                 EVENT
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
@@ -236,7 +230,6 @@ export default function Navbar() {
               <button
                 type="button"
                 className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-                style={textOutlineStyle}
               >
                 KABINET
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
@@ -251,7 +244,6 @@ export default function Navbar() {
             <Link
               href="/galeri"
               className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
             >
               Galeri
             </Link>
