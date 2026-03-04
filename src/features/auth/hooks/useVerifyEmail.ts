@@ -7,11 +7,9 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { VerifyEmailRequest } from "@/features/auth/types";
 import { setToken } from "@/lib/cookies";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export function useVerifyEmail() {
-  const router = useRouter();
   const { login } = useAuthStore();
 
   return useMutation({
@@ -21,7 +19,6 @@ export function useVerifyEmail() {
       login(data.user, data.accessToken);
       setToken(data.accessToken);
       toast.success("Email verified successfully!");
-      router.push("/dashboard");
     },
     onError: (error: unknown) => {
       const message =

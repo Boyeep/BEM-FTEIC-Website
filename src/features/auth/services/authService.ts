@@ -92,6 +92,14 @@ export const authService = {
       if (error) {
         throw new Error(error.message || "Email verification failed");
       }
+    } else if (payload.accessToken && payload.refreshToken) {
+      const { error } = await supabase.auth.setSession({
+        access_token: payload.accessToken,
+        refresh_token: payload.refreshToken,
+      });
+      if (error) {
+        throw new Error(error.message || "Email verification failed");
+      }
     } else if (payload.tokenHash && payload.type) {
       const { error } = await supabase.auth.verifyOtp({
         token_hash: payload.tokenHash,

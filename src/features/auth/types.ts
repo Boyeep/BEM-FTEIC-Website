@@ -33,6 +33,8 @@ export interface VerifyEmailRequest {
   code?: string;
   tokenHash?: string;
   type?: "signup" | "email";
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface VerifyEmailResponse {
