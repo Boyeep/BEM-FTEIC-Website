@@ -48,7 +48,7 @@ export default function GaleriFilters({
               }
               className="w-full appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:min-w-44 md:w-auto"
             >
-              <option value="all">All</option>
+              <option value="all">Departemen</option>
               <option value="teknik_elektro">Teknik Elektro</option>
               <option value="teknik_informatika">Teknik Informatika</option>
               <option value="sistem_informasi">Sistem Informasi</option>
@@ -69,7 +69,7 @@ export default function GaleriFilters({
               }
               className="w-full appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:min-w-36 md:w-auto"
             >
-              <option value="all">All</option>
+              <option value="all">Orientation</option>
               <option value="portrait">Portrait</option>
               <option value="landscape">Landscape</option>
               <option value="square">Square</option>

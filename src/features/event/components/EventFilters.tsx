@@ -117,7 +117,7 @@ export default function EventFilters({
               }
               className="min-w-44 appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black"
             >
-              <option value="all">All</option>
+              <option value="all">Date Range</option>
               <option value="this_week">Minggu ini</option>
               <option value="this_month">Bulan ini</option>
               <option value="this_year">Tahun ini</option>
