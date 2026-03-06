@@ -105,7 +105,7 @@ export default function EventFilters({
   return (
     <div className="mt-8 flex flex-col gap-6">
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
           <span className="text-xs font-semibold uppercase text-black/70">
             FILTER BY
           </span>
@@ -130,7 +130,7 @@ export default function EventFilters({
           </label>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
           <span className="text-xs font-semibold uppercase text-black/70">
             SORT BY
           </span>
