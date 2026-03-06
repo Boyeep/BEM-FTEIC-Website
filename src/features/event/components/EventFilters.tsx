@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { EventSortBy } from "@/features/event/types";
 
 type DateRangePreset =
@@ -49,6 +48,25 @@ function startOfYear(date: Date) {
 
 function endOfYear(date: Date) {
   return new Date(date.getFullYear(), 11, 31);
+}
+
+function DropdownChevron() {
+  return (
+    <svg
+      viewBox="0 0 12 8"
+      aria-hidden="true"
+      className="pointer-events-none absolute top-1/2 right-3 h-2 w-3 -translate-y-1/2"
+    >
+      <path
+        d="M1 1.5L6 6.5L11 1.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 export default function EventFilters({
@@ -123,10 +141,7 @@ export default function EventFilters({
               <option value="this_year">Tahun ini</option>
               <option value="custom">Custom range</option>
             </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
-            />
+            <DropdownChevron />
           </label>
         </div>
 
@@ -145,10 +160,7 @@ export default function EventFilters({
               <option value="title_asc">Alphabetical (A-Z)</option>
               <option value="title_desc">Alphabetical (Z-A)</option>
             </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
-            />
+            <DropdownChevron />
           </label>
         </div>
       </div>
