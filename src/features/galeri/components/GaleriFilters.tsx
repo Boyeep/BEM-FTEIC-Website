@@ -39,7 +39,7 @@ export default function GaleriFilters({
         <span className="text-xs font-semibold uppercase text-black/70">
           FILTER BY
         </span>
-        <div className="flex flex-row items-center gap-2 md:w-auto md:gap-3">
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center md:w-auto md:gap-3">
           <label className="relative inline-flex">
             <select
               value={department}
