@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import {
   GaleriDepartment,
   GaleriOrientation,
@@ -9,25 +10,6 @@ interface GaleriFiltersProps {
   onSortChange: (sortBy: GaleriSortBy) => void;
   onDepartmentChange: (department: GaleriDepartment) => void;
   onOrientationChange: (orientation: GaleriOrientation) => void;
-}
-
-function DropdownChevron() {
-  return (
-    <svg
-      viewBox="0 0 12 8"
-      aria-hidden="true"
-      className="pointer-events-none absolute top-1/2 right-3 h-2 w-3 -translate-y-1/2"
-    >
-      <path
-        d="M1 1.5L6 6.5L11 1.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 export default function GaleriFilters({
@@ -74,7 +56,10 @@ export default function GaleriFilters({
               <option value="teknik_biomedik">Teknik Biomedik</option>
               <option value="teknologi_informasi">Teknologi Informasi</option>
             </select>
-            <DropdownChevron />
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
+            />
           </label>
           <label className="relative inline-flex">
             <select
@@ -89,7 +74,10 @@ export default function GaleriFilters({
               <option value="landscape">Landscape</option>
               <option value="square">Square</option>
             </select>
-            <DropdownChevron />
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
+            />
           </label>
         </div>
       </div>
@@ -109,7 +97,10 @@ export default function GaleriFilters({
             <option value="title_asc">Alphabetical (A-Z)</option>
             <option value="title_desc">Alphabetical (Z-A)</option>
           </select>
-          <DropdownChevron />
+          <ChevronDown
+            size={16}
+            className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
+          />
         </label>
       </div>
     </div>
