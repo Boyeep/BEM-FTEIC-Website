@@ -36,7 +36,7 @@ export default function GaleriFilters({
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
       <div className="flex items-start gap-3 md:items-center md:gap-3">
-        <span className="text-xs font-semibold uppercase text-black/70">
+        <span className="pt-3 text-xs font-semibold uppercase text-black/70 md:pt-0">
           FILTER BY
         </span>
         <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center md:w-auto md:gap-3">
