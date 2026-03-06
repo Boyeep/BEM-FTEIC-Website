@@ -35,18 +35,18 @@ export default function GaleriFilters({
 
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-      <div className="flex items-start gap-3 sm:items-center md:gap-3">
+      <div className="flex items-center gap-3 md:gap-3">
         <span className="text-xs font-semibold uppercase text-black/70">
           FILTER BY
         </span>
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-2 md:w-auto md:gap-3">
+        <div className="flex flex-row items-center gap-2 md:w-auto md:gap-3">
           <label className="relative inline-flex">
             <select
               value={department}
               onChange={(event) =>
                 setDepartment(event.target.value as GaleriDepartment)
               }
-              className="w-[180px] appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:w-[220px]"
+              className="w-[150px] appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:w-[220px]"
             >
               <option value="all">Departemen</option>
               <option value="teknik_elektro">Teknik Elektro</option>
@@ -67,7 +67,7 @@ export default function GaleriFilters({
               onChange={(event) =>
                 setOrientation(event.target.value as GaleriOrientation)
               }
-              className="w-[180px] appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:w-[220px]"
+              className="w-[150px] appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:w-[220px]"
             >
               <option value="all">Orientation</option>
               <option value="portrait">Portrait</option>
