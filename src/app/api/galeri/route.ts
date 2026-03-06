@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get("page") ?? "1");
     const limit = Number(searchParams.get("limit") ?? "12");
     const sortBy = searchParams.get("sortBy") ?? undefined;
+    const department = searchParams.get("department") ?? undefined;
 
     const response = await galeriService.getPublicGaleri(page, limit, {
       sortBy:
@@ -16,6 +17,16 @@ export async function GET(request: NextRequest) {
         sortBy === "title_desc" ||
         sortBy === "latest"
           ? sortBy
+          : undefined,
+      department:
+        department === "teknik_elektro" ||
+        department === "teknik_informatika" ||
+        department === "sistem_informasi" ||
+        department === "teknik_komputer" ||
+        department === "teknik_biomedik" ||
+        department === "teknologi_informasi" ||
+        department === "all"
+          ? department
           : undefined,
     });
     return NextResponse.json(response);

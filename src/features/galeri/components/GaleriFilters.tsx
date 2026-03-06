@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { GaleriSortBy } from "@/features/galeri/types";
+import { GaleriDepartment, GaleriSortBy } from "@/features/galeri/types";
 
 interface GaleriFiltersProps {
   onSortChange: (sortBy: GaleriSortBy) => void;
+  onDepartmentChange: (department: GaleriDepartment) => void;
 }
 
-export default function GaleriFilters({ onSortChange }: GaleriFiltersProps) {
+export default function GaleriFilters({
+  onSortChange,
+  onDepartmentChange,
+}: GaleriFiltersProps) {
   const [sortBy, setSortBy] = useState<GaleriSortBy>("latest");
+  const [department, setDepartment] = useState<GaleriDepartment>("all");
 
   useEffect(() => {
     onSortChange(sortBy);
   }, [sortBy, onSortChange]);
+
+  useEffect(() => {
+    onDepartmentChange(department);
+  }, [department, onDepartmentChange]);
 
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
@@ -20,13 +29,27 @@ export default function GaleriFilters({ onSortChange }: GaleriFiltersProps) {
           FILTER BY
         </span>
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-2 md:w-auto md:gap-3">
-          <button
-            type="button"
-            className="flex w-full items-center justify-between border border-black/15 bg-white px-4 py-2 text-sm text-black sm:min-w-44 md:w-auto"
-          >
-            Department
-            <ChevronDown size={16} />
-          </button>
+          <label className="relative inline-flex">
+            <select
+              value={department}
+              onChange={(event) =>
+                setDepartment(event.target.value as GaleriDepartment)
+              }
+              className="w-full appearance-none border border-black/15 bg-white px-4 py-2 pr-9 text-sm text-black sm:min-w-44 md:w-auto"
+            >
+              <option value="all">All</option>
+              <option value="teknik_elektro">Teknik Elektro</option>
+              <option value="teknik_informatika">Teknik Informatika</option>
+              <option value="sistem_informasi">Sistem Informasi</option>
+              <option value="teknik_komputer">Teknik Komputer</option>
+              <option value="teknik_biomedik">Teknik Biomedik</option>
+              <option value="teknologi_informasi">Teknologi Informasi</option>
+            </select>
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
+            />
+          </label>
           <button
             type="button"
             className="flex w-full items-center justify-between border border-black/15 bg-white px-4 py-2 text-sm text-black sm:min-w-36 md:w-auto"

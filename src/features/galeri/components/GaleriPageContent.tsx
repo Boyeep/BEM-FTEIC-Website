@@ -6,15 +6,17 @@ import GaleriFilters from "@/features/galeri/components/GaleriFilters";
 import GaleriGrid from "@/features/galeri/components/GaleriGrid";
 import GaleriPagination from "@/features/galeri/components/GaleriPagination";
 import { useGaleri } from "@/features/galeri/hooks/useGaleri";
-import { GaleriSortBy } from "@/features/galeri/types";
+import { GaleriDepartment, GaleriSortBy } from "@/features/galeri/types";
 
 export default function GaleriPageContent() {
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<GaleriSortBy>("latest");
+  const [department, setDepartment] = useState<GaleriDepartment>("all");
   const { data, isPending, isError, error } = useGaleri({
     page,
     limit: 12,
     sortBy,
+    department,
   });
 
   const handleSortChange = useCallback((nextSort: GaleriSortBy) => {
@@ -22,10 +24,21 @@ export default function GaleriPageContent() {
     setPage(1);
   }, []);
 
+  const handleDepartmentChange = useCallback(
+    (nextDepartment: GaleriDepartment) => {
+      setDepartment(nextDepartment);
+      setPage(1);
+    },
+    [],
+  );
+
   return (
     <main className="min-h-screen bg-[#F3F3F3] px-6 py-16">
       <section className="mx-auto w-full max-w-6xl">
-        <GaleriFilters onSortChange={handleSortChange} />
+        <GaleriFilters
+          onSortChange={handleSortChange}
+          onDepartmentChange={handleDepartmentChange}
+        />
         {isPending ? (
           <div className="mt-8 grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, idx) => (

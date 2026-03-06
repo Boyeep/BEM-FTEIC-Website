@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import {
+  GaleriDepartment,
   GaleriDetailResponse,
   GaleriItem,
   GaleriListResponse,
@@ -45,7 +46,7 @@ export const galeriService = {
   getPublicGaleri: async (
     page: number,
     limit: number,
-    filters?: { sortBy?: GaleriSortBy },
+    filters?: { sortBy?: GaleriSortBy; department?: GaleriDepartment },
   ): Promise<GaleriListResponse> => {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
     const safeLimit =
@@ -53,12 +54,27 @@ export const galeriService = {
     const from = (safePage - 1) * safeLimit;
     const to = from + safeLimit - 1;
     const sortBy: GaleriSortBy = filters?.sortBy || "latest";
+    const department: GaleriDepartment = filters?.department || "all";
 
     let query = supabase
       .from("galeri")
       .select("id,title,link,image_url,taken_at,created_at", {
         count: "exact",
       });
+
+    if (department === "teknik_elektro") {
+      query = query.ilike("title", "%elektro%");
+    } else if (department === "teknik_informatika") {
+      query = query.ilike("title", "%informatika%");
+    } else if (department === "sistem_informasi") {
+      query = query.ilike("title", "%sistem informasi%");
+    } else if (department === "teknik_komputer") {
+      query = query.ilike("title", "%komputer%");
+    } else if (department === "teknik_biomedik") {
+      query = query.ilike("title", "%biomedik%");
+    } else if (department === "teknologi_informasi") {
+      query = query.ilike("title", "%teknologi informasi%");
+    }
 
     if (sortBy === "oldest") {
       query = query.order("taken_at", { ascending: true });

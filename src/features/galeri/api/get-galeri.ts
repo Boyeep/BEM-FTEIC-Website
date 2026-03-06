@@ -9,8 +9,9 @@ export async function getGaleri({
   page,
   limit,
   sortBy,
+  department,
 }: GaleriListParams): Promise<GaleriListResponse> {
-  return galeriService.getPublicGaleri(page, limit, { sortBy });
+  return galeriService.getPublicGaleri(page, limit, { sortBy, department });
 }
 
 export async function getGaleriById(id: string): Promise<GaleriDetailResponse> {

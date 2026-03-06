@@ -1,4 +1,12 @@
 export type GaleriSortBy = "latest" | "oldest" | "title_asc" | "title_desc";
+export type GaleriDepartment =
+  | "all"
+  | "teknik_elektro"
+  | "teknik_informatika"
+  | "sistem_informasi"
+  | "teknik_komputer"
+  | "teknik_biomedik"
+  | "teknologi_informasi";
 
 export interface GaleriItem {
   id: string;
@@ -30,6 +38,7 @@ export interface GaleriListParams {
   page: number;
   limit: number;
   sortBy?: GaleriSortBy;
+  department?: GaleriDepartment;
 }
 
 export interface UpsertGaleriPayload {
