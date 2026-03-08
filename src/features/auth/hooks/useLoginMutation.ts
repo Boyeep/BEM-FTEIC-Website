@@ -10,9 +10,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export function useLoginMutation() {
-  const router = useRouter();
+export function useLoginMutation(redirectTo: string = "/") {
   const { login } = useAuthStore();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
@@ -20,7 +20,7 @@ export function useLoginMutation() {
       login(data.user, data.accessToken);
       setToken(data.accessToken);
       toast.success("Login successful!");
-      router.push("/dashboard");
+      router.push(redirectTo);
     },
     onError: (error: unknown) => {
       const message =

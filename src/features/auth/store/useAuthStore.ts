@@ -5,6 +5,7 @@
 "use client";
 
 import { User } from "@/features/auth/types";
+import { removeToken, setToken } from "@/lib/cookies";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -26,6 +27,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       login: (user: User, accessToken: string) => {
+        setToken(accessToken);
         set({
           user,
           accessToken,
@@ -34,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        removeToken();
         set({
           user: null,
           accessToken: null,
