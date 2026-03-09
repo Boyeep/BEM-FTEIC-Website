@@ -115,10 +115,10 @@ export default function DashboardEventOverviewPage() {
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <p className="text-sm font-semibold text-black">
+                    <p className="line-clamp-2 text-sm font-semibold text-black break-words [overflow-wrap:anywhere]">
                       {event.title}
                     </p>
-                    <p className="line-clamp-1 text-xs text-black/65">
+                    <p className="line-clamp-1 text-xs text-black/65 break-words [overflow-wrap:anywhere]">
                       {event.description}
                     </p>
                   </td>

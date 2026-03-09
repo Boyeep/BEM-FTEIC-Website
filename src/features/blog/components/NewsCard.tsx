@@ -40,11 +40,11 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
 
       <article className="p-4 md:p-5">
         <h2
-          className={`line-clamp-3 font-bold leading-tight text-black ${titleClass}`}
+          className={`line-clamp-2 break-words font-bold leading-tight text-black [overflow-wrap:anywhere] ${titleClass}`}
         >
           {blog.title}
         </h2>
-        <p className="mt-3 line-clamp-3 text-[18px]/[1.45] text-black/90">
+        <p className="mt-3 line-clamp-3 break-words text-[18px]/[1.45] text-black/90 [overflow-wrap:anywhere]">
           {blog.excerpt}
         </p>
 

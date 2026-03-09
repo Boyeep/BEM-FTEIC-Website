@@ -78,11 +78,11 @@ export default function ActionTable({
                 </div>
               </td>
               <td className="px-4 py-3 align-middle">
-                <p className="text-base font-semibold text-black">
+                <p className="line-clamp-2 text-base font-semibold text-black break-words [overflow-wrap:anywhere]">
                   {row.title}
                 </p>
                 <p
-                  className="text-sm text-gray-500"
+                  className="text-sm text-gray-500 break-words [overflow-wrap:anywhere]"
                   style={
                     descriptionMaxLines
                       ? {

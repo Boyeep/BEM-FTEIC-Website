@@ -24,15 +24,15 @@ export default function EventCardGrid({ items }: EventCardGridProps) {
               />
             </div>
           </article>
-          <article>
+          <article className="min-w-0">
             <p className="text-xs font-medium text-[#1D4ED8]">
               {new Date(item.eventDate).toLocaleDateString("en-US")}
             </p>
-            <h2 className="mt-2 text-xl font-bold leading-tight text-black md:text-2xl">
+            <h2 className="mt-2 line-clamp-2 break-words text-xl font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-2xl">
               {item.title}
             </h2>
             <p
-              className="mt-2 text-lg leading-relaxed text-black/90"
+              className="mt-2 break-words text-lg leading-relaxed text-black/90 [overflow-wrap:anywhere]"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 4,

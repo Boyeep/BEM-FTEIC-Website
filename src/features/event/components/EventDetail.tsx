@@ -37,7 +37,7 @@ export default function EventDetail({ event }: EventDetailProps) {
         Kembali
       </Link>
 
-      <h1 className="mt-1 max-w-5xl text-3xl font-bold leading-tight text-black md:text-5xl">
+      <h1 className="mt-1 max-w-5xl line-clamp-2 break-words text-3xl font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-5xl">
         {event.title}
       </h1>
       <div className="mt-5 flex items-center gap-3">
@@ -56,7 +56,12 @@ export default function EventDetail({ event }: EventDetailProps) {
       </div>
       <div className="mt-5 space-y-4 text-base leading-relaxed text-black md:text-xl">
         {paragraphs.map((paragraph, index) => (
-          <p key={`${event.id}-paragraph-${index}`}>{paragraph}</p>
+          <p
+            key={`${event.id}-paragraph-${index}`}
+            className="break-words [overflow-wrap:anywhere]"
+          >
+            {paragraph}
+          </p>
         ))}
       </div>
       <p className="mt-7 text-xl text-brand-blue md:text-2xl">{eventDate}</p>
