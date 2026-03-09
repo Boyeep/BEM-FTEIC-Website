@@ -1,7 +1,6 @@
 "use client";
 
 import { MoveUpRight } from "lucide-react";
-import Link from "next/link";
 
 import { GaleriItem } from "@/features/galeri/types";
 
@@ -28,9 +27,9 @@ export default function GaleriGrid({ items }: GaleriGridProps) {
             <h2 className="line-clamp-2 text-3xl font-medium leading-tight text-black">
               {item.title}
             </h2>
-            <Link href={item.link} target="_blank" rel="noreferrer">
+            <a href={item.link} target="_blank" rel="noreferrer">
               <MoveUpRight size={17} className="mt-1 shrink-0 text-black" />
-            </Link>
+            </a>
           </div>
         </article>
       ))}

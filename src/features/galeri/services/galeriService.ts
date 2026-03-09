@@ -20,6 +20,13 @@ type GaleriRow = {
 const GALERI_BUCKET =
   process.env.NEXT_PUBLIC_SUPABASE_GALERI_BUCKET || "galeri-images";
 
+function normalizeExternalLink(rawLink: string) {
+  const trimmed = rawLink.trim();
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 function createUniqueUploadPath(
   userId: string,
   prefix: string,
@@ -36,7 +43,7 @@ function mapRow(row: GaleriRow): GaleriItem {
   return {
     id: row.id,
     title: row.title,
-    link: row.link,
+    link: normalizeExternalLink(row.link),
     imageUrl: row.image_url,
     takenAt: row.taken_at,
   };
@@ -168,7 +175,7 @@ export const galeriService = {
       .from("galeri")
       .insert({
         title: payload.title,
-        link: payload.link,
+        link: normalizeExternalLink(payload.link),
         image_url: payload.imageUrl || "",
         taken_at: payload.takenAt,
         created_by: userId,
@@ -192,7 +199,7 @@ export const galeriService = {
       .from("galeri")
       .update({
         title: payload.title,
-        link: payload.link,
+        link: normalizeExternalLink(payload.link),
         image_url: payload.imageUrl,
         taken_at: payload.takenAt,
       })
