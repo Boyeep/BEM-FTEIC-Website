@@ -1,9 +1,9 @@
+import { blogService } from "@/features/blog/services/blogService";
 import {
   BlogDetailResponse,
   BlogListParams,
   BlogListResponse,
 } from "@/features/blog/types";
-import { blogService } from "@/features/blog/services/blogService";
 
 export async function getBlogs({
   page,

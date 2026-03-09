@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 import {
   Blog,
   BlogDetailResponse,
@@ -7,6 +6,7 @@ import {
   BlogSummary,
   UpsertBlogPayload,
 } from "@/features/blog/types";
+import { supabase } from "@/lib/supabase";
 
 type BlogRow = {
   id: string;

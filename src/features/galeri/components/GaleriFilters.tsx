@@ -1,5 +1,5 @@
-import { ChevronDown } from "lucide-react";
 import { GaleriSortBy } from "@/features/galeri/types";
+import { ChevronDown } from "lucide-react";
 
 interface GaleriFiltersProps {
   onSortChange: (sortBy: GaleriSortBy) => void;

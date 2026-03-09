@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import { blogService } from "@/features/blog/services/blogService";
 import Pagination from "@/features/blog/components/Pagination";
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
+import { blogService } from "@/features/blog/services/blogService";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
 
 const PAGE_SIZE = 8;

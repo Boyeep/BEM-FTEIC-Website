@@ -2,6 +2,7 @@
 // Contains authentication-related API calls (login, signup, verify email).
 // Centralizes all auth HTTP requests.
 
+import { profileService } from "@/features/auth/services/profileService";
 import {
   LoginRequest,
   LoginResponse,
@@ -10,7 +11,6 @@ import {
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from "@/features/auth/types";
-import { profileService } from "@/features/auth/services/profileService";
 import { supabase } from "@/lib/supabase";
 
 export const authService = {

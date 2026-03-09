@@ -7,9 +7,9 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
-import { galeriService } from "@/features/galeri/services/galeriService";
 import GaleriPagination from "@/features/galeri/components/GaleriPagination";
 import { useDashboardGaleri } from "@/features/galeri/hooks/useDashboardGaleri";
+import { galeriService } from "@/features/galeri/services/galeriService";
 
 const PAGE_SIZE = 6;
 

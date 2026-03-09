@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { EventSortBy } from "@/features/event/types";
+import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type DateRangePreset =
   | "all"

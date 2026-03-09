@@ -8,8 +8,8 @@ import toast from "react-hot-toast";
 
 import Pagination from "@/features/blog/components/Pagination";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
-import { eventService } from "@/features/event/services/eventService";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
+import { eventService } from "@/features/event/services/eventService";
 
 const PAGE_SIZE = 8;
 

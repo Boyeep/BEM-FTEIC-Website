@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 import {
   EventDepartmentCategory,
   EventDetailResponse,
@@ -8,6 +7,7 @@ import {
   EventSummary,
   UpsertEventPayload,
 } from "@/features/event/types";
+import { supabase } from "@/lib/supabase";
 
 type EventRow = {
   id: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { User as SupabaseUser, type Session } from "@supabase/supabase-js";
+import { type Session, User as SupabaseUser } from "@supabase/supabase-js";
 import { useEffect } from "react";
 
 import { profileService } from "@/features/auth/services/profileService";

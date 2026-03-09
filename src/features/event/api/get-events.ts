@@ -1,9 +1,9 @@
+import { eventService } from "@/features/event/services/eventService";
 import {
   EventDetailResponse,
   EventListParams,
   EventListResponse,
 } from "@/features/event/types";
-import { eventService } from "@/features/event/services/eventService";
 
 export async function getEvents({
   page,

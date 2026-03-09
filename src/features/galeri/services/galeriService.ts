@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 import {
   GaleriDepartment,
   GaleriDetailResponse,
@@ -7,6 +6,7 @@ import {
   GaleriSortBy,
   UpsertGaleriPayload,
 } from "@/features/galeri/types";
+import { supabase } from "@/lib/supabase";
 
 type GaleriRow = {
   id: string;

@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 
 import KabinetDivisionPageContent from "@/features/kabinet/components/KabinetDivisionPageContent";
 import {
-  getKabinetDivisionBySlug,
   KABINET_DIVISIONS,
+  getKabinetDivisionBySlug,
 } from "@/features/kabinet/data";
 
 interface KabinetDivisionPageProps {
