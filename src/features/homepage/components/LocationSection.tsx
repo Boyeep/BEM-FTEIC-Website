@@ -86,6 +86,19 @@ export default function LocationSection() {
               aria-label={`Select ${department.name}`}
             />
           ))}
+
+          <div
+            className="pointer-events-none absolute z-10"
+            style={{
+              left: active.marker.x,
+              top: active.marker.y,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div className="absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1D4ED8] px-5 py-2 text-xs font-medium uppercase tracking-wide text-white md:text-sm">
+              {active.name}
+            </div>
+          </div>
         </div>
 
         <div className="overflow-hidden">

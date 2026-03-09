@@ -43,24 +43,29 @@ export default function EventSection() {
 
         <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
           {departments.map((department) => (
-            <article key={department.name}>
+            <article
+              key={department.name}
+              className="group flex h-full flex-col overflow-hidden border border-[#D9D9D9] bg-white transition-colors duration-300 hover:border-[#1D4ED8]"
+            >
               <div className="relative h-56 w-full overflow-hidden bg-white">
                 <img
                   src="/images/Event-Rektorat-Image.png"
                   alt={department.name}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="px-5 pb-1 pt-6">
-                <p className="text-3xl font-bold text-[#1D4ED8] md:text-[34px]">
+              <div className="flex flex-1 flex-col px-5 pb-6 pt-6 transition-colors duration-300 group-hover:bg-[#1D4ED8]">
+                <p className="text-3xl font-bold text-[#1D4ED8] transition-colors duration-300 group-hover:text-white md:text-[34px]">
                   {department.name}
                 </p>
-                <p className="mt-3 text-xl leading-relaxed text-black/90 md:text-2xl">
+                <p className="mt-3 line-clamp-3 text-xl leading-relaxed text-black/90 transition-colors duration-300 group-hover:text-white md:text-2xl">
                   {department.description}
                 </p>
                 <Link
                   href={department.href}
-                  className="mt-4 inline-block text-sm font-medium uppercase text-black"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-auto pt-5 inline-block text-sm font-medium uppercase text-black transition-colors duration-300 group-hover:text-white"
                 >
                   Selengkapnya ↗
                 </Link>
