@@ -17,7 +17,7 @@ export default function EventDetail({ event }: EventDetailProps) {
   const paragraphs = event.description.split("\n\n");
 
   return (
-    <article className="mx-auto w-full max-w-6xl bg-white px-6 py-6 md:py-10">
+    <article className="mx-auto w-full max-w-6xl bg-white px-6 pb-6 pt-2 md:pb-10 md:pt-4">
       <div className="relative mb-6 h-56 w-full overflow-hidden border border-brand-blue/30 md:h-[360px]">
         <img
           src={event.coverImage}
@@ -31,13 +31,13 @@ export default function EventDetail({ event }: EventDetailProps) {
 
       <Link
         href="/event"
-        className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase text-brand-blue hover:text-brand-gold md:text-base"
+        className="mb-4 inline-flex items-center gap-2 text-xs font-medium uppercase text-brand-blue hover:text-brand-gold md:text-sm"
       >
         <ArrowLeft size={18} />
         Kembali
       </Link>
 
-      <h1 className="mt-3 max-w-5xl text-4xl font-bold leading-tight text-black md:text-6xl">
+      <h1 className="mt-1 max-w-5xl text-3xl font-bold leading-tight text-black md:text-5xl">
         {event.title}
       </h1>
       <div className="mt-5 flex items-center gap-3">
@@ -52,14 +52,14 @@ export default function EventDetail({ event }: EventDetailProps) {
             {event.author.slice(0, 1)}
           </div>
         )}
-        <p className="text-xl text-black/60 md:text-2xl">{event.author}</p>
+        <p className="text-lg text-black/60 md:text-xl">{event.author}</p>
       </div>
-      <div className="mt-5 space-y-5 text-lg leading-relaxed text-black md:text-2xl">
+      <div className="mt-5 space-y-4 text-base leading-relaxed text-black md:text-xl">
         {paragraphs.map((paragraph, index) => (
           <p key={`${event.id}-paragraph-${index}`}>{paragraph}</p>
         ))}
       </div>
-      <p className="mt-7 text-2xl text-brand-blue md:text-3xl">{eventDate}</p>
+      <p className="mt-7 text-xl text-brand-blue md:text-2xl">{eventDate}</p>
     </article>
   );
 }
