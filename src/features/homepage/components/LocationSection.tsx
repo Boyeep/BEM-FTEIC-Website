@@ -125,7 +125,7 @@ export default function LocationSection() {
                   href={department.mapsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black"
+                  className="relative mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
                 >
                   View on Google Maps ↗
                 </a>

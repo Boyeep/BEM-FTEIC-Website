@@ -63,6 +63,16 @@ export default function Navbar() {
   }, []);
 
   const textClass = isTransparentState ? "text-white" : "text-black";
+  const desktopNavItemClass = clsxm(
+    "inline-flex items-center gap-1 pb-1 md:gap-2",
+    isTransparentState ? "hover:text-white/80" : "hover:text-black/70",
+  );
+  const desktopNavTextClass = clsxm(
+    "relative inline-block",
+    "after:absolute after:-bottom-[2px] after:left-0 after:h-[2px] after:w-0 after:transition-all after:duration-200",
+    "hover:after:w-full",
+    isTransparentState ? "after:bg-white" : "after:bg-black",
+  );
 
   return (
     <header
@@ -186,9 +196,9 @@ export default function Navbar() {
           >
             <Link
               href="/blog"
-              className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
+              className={clsxm(desktopNavItemClass, "uppercase")}
             >
-              Blog
+              <span className={desktopNavTextClass}>Blog</span>
             </Link>
 
             <div
@@ -196,11 +206,15 @@ export default function Navbar() {
               onMouseEnter={() => setOpenMenu("event")}
               onMouseLeave={() => setOpenMenu(null)}
             >
-              <button
-                type="button"
-                className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              >
-                EVENT
+              <button type="button" className={clsxm(desktopNavItemClass)}>
+                <span
+                  className={clsxm(
+                    desktopNavTextClass,
+                    openMenu === "event" ? "after:w-full" : "",
+                  )}
+                >
+                  EVENT
+                </span>
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
               </button>
               {openMenu === "event" ? (
@@ -215,11 +229,15 @@ export default function Navbar() {
               onMouseEnter={() => setOpenMenu("kabinet")}
               onMouseLeave={() => setOpenMenu(null)}
             >
-              <button
-                type="button"
-                className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              >
-                KABINET
+              <button type="button" className={clsxm(desktopNavItemClass)}>
+                <span
+                  className={clsxm(
+                    desktopNavTextClass,
+                    openMenu === "kabinet" ? "after:w-full" : "",
+                  )}
+                >
+                  KABINET
+                </span>
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
               </button>
               {openMenu === "kabinet" ? (
@@ -236,9 +254,9 @@ export default function Navbar() {
 
             <Link
               href="/galeri"
-              className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
+              className={clsxm(desktopNavItemClass, "uppercase")}
             >
-              Galeri
+              <span className={desktopNavTextClass}>Galeri</span>
             </Link>
           </nav>
         </div>

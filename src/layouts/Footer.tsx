@@ -51,7 +51,10 @@ export default function Footer() {
                 <ul className="space-y-2 text-white/70">
                   {pages.map((item) => (
                     <li key={item.label}>
-                      <Link href={item.href} className="hover:text-white">
+                      <Link
+                        href={item.href}
+                        className="relative inline-block transition-colors hover:text-white after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+                      >
                         {item.label}
                       </Link>
                     </li>
@@ -66,7 +69,10 @@ export default function Footer() {
                 <ul className="space-y-2 text-white/70">
                   {event.map((item) => (
                     <li key={item.label}>
-                      <Link href={item.href} className="hover:text-white">
+                      <Link
+                        href={item.href}
+                        className="relative inline-block transition-colors hover:text-white after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+                      >
                         {item.label}
                       </Link>
                     </li>

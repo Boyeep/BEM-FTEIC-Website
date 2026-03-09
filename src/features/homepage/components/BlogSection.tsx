@@ -19,7 +19,7 @@ export default function BlogSection() {
           </h3>
           <Link
             href="/blog"
-            className="text-sm font-medium uppercase hover:text-white/80 md:text-base"
+            className="relative text-sm font-medium uppercase hover:text-white/80 after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full md:text-base"
           >
             LIHAT SEMUA ↗
           </Link>
@@ -99,7 +99,7 @@ export default function BlogSection() {
                     </p>
                     <Link
                       href={`/blog/${blog.id}`}
-                      className="mt-2 inline-block text-sm font-medium uppercase text-white/95"
+                      className="relative mt-2 inline-block text-sm font-medium uppercase text-white/95 after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
                     >
                       BACA ↗
                     </Link>

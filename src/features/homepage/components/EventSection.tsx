@@ -65,7 +65,7 @@ export default function EventSection() {
                   href={department.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-auto pt-5 inline-block text-sm font-medium uppercase text-black transition-colors duration-300 group-hover:text-white"
+                  className="relative mt-auto inline-block self-start pt-5 text-sm font-medium uppercase text-black transition-colors duration-300 group-hover:text-white after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
                 >
                   Selengkapnya ↗
                 </Link>
