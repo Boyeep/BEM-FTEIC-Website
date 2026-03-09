@@ -22,8 +22,8 @@ export default function LoginForm() {
     },
   });
 
-  // Auto redirect to dashboard-admin after login
-  const { mutate: login, isPending } = useLoginMutation("/dashboard-admin");
+  // Auto redirect to dashboard after login
+  const { mutate: login, isPending } = useLoginMutation("/dashboard");
 
   const onSubmit = (data: LoginRequest) => {
     login(data);
