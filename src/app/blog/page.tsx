@@ -19,7 +19,7 @@ export default function BlogPage() {
   });
 
   return (
-    <main className="min-h-screen bg-white px-4 py-16">
+    <main className="min-h-screen bg-white px-4 pb-16 pt-32">
       <section className="mx-auto w-full max-w-6xl">
         <BlogPageHeader />
 

@@ -14,7 +14,7 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
     variant === "small" ? "h-44 md:h-48" : "h-56 md:h-64";
 
   const titleClass =
-    variant === "small" ? "text-5xl" : "text-[46px] md:text-[54px]";
+    variant === "small" ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
 
   const cardHeightClass = variant === "small" ? "" : "h-full";
 
@@ -40,7 +40,7 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
 
       <article className="p-4 md:p-5">
         <h2
-          className={`line-clamp-2 font-bold leading-tight text-black ${titleClass}`}
+          className={`line-clamp-3 font-bold leading-tight text-black ${titleClass}`}
         >
           {blog.title}
         </h2>

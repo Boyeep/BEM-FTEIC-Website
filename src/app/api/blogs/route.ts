@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getPaginatedBlogs } from "@/features/blog/api/mock-blogs";
+import { blogService } from "@/features/blog/services/blogService";
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const page = Number(searchParams.get("page") ?? "1");
-  const limit = Number(searchParams.get("limit") ?? "6");
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const page = Number(searchParams.get("page") ?? "1");
+    const limit = Number(searchParams.get("limit") ?? "6");
 
-  const response = getPaginatedBlogs(page, limit);
-  return NextResponse.json(response);
+    const response = await blogService.getPublicBlogs(page, limit);
+    return NextResponse.json(response);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to fetch blogs.";
+    return NextResponse.json({ message }, { status: 500 });
+  }
 }

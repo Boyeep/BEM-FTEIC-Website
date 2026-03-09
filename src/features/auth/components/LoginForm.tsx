@@ -17,13 +17,13 @@ export default function LoginForm() {
   const methods = useForm<LoginRequest>({
     mode: "onBlur",
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  // Auto redirect to dashboard-admin after login
-  const { mutate: login, isPending } = useLoginMutation("/dashboard-admin");
+  // Auto redirect to dashboard after login
+  const { mutate: login, isPending } = useLoginMutation("/dashboard");
 
   const onSubmit = (data: LoginRequest) => {
     login(data);
@@ -46,17 +46,17 @@ export default function LoginForm() {
           className="space-y-4 text-left"
         >
           <Input
-            id="username"
-            label="USERNAME"
-            type="text"
-            placeholder="Boy Steven"
+            id="email"
+            label="EMAIL"
+            type="email"
+            placeholder="boysteven@gmail.com"
             className="bg-[#D9D9D9] border-none rounded-lg"
             labelClassName="text-[10px] font-bold text-gray-400"
             validation={{
-              required: "Username is required",
-              minLength: {
-                value: 3,
-                message: "Username must be at least 3 characters",
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Invalid email format",
               },
             }}
           />

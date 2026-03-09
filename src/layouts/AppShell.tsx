@@ -1,8 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
+import { visitorService } from "@/features/analytics/services/visitorService";
 import Footer from "@/layouts/Footer";
 import Navbar from "@/layouts/Navbar";
 
@@ -17,25 +18,26 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthRoute = AUTH_ROUTES.has(pathname);
   const isReadBlogPage = pathname.startsWith("/blog/");
-  const isHomepage = pathname === "/";
-  const isDepartemenPage = pathname.startsWith("/departemen");
-  const isGaleriPage = pathname.startsWith("/galeri");
+  const isReadEventPage = pathname.startsWith("/event/read/");
+  const isKabinetStrukturPage = pathname === "/kabinet/struktur";
+  const isDashboardPage = pathname.startsWith("/dashboard");
 
-  const hideNavbar = isAuthRoute;
-  const hideFooter = isAuthRoute || isReadBlogPage;
-  const needsNavbarSpacer = !hideNavbar && !isHomepage;
-  const spacerBackground =
-    isDepartemenPage || isGaleriPage ? "#F3F3F3" : "#FFFFFF";
+  const hideNavbar =
+    isAuthRoute || isReadBlogPage || isReadEventPage || isDashboardPage;
+  const hideFooter =
+    isAuthRoute ||
+    isReadBlogPage ||
+    isReadEventPage ||
+    isKabinetStrukturPage ||
+    isDashboardPage;
+
+  useEffect(() => {
+    void visitorService.trackVisit(pathname);
+  }, [pathname]);
 
   return (
     <>
       {!hideNavbar ? <Navbar /> : null}
-      {needsNavbarSpacer ? (
-        <div
-          className="h-[76px]"
-          style={{ backgroundColor: spacerBackground }}
-        />
-      ) : null}
       {children}
       {!hideFooter ? <Footer /> : null}
     </>

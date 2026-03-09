@@ -5,11 +5,12 @@ export interface User {
   id: string;
   email: string;
   username: string;
+  avatarUrl?: string | null;
   createdAt: string;
 }
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -29,7 +30,11 @@ export interface SignupResponse {
 }
 
 export interface VerifyEmailRequest {
-  token: string;
+  code?: string;
+  tokenHash?: string;
+  type?: "signup" | "email";
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface VerifyEmailResponse {

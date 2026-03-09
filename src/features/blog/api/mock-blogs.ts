@@ -19,6 +19,7 @@ const MOCK_BLOGS: Blog[] = Array.from({ length: 18 }, (_, index) => ({
   coverImage: BLOG_IMAGE,
   publishedAt: new Date(2025, 7, 11 + index).toISOString(),
   readingTimeMinutes: 8,
+  status: "PUBLISHED",
   content: BASE_CONTENT,
 }));
 

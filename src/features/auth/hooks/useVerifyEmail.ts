@@ -5,13 +5,11 @@
 import { authService } from "@/features/auth/services/authService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { VerifyEmailRequest } from "@/features/auth/types";
+import { setToken } from "@/lib/cookies";
 import { useMutation } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export function useVerifyEmail() {
-  const router = useRouter();
   const { login } = useAuthStore();
 
   return useMutation({
@@ -19,14 +17,14 @@ export function useVerifyEmail() {
       authService.verifyEmail(payload),
     onSuccess: (data) => {
       login(data.user, data.accessToken);
+      setToken(data.accessToken);
       toast.success("Email verified successfully!");
-      router.push("/");
     },
     onError: (error: unknown) => {
-      const message = isAxiosError<{ message?: string }>(error)
-        ? error.response?.data?.message ||
-          "Email verification failed. Please try again."
-        : "Email verification failed. Please try again.";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Email verification failed. Please try again.";
       toast.error(message);
     },
   });

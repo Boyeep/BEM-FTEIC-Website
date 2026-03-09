@@ -2,46 +2,51 @@
 
 import { ChevronDown, ChevronUp, MoveUpRight } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { EVENT_NAV_ITEMS } from "@/features/event/department";
 import clsxm from "@/lib/clsxm";
 
-const eventItems = [
-  "FTEIC",
-  "TEKNIK ELEKTRO",
-  "TEKNIK INFORMATIKA",
-  "SISTEM INFORMASI",
-  "TEKNIK KOMPUTER",
-  "TEKNIK BIOMEDIK",
-  "TEKNOLOGI INFORMASI",
-];
-
 const kabinetItems = [
-  "STRUKTUR",
-  "BPH",
-  "ORGANIZATIONAL AFFAIRS",
-  "DEPARTMENT SECRETARY",
-  "INTERNAL AFFAIRS",
-  "EXTERNAL AFFAIRS",
-  "ENTREPRENEURSHIP",
-  "RESOURCE DEVELOPMENT",
-  "SOCIAL COMMUNITY AFFAIRS",
-  "RESEARCH TECHNOLOGY",
+  { label: "STRUKTUR", href: "/kabinet/struktur" },
+  { label: "BPH", href: "/kabinet/bph" },
+  { label: "ORGANIZATIONAL AFFAIRS", href: "/kabinet/organizational-affairs" },
+  { label: "DEPARTMENT SECRETARY", href: "/kabinet/department-secretary" },
+  { label: "INTERNAL AFFAIRS", href: "/kabinet/internal-affairs" },
+  { label: "EXTERNAL AFFAIRS", href: "/kabinet/external-affairs" },
+  { label: "ENTREPRENEURSHIP", href: "/kabinet/entrepreneurship" },
+  {
+    label: "STUDENT RESOURCE DEVELOPMENT",
+    href: "/kabinet/student-resource-development",
+  },
+  {
+    label: "SOCIAL AFFAIRS AND COMMUNITY",
+    href: "/kabinet/social-affairs-and-community",
+  },
+  {
+    label: "RESEARCH AND TECHNOLOGY",
+    href: "/kabinet/research-and-technology",
+  },
 ];
 
-function DropdownList({ items }: { items: string[] }) {
+function DropdownList({
+  items,
+}: {
+  items: { label: string; href: string }[];
+}) {
   return (
     <div className="w-[320px] border border-black/20 bg-[#FCD704]">
       {items.map((item) => (
         <Link
-          key={item}
-          href="#"
+          key={item.label}
+          href={item.href}
           className={clsxm(
             "flex items-center justify-between border-b border-black/20 px-5 py-3 text-sm text-black",
             "transition-colors hover:bg-[#FCEABF] last:border-b-0",
           )}
         >
-          <span>{item}</span>
+          <span>{item.label}</span>
           <MoveUpRight size={18} />
         </Link>
       ))}
@@ -50,12 +55,14 @@ function DropdownList({ items }: { items: string[] }) {
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<"event" | "kabinet" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileEventOpen, setMobileEventOpen] = useState(false);
   const [mobileKabinetOpen, setMobileKabinetOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const isTransparentState = isScrolled;
+  const isHomepage = pathname === "/";
+  const isTransparentState = isHomepage && !isScrolled;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 12);
@@ -65,11 +72,16 @@ export default function Navbar() {
   }, []);
 
   const textClass = isTransparentState ? "text-white" : "text-black";
-  const textOutlineStyle = isTransparentState
-    ? ({
-        textShadow: "-0.6px 0 #000, 0 0.6px #000, 0.6px 0 #000, 0 -0.6px #000",
-      } as const)
-    : undefined;
+  const desktopNavItemClass = clsxm(
+    "inline-flex items-center gap-1 pb-1 md:gap-2",
+    isTransparentState ? "hover:text-white/80" : "hover:text-black/70",
+  );
+  const desktopNavTextClass = clsxm(
+    "relative inline-block",
+    "after:absolute after:-bottom-[2px] after:left-0 after:h-[2px] after:w-0 after:transition-all after:duration-200",
+    "hover:after:w-full",
+    isTransparentState ? "after:bg-white" : "after:bg-black",
+  );
 
   return (
     <header
@@ -83,7 +95,6 @@ export default function Navbar() {
           <Link
             href="/"
             className={`text-3xl font-extrabold leading-none md:text-4xl ${textClass}`}
-            style={textOutlineStyle}
           >
             BEM FTEIC
           </Link>
@@ -93,7 +104,6 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className={`inline-flex items-center gap-1 text-sm font-semibold uppercase ${textClass} ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
             >
               Menu
               {mobileMenuOpen ? (
@@ -132,14 +142,14 @@ export default function Navbar() {
                   </button>
                   {mobileEventOpen ? (
                     <div className="border-t border-black/20 bg-[#FCD704]">
-                      {eventItems.map((item) => (
+                      {EVENT_NAV_ITEMS.map((item) => (
                         <Link
-                          key={`mobile-event-${item}`}
-                          href="#"
+                          key={`mobile-event-${item.label}`}
+                          href={item.href}
                           className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase transition-colors hover:bg-[#FCEABF] active:bg-[#FCEABF] last:border-b-0"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {item}
+                          {item.label}
                         </Link>
                       ))}
                     </div>
@@ -168,12 +178,12 @@ export default function Navbar() {
                     <div className="border-t border-black/20 bg-[#FCD704]">
                       {kabinetItems.map((item) => (
                         <Link
-                          key={`mobile-kabinet-${item}`}
-                          href="#"
+                          key={`mobile-kabinet-${item.label}`}
+                          href={item.href}
                           className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase transition-colors hover:bg-[#FCEABF] active:bg-[#FCEABF] last:border-b-0"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {item}
+                          {item.label}
                         </Link>
                       ))}
                     </div>
@@ -195,10 +205,9 @@ export default function Navbar() {
           >
             <Link
               href="/blog"
-              className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
+              className={clsxm(desktopNavItemClass, "uppercase")}
             >
-              Blog
+              <span className={desktopNavTextClass}>Blog</span>
             </Link>
 
             <div
@@ -206,17 +215,20 @@ export default function Navbar() {
               onMouseEnter={() => setOpenMenu("event")}
               onMouseLeave={() => setOpenMenu(null)}
             >
-              <button
-                type="button"
-                className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-                style={textOutlineStyle}
-              >
-                EVENT
+              <button type="button" className={clsxm(desktopNavItemClass)}>
+                <span
+                  className={clsxm(
+                    desktopNavTextClass,
+                    openMenu === "event" ? "after:w-full" : "",
+                  )}
+                >
+                  EVENT
+                </span>
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
               </button>
               {openMenu === "event" ? (
                 <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
-                  <DropdownList items={eventItems} />
+                  <DropdownList items={EVENT_NAV_ITEMS} />
                 </div>
               ) : null}
             </div>
@@ -226,12 +238,15 @@ export default function Navbar() {
               onMouseEnter={() => setOpenMenu("kabinet")}
               onMouseLeave={() => setOpenMenu(null)}
             >
-              <button
-                type="button"
-                className={`inline-flex items-center gap-1 md:gap-2 ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-                style={textOutlineStyle}
-              >
-                KABINET
+              <button type="button" className={clsxm(desktopNavItemClass)}>
+                <span
+                  className={clsxm(
+                    desktopNavTextClass,
+                    openMenu === "kabinet" ? "after:w-full" : "",
+                  )}
+                >
+                  KABINET
+                </span>
                 <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
               </button>
               {openMenu === "kabinet" ? (
@@ -243,10 +258,9 @@ export default function Navbar() {
 
             <Link
               href="/galeri"
-              className={`uppercase ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
-              style={textOutlineStyle}
+              className={clsxm(desktopNavItemClass, "uppercase")}
             >
-              Galeri
+              <span className={desktopNavTextClass}>Galeri</span>
             </Link>
           </nav>
         </div>

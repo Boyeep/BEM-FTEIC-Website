@@ -8,14 +8,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const pages = ["Blog", "Event", "Kabinet", "Galeri"];
-const departemen = [
-  "Teknik Elektro",
-  "Teknik Informatika",
-  "Sistem Informasi",
-  "Teknik Komputer",
-  "Teknik Biomedik",
-  "Teknologi Informasi",
+const pages = [
+  { label: "Blog", href: "/blog" },
+  { label: "Event", href: "/event" },
+  { label: "Kabinet", href: "/#kabinet" },
+  { label: "Galeri", href: "/galeri" },
+];
+const event = [
+  { label: "Teknik Elektro", href: "/event/teknik-elektro" },
+  { label: "Teknik Informatika", href: "/event/teknik-informatika" },
+  { label: "Sistem Informasi", href: "/event/sistem-informasi" },
+  { label: "Teknik Komputer", href: "/event/teknik-komputer" },
+  { label: "Teknik Biomedik", href: "/event/teknik-biomedik" },
+  { label: "Teknologi Informasi", href: "/event/teknologi-informasi" },
 ];
 
 export default function Footer() {
@@ -45,9 +50,12 @@ export default function Footer() {
                 </h3>
                 <ul className="space-y-2 text-white/70">
                   {pages.map((item) => (
-                    <li key={item}>
-                      <Link href="#" className="hover:text-white">
-                        {item}
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className="relative inline-block transition-colors hover:text-white after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+                      >
+                        {item.label}
                       </Link>
                     </li>
                   ))}
@@ -59,8 +67,15 @@ export default function Footer() {
                   Departemen
                 </h3>
                 <ul className="space-y-2 text-white/70">
-                  {departemen.map((item) => (
-                    <li key={item}>{item}</li>
+                  {event.map((item) => (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className="relative inline-block transition-colors hover:text-white after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
