@@ -25,3 +25,26 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+@layer utilities {
+  .text-metallic {
+    background-image: linear-gradient(
+      120deg,
+      #f8f7f2 0%,
+      #dedbd0 18%,
+      #ffffff 34%,
+      #b8b3a7 48%,
+      #f6f2e5 63%,
+      #928c7f 78%,
+      #fffef9 90%,
+      #c9c4b6 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.22),
+      0 8px 20px rgba(0, 0, 0, 0.34);
+  }
+}
