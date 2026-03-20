@@ -23,6 +23,7 @@ type BlogRow = {
 };
 
 type ProfileRow = {
+  id: string;
   username: string;
   avatar_url?: string | null;
 };
@@ -80,13 +81,50 @@ async function resolveAuthorProfile(createdBy?: string | null) {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("username,avatar_url")
+    .select("id,username,avatar_url")
     .eq("id", createdBy)
     .limit(1)
     .maybeSingle();
 
   if (error || !data) return null;
   return data as ProfileRow;
+}
+
+async function resolveAuthorProfiles(items: BlogSummary[]) {
+  const createdByIds = items
+    .map((item) => item.createdBy)
+    .filter((createdBy): createdBy is string => Boolean(createdBy));
+
+  if (createdByIds.length === 0) {
+    return items;
+  }
+
+  const uniqueIds = Array.from(new Set(createdByIds));
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id,username,avatar_url")
+    .in("id", uniqueIds);
+
+  if (error || !data) {
+    return items;
+  }
+
+  const profileMap = new Map(
+    ((data || []) as ProfileRow[]).map((profile) => [profile.id, profile]),
+  );
+
+  return items.map((item) => {
+    const profile = item.createdBy ? profileMap.get(item.createdBy) : undefined;
+    if (!profile) {
+      return item;
+    }
+
+    return {
+      ...item,
+      author: profile.username || item.author,
+      authorAvatarUrl: profile.avatar_url || null,
+    };
+  });
 }
 
 export const blogService = {
@@ -118,8 +156,12 @@ export const blogService = {
     const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
     const normalizedPage = Math.min(safePage, totalPages);
 
+    const items = await resolveAuthorProfiles(
+      ((data || []) as BlogRow[]).map(mapRowToSummary),
+    );
+
     return {
-      items: ((data || []) as BlogRow[]).map(mapRowToSummary),
+      items,
       pagination: {
         page: normalizedPage,
         limit: safeLimit,
@@ -186,8 +228,12 @@ export const blogService = {
     const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
     const normalizedPage = Math.min(safePage, totalPages);
 
+    const items = await resolveAuthorProfiles(
+      ((data || []) as BlogRow[]).map(mapRowToSummary),
+    );
+
     return {
-      items: ((data || []) as BlogRow[]).map(mapRowToSummary),
+      items,
       pagination: {
         page: normalizedPage,
         limit: safeLimit,
@@ -257,7 +303,7 @@ export const blogService = {
 
   createBlog: async (
     payload: UpsertBlogPayload,
-    authorEmail: string,
+    authorName: string,
     createdBy: string,
   ): Promise<BlogDetailResponse> => {
     const now = new Date().toISOString();
@@ -266,7 +312,7 @@ export const blogService = {
       .insert({
         title: payload.title,
         excerpt: buildExcerpt(payload.content),
-        author: authorEmail,
+        author: authorName.trim(),
         category: payload.category,
         cover_image: payload.coverImage || "",
         content: payload.content,

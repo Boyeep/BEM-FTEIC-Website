@@ -89,7 +89,7 @@ export default function DashboardBlogForm({
             status,
             coverImage: finalCoverImage,
           },
-          user.email,
+          user.username || user.email,
           user.id,
         );
         toast.success("Blog berhasil dibuat.");

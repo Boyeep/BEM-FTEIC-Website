@@ -248,7 +248,52 @@ create policy "profiles_update_own" on public.profiles
 for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
 ```
 
-### 3. Blogs table
+### 3. Signup whitelist
+```sql
+create table if not exists public.signup_whitelist (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists signup_whitelist_email_unique
+on public.signup_whitelist (lower(email));
+
+alter table public.signup_whitelist enable row level security;
+
+create policy "signup_whitelist_auth_read" on public.signup_whitelist
+for select to authenticated using (true);
+
+create policy "signup_whitelist_auth_insert" on public.signup_whitelist
+for insert to authenticated with check (auth.uid() = created_by);
+
+create policy "signup_whitelist_auth_delete" on public.signup_whitelist
+for delete to authenticated using (true);
+
+create or replace function public.is_signup_email_whitelisted(candidate_email text)
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.signup_whitelist
+    where lower(email) = lower(trim(candidate_email))
+  );
+$$;
+
+grant execute on function public.is_signup_email_whitelisted(text)
+to anon, authenticated;
+
+insert into public.signup_whitelist (email)
+values ('admin@example.com')
+on conflict do nothing;
+```
+
+### 4. Blogs table
 ```sql
 create table if not exists public.blogs (
   id uuid primary key default gen_random_uuid(),
@@ -280,7 +325,7 @@ create policy "blogs_auth_update" on public.blogs
 for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
 ```
 
-### 4. Events table
+### 5. Events table
 ```sql
 create table if not exists public.events (
   id uuid primary key default gen_random_uuid(),
@@ -308,7 +353,7 @@ create policy "events_auth_update" on public.events
 for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
 ```
 
-### 5. Galeri table
+### 6. Galeri table
 ```sql
 create table if not exists public.galeri (
   id uuid primary key default gen_random_uuid(),
@@ -333,7 +378,7 @@ create policy "galeri_auth_update" on public.galeri
 for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
 ```
 
-### 6. Storage buckets
+### 7. Storage buckets
 Buat bucket public berikut:
 - `avatars`
 - `blog-covers`
@@ -345,7 +390,7 @@ Untuk tiap bucket, gunakan policy:
 - authenticated `insert/update` hanya di folder miliknya:
   - `(storage.foldername(name))[1] = auth.uid()::text`
 
-### 7. Visitor analytics table (dashboard Visitors card)
+### 8. Visitor analytics table (dashboard Visitors card)
 ```sql
 create table if not exists public.site_visitors (
   id text primary key,

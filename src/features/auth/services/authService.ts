@@ -3,6 +3,7 @@
 // Centralizes all auth HTTP requests.
 
 import { profileService } from "@/features/auth/services/profileService";
+import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import {
   LoginRequest,
   LoginResponse,
@@ -53,13 +54,25 @@ export const authService = {
   },
 
   signup: async (payload: SignupRequest): Promise<SignupResponse> => {
+    const normalizedEmail = signupWhitelistService.normalizeEmail(
+      payload.email,
+    );
+    const isWhitelisted =
+      await signupWhitelistService.isEmailWhitelisted(normalizedEmail);
+
+    if (!isWhitelisted) {
+      throw new Error(
+        "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses signup.",
+      );
+    }
+
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
     const { data, error } = await supabase.auth.signUp({
-      email: payload.email,
+      email: normalizedEmail,
       password: payload.password,
       options: {
         data: {
-          username: payload.username,
+          username: payload.username.trim(),
         },
         emailRedirectTo: `${siteUrl}/confirm-email`,
       },
