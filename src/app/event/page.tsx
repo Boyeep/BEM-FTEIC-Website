@@ -1,5 +1,5 @@
-import EventPageContent from "@/features/event/components/EventPageContent";
+import { redirect } from "next/navigation";
 
 export default function EventPage() {
-  return <EventPageContent />;
+  redirect("/event/fteic");
 }

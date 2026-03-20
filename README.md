@@ -426,4 +426,9 @@ using (true);
 2. Tambahkan production URL ke Supabase Auth Redirect URLs
 3. Redeploy
 
+## Opsional: Backfill creator username
+Kalau ada data blog/event lama yang kolom `author`-nya masih berisi email, jalankan script berikut di Supabase SQL Editor:
+
+- [docs/sql/backfill-creator-usernames.sql](docs/sql/backfill-creator-usernames.sql)
+
 (18/03/2026)

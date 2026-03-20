@@ -16,7 +16,7 @@ import { departments } from "@/features/homepage/data/departments";
 
 const pages = [
   { label: "Blog", href: "/blog" },
-  { label: "Event", href: "/event" },
+  { label: "Event", href: "/event/fteic" },
   { label: "Kabinet", href: "/#kabinet" },
   { label: "Galeri", href: "/galeri" },
 ];

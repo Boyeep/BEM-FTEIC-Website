@@ -6,6 +6,7 @@ import EventCardGrid from "@/features/event/components/EventCardGrid";
 import EventFilters from "@/features/event/components/EventFilters";
 import EventHeader from "@/features/event/components/EventHeader";
 import EventPagination from "@/features/event/components/EventPagination";
+import { getEventDepartmentByCategory } from "@/features/event/department";
 import { useEvents } from "@/features/event/hooks/useEvents";
 import { EventDepartmentCategory, EventSortBy } from "@/features/event/types";
 
@@ -16,6 +17,7 @@ interface EventPageContentProps {
 export default function EventPageContent({
   initialDepartment,
 }: EventPageContentProps) {
+  const headerDepartment = getEventDepartmentByCategory(initialDepartment);
   const [page, setPage] = useState(1);
   const [dateRange, setDateRange] = useState<{
     startDate?: string;
@@ -47,7 +49,7 @@ export default function EventPageContent({
   return (
     <main className="min-h-screen bg-[#F3F3F3] px-6 pb-16 pt-32">
       <section className="mx-auto w-full max-w-6xl">
-        <EventHeader />
+        <EventHeader department={headerDepartment} />
         <EventFilters
           onDateRangeChange={handleDateRangeChange}
           onSortChange={handleSortChange}

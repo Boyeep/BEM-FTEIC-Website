@@ -1,6 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+import {
+  getEventDepartmentByCategory,
+  isEventDepartmentCategory,
+} from "@/features/event/department";
 import { EventSummary } from "@/features/event/types";
 
 interface EventDetailProps {
@@ -8,6 +12,9 @@ interface EventDetailProps {
 }
 
 export default function EventDetail({ event }: EventDetailProps) {
+  const department = getEventDepartmentByCategory(
+    isEventDepartmentCategory(event.category) ? event.category : undefined,
+  );
   const eventDate = new Date(event.eventDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -30,7 +37,7 @@ export default function EventDetail({ event }: EventDetailProps) {
       </div>
 
       <Link
-        href="/event"
+        href={`/event/${department.slug}`}
         className="mb-4 inline-flex items-center gap-2 text-xs font-medium uppercase text-brand-blue hover:text-brand-gold md:text-sm"
       >
         <ArrowLeft size={18} />
