@@ -21,9 +21,11 @@ export default function GlobalError({
     <html>
       <body>
         <ErrorPanel
-          title="Critical Error"
-          description="A critical error occurred at the application root level."
-          action={<ErrorRetryButton onRetry={() => reset()} />}
+          title="Error"
+          description="500 Internal Service Error"
+          action={
+            <ErrorRetryButton onRetry={() => reset()} label="Try Again" />
+          }
         />
       </body>
     </html>

@@ -37,7 +37,7 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
         Kembali
       </Link>
 
-      <h1 className="mt-1 max-w-5xl line-clamp-2 break-words text-3xl font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-5xl">
+      <h1 className="mt-1 max-w-5xl break-words pb-1 text-3xl font-bold leading-[1.08] text-black [overflow-wrap:anywhere] md:text-5xl">
         {blog.title}
       </h1>
       <div className="mt-5 flex items-center gap-3">

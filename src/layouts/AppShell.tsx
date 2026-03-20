@@ -35,6 +35,31 @@ export default function AppShell({ children }: { children: ReactNode }) {
     void visitorService.trackVisit(pathname);
   }, [pathname]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [pathname]);
+
   return (
     <>
       {!hideNavbar ? <Navbar /> : null}

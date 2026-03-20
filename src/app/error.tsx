@@ -19,14 +19,10 @@ export default function ErrorBoundary({
 
   return (
     <ErrorPanel
-      title="Something went wrong!"
-      description="A rendering error occurred in this section of the application."
-      containerClassName="flex min-h-[400px] w-full flex-col items-center justify-center p-4 text-center"
-      cardClassName="flex max-w-md flex-col items-center rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200"
+      title="Error"
+      description="500 Internal Service Error"
       titleAs="h2"
-      iconSize={32}
-      actionSpacingClassName="mb-6"
-      action={<ErrorRetryButton onRetry={() => reset()} />}
+      action={<ErrorRetryButton onRetry={() => reset()} label="Try Again" />}
     />
   );
 }

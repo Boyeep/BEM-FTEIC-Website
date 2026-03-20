@@ -1,11 +1,9 @@
-// untuk SEO
-
 # *
 User-agent: *
 Allow: /
 
 # Host
-Host: https://example.com
+Host: https://bem-fteic-playground.vercel.app
 
 # Sitemaps
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://bem-fteic-playground.vercel.app/sitemap.xml

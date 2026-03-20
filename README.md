@@ -227,156 +227,29 @@ Copy ini ke `Authentication > Email Templates > Confirm signup`:
 ```
 
 ### 2. Profiles table
-```sql
-create table if not exists public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
-  email text not null,
-  username text not null,
-  avatar_url text,
-  updated_at timestamptz not null default now()
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-alter table public.profiles enable row level security;
-
-create policy "profiles_select_own" on public.profiles
-for select to authenticated using (auth.uid() = id);
-
-create policy "profiles_insert_own" on public.profiles
-for insert to authenticated with check (auth.uid() = id);
-
-create policy "profiles_update_own" on public.profiles
-for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
-```
+- [docs/sql/setup-profiles.sql](docs/sql/setup-profiles.sql)
 
 ### 3. Signup whitelist
-```sql
-create table if not exists public.signup_whitelist (
-  id uuid primary key default gen_random_uuid(),
-  email text not null,
-  created_by uuid references auth.users(id) on delete set null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-create unique index if not exists signup_whitelist_email_unique
-on public.signup_whitelist (lower(email));
-
-alter table public.signup_whitelist enable row level security;
-
-create policy "signup_whitelist_auth_read" on public.signup_whitelist
-for select to authenticated using (true);
-
-create policy "signup_whitelist_auth_insert" on public.signup_whitelist
-for insert to authenticated with check (auth.uid() = created_by);
-
-create policy "signup_whitelist_auth_delete" on public.signup_whitelist
-for delete to authenticated using (true);
-
-create or replace function public.is_signup_email_whitelisted(candidate_email text)
-returns boolean
-language sql
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.signup_whitelist
-    where lower(email) = lower(trim(candidate_email))
-  );
-$$;
-
-grant execute on function public.is_signup_email_whitelisted(text)
-to anon, authenticated;
-
-insert into public.signup_whitelist (email)
-values ('admin@example.com')
-on conflict do nothing;
-```
+- [docs/sql/setup-signup-whitelist.sql](docs/sql/setup-signup-whitelist.sql)
 
 ### 4. Blogs table
-```sql
-create table if not exists public.blogs (
-  id uuid primary key default gen_random_uuid(),
-  title text not null,
-  excerpt text not null,
-  author text not null,
-  category text not null,
-  cover_image text not null,
-  content text not null,
-  status text not null default 'PUBLISHED',
-  published_at timestamptz not null default now(),
-  created_by uuid references auth.users(id) on delete set null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-alter table public.blogs enable row level security;
-
-create policy "blogs_public_read_published" on public.blogs
-for select to public using (status = 'PUBLISHED');
-
-create policy "blogs_auth_read_all" on public.blogs
-for select to authenticated using (true);
-
-create policy "blogs_auth_insert" on public.blogs
-for insert to authenticated with check (auth.uid() = created_by);
-
-create policy "blogs_auth_update" on public.blogs
-for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
-```
+- [docs/sql/setup-blogs.sql](docs/sql/setup-blogs.sql)
 
 ### 5. Events table
-```sql
-create table if not exists public.events (
-  id uuid primary key default gen_random_uuid(),
-  title text not null,
-  description text not null,
-  author text not null,
-  category text not null,
-  cover_image text not null,
-  event_date date not null,
-  status text not null default 'ONGOING',
-  created_by uuid references auth.users(id) on delete set null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-alter table public.events enable row level security;
-
-create policy "events_public_read" on public.events
-for select to public using (true);
-
-create policy "events_auth_insert" on public.events
-for insert to authenticated with check (auth.uid() = created_by);
-
-create policy "events_auth_update" on public.events
-for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
-```
+- [docs/sql/setup-events.sql](docs/sql/setup-events.sql)
 
 ### 6. Galeri table
-```sql
-create table if not exists public.galeri (
-  id uuid primary key default gen_random_uuid(),
-  title text not null,
-  link text not null,
-  image_url text not null,
-  taken_at date not null,
-  created_by uuid references auth.users(id) on delete set null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-alter table public.galeri enable row level security;
-
-create policy "galeri_public_read" on public.galeri
-for select to public using (true);
-
-create policy "galeri_auth_insert" on public.galeri
-for insert to authenticated with check (auth.uid() = created_by);
-
-create policy "galeri_auth_update" on public.galeri
-for update to authenticated using (auth.uid() = created_by) with check (auth.uid() = created_by);
-```
+- [docs/sql/setup-galeri.sql](docs/sql/setup-galeri.sql)
 
 ### 7. Storage buckets
 Buat bucket public berikut:
@@ -391,35 +264,9 @@ Untuk tiap bucket, gunakan policy:
   - `(storage.foldername(name))[1] = auth.uid()::text`
 
 ### 8. Visitor analytics table (dashboard Visitors card)
-```sql
-create table if not exists public.site_visitors (
-  id text primary key,
-  last_seen_at timestamptz not null default now(),
-  last_path text,
-  user_agent text
-);
+Jalankan file berikut di Supabase SQL Editor:
 
-alter table public.site_visitors enable row level security;
-
-create policy "site_visitors_public_insert"
-on public.site_visitors
-for insert
-to public
-with check (true);
-
-create policy "site_visitors_public_update"
-on public.site_visitors
-for update
-to public
-using (true)
-with check (true);
-
-create policy "site_visitors_public_read_count"
-on public.site_visitors
-for select
-to public
-using (true);
-```
+- [docs/sql/setup-site-visitors.sql](docs/sql/setup-site-visitors.sql)
 
 ## Deployment (Vercel)
 1. Set semua env vars yang dibutuhkan di Project Settings

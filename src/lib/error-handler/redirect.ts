@@ -5,6 +5,14 @@ export function getErrorRedirectPath(statusCode?: number): string | null {
     return ERROR_ROUTES.notFound;
   }
 
+  if (statusCode === 403) {
+    return ERROR_ROUTES.forbidden;
+  }
+
+  if (statusCode === 503) {
+    return ERROR_ROUTES.serviceUnavailable;
+  }
+
   if (statusCode && statusCode >= 500) {
     return ERROR_ROUTES.serverError;
   }

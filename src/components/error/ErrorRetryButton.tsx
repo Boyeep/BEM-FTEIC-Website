@@ -10,7 +10,7 @@ export default function ErrorRetryButton({
   return (
     <button
       onClick={onRetry}
-      className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+      className="inline-flex items-center justify-center bg-[#D9D9D9] px-6 py-3 font-semibold text-[#2450DB] transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-white/30"
     >
       {label}
     </button>

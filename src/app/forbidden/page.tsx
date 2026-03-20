@@ -4,16 +4,17 @@ import ErrorHomeLink from "@/components/error/ErrorHomeLink";
 import ErrorPanel from "@/components/error/ErrorPanel";
 
 export const metadata: Metadata = {
-  title: "Error - Something went wrong",
+  title: "403",
 };
 
-export default function ErrorPage() {
+export default function ForbiddenPage() {
   return (
     <main>
       <ErrorPanel
         title="Error"
-        description="500 Internal Service Error"
+        description="403 Forbidden"
         titleAs="h1"
+        iconVariant="forbidden"
         action={<ErrorHomeLink label="Back to Home" />}
       />
     </main>
