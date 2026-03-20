@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronLeft, Upload } from "lucide-react";
+import { ChevronDown, ChevronLeft, Upload } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -196,31 +196,45 @@ export default function DashboardBlogForm({
             <label className="mb-2 block text-2xl font-medium text-black">
               DEPARTMENT
             </label>
-            <select
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-              className="h-12 w-full border border-[#C8C8C8] bg-transparent px-3 text-sm text-black outline-none"
-            >
-              {DEPARTMENT_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            <label className="group relative block">
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
+              >
+                {DEPARTMENT_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black transition-transform duration-300 ease-out group-focus-within:rotate-180"
+              />
+            </label>
           </div>
 
           <div>
             <label className="mb-2 block text-2xl font-medium text-black">
               STATUS
             </label>
-            <select
-              value={status}
-              onChange={(event) => setStatus(event.target.value as BlogStatus)}
-              className="h-12 w-full border border-[#C8C8C8] bg-transparent px-3 text-sm text-black outline-none"
-            >
-              <option value="PUBLISHED">PUBLISHED</option>
-              <option value="ARCHIVED">ARCHIVED</option>
-            </select>
+            <label className="group relative block">
+              <select
+                value={status}
+                onChange={(event) =>
+                  setStatus(event.target.value as BlogStatus)
+                }
+                className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
+              >
+                <option value="PUBLISHED">PUBLISHED</option>
+                <option value="ARCHIVED">ARCHIVED</option>
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black transition-transform duration-300 ease-out group-focus-within:rotate-180"
+              />
+            </label>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronUp, MoveUpRight } from "lucide-react";
+import { ChevronUp, MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -73,8 +73,10 @@ export default function Navbar() {
 
   const textClass = isTransparentState ? "text-white" : "text-black";
   const desktopNavItemClass = clsxm(
-    "inline-flex items-center gap-1 pb-1 md:gap-2",
-    isTransparentState ? "hover:text-white/80" : "hover:text-black/70",
+    "inline-flex items-center gap-1 pb-1 transition-[filter] duration-200 md:gap-2",
+    isTransparentState
+      ? "hover:[filter:drop-shadow(0_0_10px_rgba(255,255,255,0.65))]"
+      : "hover:[filter:drop-shadow(0_0_10px_rgba(0,0,0,0.28))]",
   );
   const desktopNavTextClass = clsxm(
     "relative inline-block",
@@ -106,11 +108,12 @@ export default function Navbar() {
               className={`inline-flex items-center gap-1 text-sm font-semibold uppercase ${textClass} ${isTransparentState ? "hover:text-white/80" : "hover:text-black/70"}`}
             >
               Menu
-              {mobileMenuOpen ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
+              <ChevronUp
+                className={clsxm(
+                  "h-4 w-4 transition-transform duration-300 ease-out",
+                  mobileMenuOpen ? "rotate-180" : "rotate-0",
+                )}
+              />
             </button>
             {mobileMenuOpen ? (
               <div className="absolute right-0 top-full z-50 mt-2 w-56 border border-black/20 bg-[#FCD704] text-black">
@@ -134,11 +137,12 @@ export default function Navbar() {
                     }}
                   >
                     Event
-                    {mobileEventOpen ? (
-                      <ChevronUp className="h-3 w-3" />
-                    ) : (
-                      <ChevronDown className="h-3 w-3" />
-                    )}
+                    <ChevronUp
+                      className={clsxm(
+                        "h-3 w-3 transition-transform duration-300 ease-out",
+                        mobileEventOpen ? "rotate-180" : "rotate-0",
+                      )}
+                    />
                   </button>
                   {mobileEventOpen ? (
                     <div className="border-t border-black/20 bg-[#FCD704]">
@@ -168,11 +172,12 @@ export default function Navbar() {
                     }}
                   >
                     Kabinet
-                    {mobileKabinetOpen ? (
-                      <ChevronUp className="h-3 w-3" />
-                    ) : (
-                      <ChevronDown className="h-3 w-3" />
-                    )}
+                    <ChevronUp
+                      className={clsxm(
+                        "h-3 w-3 transition-transform duration-300 ease-out",
+                        mobileKabinetOpen ? "rotate-180" : "rotate-0",
+                      )}
+                    />
                   </button>
                   {mobileKabinetOpen ? (
                     <div className="border-t border-black/20 bg-[#FCD704]">
@@ -224,7 +229,12 @@ export default function Navbar() {
                 >
                   EVENT
                 </span>
-                <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                <ChevronUp
+                  className={clsxm(
+                    "h-2.5 w-2.5 transition-transform duration-300 ease-out md:h-3 md:w-3",
+                    openMenu === "event" ? "rotate-180" : "rotate-0",
+                  )}
+                />
               </button>
               {openMenu === "event" ? (
                 <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
@@ -247,7 +257,12 @@ export default function Navbar() {
                 >
                   KABINET
                 </span>
-                <ChevronUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
+                <ChevronUp
+                  className={clsxm(
+                    "h-2.5 w-2.5 transition-transform duration-300 ease-out md:h-3 md:w-3",
+                    openMenu === "kabinet" ? "rotate-180" : "rotate-0",
+                  )}
+                />
               </button>
               {openMenu === "kabinet" ? (
                 <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">

@@ -109,7 +109,7 @@ export default function EventFilters({
           <span className="text-xs font-semibold uppercase text-black/70">
             FILTER BY
           </span>
-          <label className="relative inline-flex">
+          <label className="group relative inline-flex">
             <select
               value={preset}
               onChange={(event) =>
@@ -125,7 +125,7 @@ export default function EventFilters({
             </select>
             <ChevronDown
               size={16}
-              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-black"
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black transition-transform duration-300 ease-out group-focus-within:rotate-180"
             />
           </label>
         </div>
@@ -134,7 +134,7 @@ export default function EventFilters({
           <span className="text-xs font-semibold uppercase text-black/70">
             SORT BY
           </span>
-          <label className="relative inline-flex">
+          <label className="group relative inline-flex">
             <select
               value={sortBy}
               onChange={(event) => setSortBy(event.target.value as EventSortBy)}
@@ -147,7 +147,7 @@ export default function EventFilters({
             </select>
             <ChevronDown
               size={16}
-              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-black"
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black transition-transform duration-300 ease-out group-focus-within:rotate-180"
             />
           </label>
         </div>

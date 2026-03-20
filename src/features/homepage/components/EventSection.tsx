@@ -248,7 +248,7 @@ function DepartmentCard({ department }: { department: Department }) {
   }
 
   return (
-    <article className="group relative min-h-[560px] overflow-hidden bg-[#F3F3F3] [perspective:1600px]">
+    <article className="group relative min-h-[560px] overflow-visible bg-[#F3F3F3] [perspective:1600px]">
       <div
         className="absolute inset-0 transition-transform duration-700 [transform-style:preserve-3d]"
         style={{ transform: `rotateY(${rotation}deg)` }}
