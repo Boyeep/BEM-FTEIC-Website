@@ -75,9 +75,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         ].join(" ")}
       />
       {!hideNavbar ? <Navbar /> : null}
-      <div key={pathname} className="animate-page-enter">
-        {children}
-      </div>
+      {children}
       {!hideFooter ? <Footer /> : null}
     </>
   );
