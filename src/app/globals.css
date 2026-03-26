@@ -91,12 +91,11 @@ body::-webkit-scrollbar-thumb:hover {
     --scroll-reveal-distance: 20px;
     --scroll-reveal-duration: 620ms;
     --scroll-reveal-scale-from: 0.992;
-    will-change: opacity, transform, filter;
+    will-change: opacity, transform;
   }
 
   .scroll-reveal-hidden {
     opacity: 0;
-    filter: blur(6px);
     transform: translate3d(0, var(--scroll-reveal-distance), 0)
       scale(var(--scroll-reveal-scale-from));
   }
@@ -143,14 +142,12 @@ body::-webkit-scrollbar-thumb:hover {
 @keyframes scroll-reveal-enter {
   from {
     opacity: 0;
-    filter: blur(6px);
     transform: translate3d(0, var(--scroll-reveal-distance), 0)
       scale(var(--scroll-reveal-scale-from));
   }
 
   to {
     opacity: 1;
-    filter: blur(0);
     transform: translate3d(0, 0, 0) scale(1);
   }
 }

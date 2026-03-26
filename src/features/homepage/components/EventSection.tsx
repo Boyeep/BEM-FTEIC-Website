@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import ScrollReveal from "@/components/ScrollReveal";
 import {
   type Department,
   defaultDepartmentImage,
@@ -278,13 +279,21 @@ export default function EventSection() {
   return (
     <section className="bg-[#F3F3F3] py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <h3 className="text-4xl font-extrabold uppercase text-[#1D4ED8] md:text-5xl">
-          Departemen
-        </h3>
+        <ScrollReveal delay={40}>
+          <h3 className="text-4xl font-extrabold uppercase text-[#1D4ED8] md:text-5xl">
+            Departemen
+          </h3>
+        </ScrollReveal>
 
         <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-          {departments.map((department) => (
-            <DepartmentCard key={department.name} department={department} />
+          {departments.map((department, index) => (
+            <ScrollReveal
+              key={department.name}
+              delay={70 + index * 20}
+              className="h-full"
+            >
+              <DepartmentCard department={department} />
+            </ScrollReveal>
           ))}
         </div>
       </div>
