@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import ScrollReveal from "@/components/ScrollReveal";
-
 const departments = [
   {
     name: "Teknik Informatika",
@@ -66,103 +64,98 @@ export default function LocationSection() {
   return (
     <section className="bg-[#F3F3F3] py-16">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-[1.25fr_0.9fr]">
-        <ScrollReveal delay={40}>
-          <div className="relative h-[540px] w-full overflow-hidden border border-[#C7D2FE] bg-[#E6E6E6] md:h-[700px]">
-            <img
-              src="/images/Homepage_Location-Section_Image.png"
-              alt="ITS map"
-              className="h-full w-full object-cover opacity-35"
-            />
+        <div className="relative h-[540px] w-full overflow-hidden border border-[#C7D2FE] bg-[#E6E6E6] md:h-[700px]">
+          <img
+            src="/images/Homepage_Location-Section_Image.png"
+            alt="ITS map"
+            className="h-full w-full object-cover opacity-35"
+          />
 
-            {departments.map((department, index) => (
-              <button
-                type="button"
-                key={department.name}
-                onClick={() => setActiveIndex(index)}
-                className="absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-2 border-[#1D4ED8] bg-white transition-all"
-                style={{
-                  left: department.marker.x,
-                  top: department.marker.y,
-                  transform: `translate(-50%, -50%) rotate(45deg) scale(${index === activeIndex ? 1.15 : 1})`,
-                  backgroundColor:
-                    index === activeIndex ? "#DBEAFE" : "#FFFFFF",
-                }}
-                aria-label={`Select ${department.name}`}
-              />
-            ))}
-
-            <div
-              className="pointer-events-none absolute z-10"
+          {departments.map((department, index) => (
+            <button
+              type="button"
+              key={department.name}
+              onClick={() => setActiveIndex(index)}
+              className="absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-2 border-[#1D4ED8] bg-white transition-all"
               style={{
-                left: active.marker.x,
-                top: active.marker.y,
-                transform: "translate(-50%, -50%)",
+                left: department.marker.x,
+                top: department.marker.y,
+                transform: `translate(-50%, -50%) rotate(45deg) scale(${index === activeIndex ? 1.15 : 1})`,
+                backgroundColor: index === activeIndex ? "#DBEAFE" : "#FFFFFF",
               }}
-            >
-              <div className="absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1D4ED8] px-5 py-2 text-xs font-medium uppercase tracking-wide text-white md:text-sm">
-                {active.name}
-              </div>
+              aria-label={`Select ${department.name}`}
+            />
+          ))}
+
+          <div
+            className="pointer-events-none absolute z-10"
+            style={{
+              left: active.marker.x,
+              top: active.marker.y,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div className="absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1D4ED8] px-5 py-2 text-xs font-medium uppercase tracking-wide text-white md:text-sm">
+              {active.name}
             </div>
           </div>
-        </ScrollReveal>
+        </div>
 
-        <ScrollReveal delay={90}>
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-            >
-              {departments.map((department) => (
-                <article key={department.name} className="w-full shrink-0">
-                  <div className="h-[310px] w-full overflow-hidden bg-white">
-                    <img
-                      src="/images/Event-Rektorat-Image.png"
-                      alt={department.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <h3 className="mt-8 text-5xl font-extrabold text-[#1D4ED8]">
-                    {department.name}
-                  </h3>
-                  <p className="mt-4 max-w-[95%] text-2xl leading-relaxed text-black/90">
-                    {department.address}
-                  </p>
-                  <a
-                    href={department.mapsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="relative mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
-                  >
-                    View on Google Maps ↗
-                  </a>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-6 flex justify-end gap-4">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="text-5xl leading-none text-black transition-colors hover:text-[#1D4ED8]"
-                aria-label="Previous department"
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="text-5xl leading-none text-black transition-colors hover:text-[#1D4ED8]"
-                aria-label="Next department"
-              >
-                ›
-              </button>
-            </div>
-
-            <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
-              {activeIndex + 1}/{departments.length}
-            </p>
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          >
+            {departments.map((department) => (
+              <article key={department.name} className="w-full shrink-0">
+                <div className="h-[310px] w-full overflow-hidden bg-white">
+                  <img
+                    src="/images/Event-Rektorat-Image.png"
+                    alt={department.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <h3 className="mt-8 text-5xl font-extrabold text-[#1D4ED8]">
+                  {department.name}
+                </h3>
+                <p className="mt-4 max-w-[95%] text-2xl leading-relaxed text-black/90">
+                  {department.address}
+                </p>
+                <a
+                  href={department.mapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="relative mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+                >
+                  View on Google Maps ↗
+                </a>
+              </article>
+            ))}
           </div>
-        </ScrollReveal>
+
+          <div className="mt-6 flex justify-end gap-4">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="text-5xl leading-none text-black transition-colors hover:text-[#1D4ED8]"
+              aria-label="Previous department"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="text-5xl leading-none text-black transition-colors hover:text-[#1D4ED8]"
+              aria-label="Next department"
+            >
+              ›
+            </button>
+          </div>
+
+          <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
+            {activeIndex + 1}/{departments.length}
+          </p>
+        </div>
       </div>
     </section>
   );
