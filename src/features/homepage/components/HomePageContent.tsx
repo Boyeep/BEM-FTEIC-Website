@@ -1,3 +1,4 @@
+import ScrollReveal from "@/components/ScrollReveal";
 import AboutSection from "@/features/homepage/components/AboutSection";
 import BirokrasiSection from "@/features/homepage/components/BirokrasiSection";
 import BlogSection from "@/features/homepage/components/BlogSection";
@@ -12,12 +13,24 @@ export default function HomePageContent() {
     <main className="overflow-x-hidden bg-black">
       <HeroSection />
       <HeroToAboutGradient />
-      <AboutSection />
-      <VisiMisiSection />
-      <BirokrasiSection />
-      <EventSection />
-      <BlogSection />
-      <LocationSection />
+      <ScrollReveal delay={40}>
+        <AboutSection />
+      </ScrollReveal>
+      <ScrollReveal delay={70}>
+        <VisiMisiSection />
+      </ScrollReveal>
+      <ScrollReveal delay={90}>
+        <BirokrasiSection />
+      </ScrollReveal>
+      <ScrollReveal delay={110}>
+        <EventSection />
+      </ScrollReveal>
+      <ScrollReveal delay={130}>
+        <BlogSection />
+      </ScrollReveal>
+      <ScrollReveal delay={150}>
+        <LocationSection />
+      </ScrollReveal>
     </main>
   );
 }

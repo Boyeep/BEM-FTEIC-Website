@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 import {
+  type Department,
   defaultDepartmentImage,
   departments,
-  type Department,
 } from "@/features/homepage/data/departments";
 
 type DepartmentSlide = {
