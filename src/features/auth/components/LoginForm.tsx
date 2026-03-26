@@ -6,14 +6,18 @@
 
 import Input from "@/components/input/Input";
 import { useLoginMutation } from "@/features/auth/hooks/useLoginMutation";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { LoginRequest } from "@/features/auth/types";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { isAuthenticated } = useAuthStore();
   const methods = useForm<LoginRequest>({
     mode: "onBlur",
     defaultValues: {
@@ -24,6 +28,12 @@ export default function LoginForm() {
 
   // Auto redirect to dashboard after login
   const { mutate: login, isPending } = useLoginMutation("/dashboard");
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    router.replace("/dashboard");
+  }, [isAuthenticated, router]);
 
   const onSubmit = (data: LoginRequest) => {
     login(data);

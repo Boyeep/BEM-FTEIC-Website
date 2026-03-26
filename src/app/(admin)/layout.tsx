@@ -1,18 +1,20 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-import DashboardNavbar from "@/features/dashboard/components/DashboardNavbar";
+import { getWhitelistedDashboardUser } from "@/features/auth/services/serverAuthAccess";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const showDashboardNavbar = pathname.startsWith("/dashboard");
+import AdminShell from "./AdminShell";
 
-  return (
-    <>
-      {showDashboardNavbar ? <DashboardNavbar /> : null}
-      <div className={showDashboardNavbar ? "pt-[56px]" : ""}>{children}</div>
-    </>
-  );
+export default async function AdminLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const user = await getWhitelistedDashboardUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  return <AdminShell>{children}</AdminShell>;
 }

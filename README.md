@@ -231,7 +231,7 @@ Jalankan file berikut di Supabase SQL Editor:
 
 - [docs/sql/setup-profiles.sql](docs/sql/setup-profiles.sql)
 
-### 3. Signup whitelist
+### 3. Signup/login whitelist
 Jalankan file berikut di Supabase SQL Editor:
 
 - [docs/sql/setup-signup-whitelist.sql](docs/sql/setup-signup-whitelist.sql)

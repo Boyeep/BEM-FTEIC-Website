@@ -6,14 +6,18 @@
 
 import Input from "@/components/input/Input";
 import { useSignupMutation } from "@/features/auth/hooks/useSignupMutation";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { SignupRequest } from "@/features/auth/types";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 export default function SignupForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { isAuthenticated } = useAuthStore();
   const methods = useForm<SignupRequest>({
     mode: "onBlur",
     defaultValues: {
@@ -24,6 +28,12 @@ export default function SignupForm() {
   });
 
   const { mutate: signup, isPending } = useSignupMutation();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    router.replace("/dashboard");
+  }, [isAuthenticated, router]);
 
   const onSubmit = (data: SignupRequest) => {
     signup(data);

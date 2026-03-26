@@ -1,23 +1,27 @@
 "use client";
 
-import { ArrowLeft, SquarePen } from "lucide-react";
+import { ArrowLeft, LogOut, SquarePen } from "lucide-react";
 
 type ProfileDropdownProps = {
   name: string;
   email: string;
   avatarUrl?: string | null;
+  isLoggingOut?: boolean;
   onClose: () => void;
   onEditName: () => void;
   onEditPhoto: () => void;
+  onLogout: () => void;
 };
 
 export default function ProfileDropdown({
   name,
   email,
   avatarUrl,
+  isLoggingOut = false,
   onClose,
   onEditName,
   onEditPhoto,
+  onLogout,
 }: ProfileDropdownProps) {
   return (
     <div className="w-[320px] border-b-2 border-[#365BD7] bg-[#D9D9D9] p-5 shadow-[0_10px_20px_rgba(0,0,0,0.22)]">
@@ -66,6 +70,16 @@ export default function ProfileDropdown({
       >
         <SquarePen className="h-5 w-5" />
         Edit foto
+      </button>
+
+      <button
+        type="button"
+        onClick={onLogout}
+        disabled={isLoggingOut}
+        className="mt-4 flex w-full items-center gap-2 border-t border-[#B8BBC3] pt-4 text-lg text-[#C42121] disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        <LogOut className="h-5 w-5" />
+        {isLoggingOut ? "Logging out..." : "Logout"}
       </button>
     </div>
   );

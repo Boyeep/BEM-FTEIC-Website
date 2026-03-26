@@ -1,7 +1,16 @@
 // /signup page
 
-import SignupForm from "@/features/auth/components/SignupForm";
+import { redirect } from "next/navigation";
 
-export default function SignupPage() {
+import SignupForm from "@/features/auth/components/SignupForm";
+import { getWhitelistedDashboardUser } from "@/features/auth/services/serverAuthAccess";
+
+export default async function SignupPage() {
+  const user = await getWhitelistedDashboardUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return <SignupForm />;
 }
