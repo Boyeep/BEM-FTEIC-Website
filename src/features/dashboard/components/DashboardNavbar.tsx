@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -20,23 +21,44 @@ const navItems = [
 ];
 
 export default function DashboardNavbar() {
+  const router = useRouter();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMode, setPopupMode] = useState<"menu" | "edit-name">("menu");
   const [editedName, setEditedName] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const profileButtonRef = useRef<HTMLButtonElement | null>(null);
   const photoInputRef = useRef<HTMLInputElement | null>(null);
-  const { user, setUser } = useAuthStore();
+  const { user, setUser, logout: clearAuthState } = useAuthStore();
 
   const displayName = user?.username?.trim() || "NAMA AKUN";
   const displayEmail = user?.email?.trim() || "-";
   const displayAvatarUrl = user?.avatarUrl || null;
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+    } finally {
+      clearAuthState();
+      setIsPopupOpen(false);
+      setPopupMode("menu");
+      setIsMobileNavOpen(false);
+      toast.success("Logout berhasil.");
+      router.replace("/login");
+      router.refresh();
+      setIsLoggingOut(false);
+    }
+  };
 
   useEffect(() => {
     if (!isPopupOpen && !isMobileNavOpen) return;
@@ -182,6 +204,7 @@ export default function DashboardNavbar() {
               name={displayName}
               email={displayEmail}
               avatarUrl={displayAvatarUrl}
+              isLoggingOut={isLoggingOut}
               onClose={() => {
                 setIsPopupOpen(false);
                 setPopupMode("menu");
@@ -190,6 +213,9 @@ export default function DashboardNavbar() {
               onEditPhoto={() => {
                 if (isUploadingPhoto) return;
                 photoInputRef.current?.click();
+              }}
+              onLogout={() => {
+                void handleLogout();
               }}
             />
           ) : (

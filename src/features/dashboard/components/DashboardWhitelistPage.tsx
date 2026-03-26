@@ -82,11 +82,11 @@ export default function DashboardWhitelistPage() {
       <section className="mx-auto max-w-[1280px] space-y-6">
         <header className="space-y-2">
           <h1 className="text-4xl font-extrabold uppercase text-black md:text-5xl">
-            SIGNUP WHITELIST
+            AUTH WHITELIST
           </h1>
           <p className="max-w-3xl text-sm text-black/70 md:text-base">
-            Hanya email yang ada di daftar ini yang bisa membuat akun lewat
-            halaman signup.
+            Hanya email yang ada di daftar ini yang bisa signup dan login ke
+            dashboard.
           </p>
         </header>
 

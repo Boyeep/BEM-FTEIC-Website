@@ -14,10 +14,24 @@ export interface SignupWhitelistEntry {
   createdBy?: string | null;
 }
 
+export type WhitelistAccessContext = "signup" | "login" | "session";
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
+}
+
+function getWhitelistAccessErrorMessage(context: WhitelistAccessContext) {
+  if (context === "signup") {
+    return "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses signup.";
+  }
+
+  if (context === "session") {
+    return "Akses akun ini sudah dicabut dari whitelist. Hubungi admin dashboard untuk meminta akses login kembali.";
+  }
+
+  return "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses login.";
 }
 
 function mapRowToEntry(row: SignupWhitelistRow): SignupWhitelistEntry {
@@ -31,11 +45,11 @@ function mapRowToEntry(row: SignupWhitelistRow): SignupWhitelistEntry {
 
 function mapWhitelistErrorMessage(message?: string) {
   if (!message) {
-    return "Gagal memproses signup whitelist.";
+    return "Gagal memproses email whitelist.";
   }
 
   if (message.includes("is_signup_email_whitelisted")) {
-    return "Whitelist signup belum dikonfigurasi di Supabase.";
+    return "Pemeriksaan whitelist email belum dikonfigurasi di Supabase.";
   }
 
   if (message.includes("signup_whitelist")) {
@@ -50,6 +64,10 @@ export const signupWhitelistService = {
 
   isValidEmail(email: string) {
     return EMAIL_PATTERN.test(normalizeEmail(email));
+  },
+
+  getAccessErrorMessage(context: WhitelistAccessContext) {
+    return getWhitelistAccessErrorMessage(context);
   },
 
   isEmailWhitelisted: async (email: string): Promise<boolean> => {
@@ -68,6 +86,26 @@ export const signupWhitelistService = {
     }
 
     return Boolean(data);
+  },
+
+  ensureEmailWhitelisted: async (
+    email: string,
+    context: WhitelistAccessContext = "login",
+  ): Promise<string> => {
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!EMAIL_PATTERN.test(normalizedEmail)) {
+      throw new Error("Masukkan email yang valid.");
+    }
+
+    const isWhitelisted =
+      await signupWhitelistService.isEmailWhitelisted(normalizedEmail);
+
+    if (!isWhitelisted) {
+      throw new Error(getWhitelistAccessErrorMessage(context));
+    }
+
+    return normalizedEmail;
   },
 
   getEntries: async (): Promise<SignupWhitelistEntry[]> => {

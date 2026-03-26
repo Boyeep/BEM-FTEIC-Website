@@ -14,16 +14,32 @@ import {
 } from "@/features/auth/types";
 import { supabase } from "@/lib/supabase";
 
+async function ensureCurrentSessionIsWhitelisted(email?: string | null) {
+  try {
+    await signupWhitelistService.ensureEmailWhitelisted(email || "", "session");
+  } catch (error) {
+    await supabase.auth.signOut();
+    throw error;
+  }
+}
+
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
+    const normalizedEmail = await signupWhitelistService.ensureEmailWhitelisted(
+      credentials.email,
+      "login",
+    );
+
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: credentials.email,
+      email: normalizedEmail,
       password: credentials.password,
     });
 
     if (error || !data.session || !data.user) {
       throw new Error(error?.message || "Login failed");
     }
+
+    await ensureCurrentSessionIsWhitelisted(data.user.email);
 
     let profile = null;
     try {
@@ -54,17 +70,10 @@ export const authService = {
   },
 
   signup: async (payload: SignupRequest): Promise<SignupResponse> => {
-    const normalizedEmail = signupWhitelistService.normalizeEmail(
+    const normalizedEmail = await signupWhitelistService.ensureEmailWhitelisted(
       payload.email,
+      "signup",
     );
-    const isWhitelisted =
-      await signupWhitelistService.isEmailWhitelisted(normalizedEmail);
-
-    if (!isWhitelisted) {
-      throw new Error(
-        "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses signup.",
-      );
-    }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
     const { data, error } = await supabase.auth.signUp({
@@ -132,6 +141,8 @@ export const authService = {
     if (error || !session || !user) {
       throw new Error(error?.message || "Failed to create session");
     }
+
+    await ensureCurrentSessionIsWhitelisted(user.email);
 
     let profile = null;
     try {
