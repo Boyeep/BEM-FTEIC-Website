@@ -10,9 +10,6 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
-  const imageHeightClass =
-    variant === "small" ? "h-44 md:h-48" : "h-56 md:h-64";
-
   const titleClass =
     variant === "small" ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
 
@@ -27,7 +24,7 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
         "shadow-[0_3px_0_0_#5172E8] transition-colors duration-300 hover:bg-[#FCEABF]",
       )}
     >
-      <div className={`relative w-full overflow-hidden ${imageHeightClass}`}>
+      <div className="relative aspect-[16/9] w-full overflow-hidden">
         <img
           src={blog.coverImage}
           alt={blog.title}
