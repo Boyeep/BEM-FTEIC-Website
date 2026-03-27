@@ -23,6 +23,20 @@ export default function GaleriPageContent() {
     setPage(1);
   }, []);
 
+  const handlePageChange = useCallback((nextPage: number) => {
+    setPage(nextPage);
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#F3F3F3] px-6 pb-16 pt-32">
       <section className="mx-auto w-full max-w-6xl">
@@ -57,7 +71,7 @@ export default function GaleriPageContent() {
             <GaleriPagination
               currentPage={data.pagination.page}
               totalPages={data.pagination.totalPages}
-              onPageChange={(nextPage) => setPage(nextPage)}
+              onPageChange={handlePageChange}
             />
           </ScrollReveal>
         ) : null}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import ScrollReveal from "@/components/ScrollReveal";
 import BlogPageContent from "@/features/blog/components/BlogPageContent";
@@ -18,6 +18,20 @@ export default function BlogPage() {
     page,
     limit: PAGE_SIZE,
   });
+
+  const handlePageChange = useCallback((nextPage: number) => {
+    setPage(nextPage);
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, []);
 
   return (
     <main className="min-h-screen bg-white px-4 pb-16 pt-32">
@@ -51,7 +65,7 @@ export default function BlogPage() {
             <Pagination
               currentPage={data.pagination.page}
               totalPages={data.pagination.totalPages}
-              onPageChange={(nextPage) => setPage(nextPage)}
+              onPageChange={handlePageChange}
             />
           </ScrollReveal>
         ) : null}

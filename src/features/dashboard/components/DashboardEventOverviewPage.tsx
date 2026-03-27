@@ -7,6 +7,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import Pagination from "@/features/blog/components/Pagination";
+import { getRichContentPreview } from "@/features/content/richContent";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
 import { eventService } from "@/features/event/services/eventService";
@@ -105,58 +106,62 @@ export default function DashboardEventOverviewPage() {
                 </tr>
               ) : null}
 
-              {data?.items.map((event) => (
-                <tr key={event.id} className="border-b border-[#D0D0D0]">
-                  <td className="px-3 py-2">
-                    <img
-                      src={event.coverImage}
-                      alt={event.title}
-                      className="h-[48px] w-[66px] object-cover"
-                    />
-                  </td>
-                  <td className="px-3 py-2">
-                    <p className="line-clamp-2 text-sm font-semibold text-black break-words [overflow-wrap:anywhere]">
-                      {event.title}
-                    </p>
-                    <p className="line-clamp-1 text-xs text-black/65 break-words [overflow-wrap:anywhere]">
-                      {event.description}
-                    </p>
-                  </td>
-                  <td className="px-3 py-2 text-xs text-black">
-                    {event.category}
-                  </td>
-                  <td className="px-3 py-2 text-xs text-black">
-                    <span className="block truncate">{event.author}</span>
-                  </td>
-                  <td className="px-3 py-2 text-xs text-black">
-                    {new Date(event.eventDate).toLocaleDateString("en-US")}
-                  </td>
-                  <td className="px-3 py-2">
-                    <span className="border border-[#436FFF] px-2 py-0.5 text-[10px] uppercase text-[#436FFF]">
-                      {event.status}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2">
-                    <div className="flex items-center gap-3">
-                      <Link
-                        href={`/dashboard/event/edit?id=${event.id}`}
-                        aria-label={`Edit ${event.title}`}
-                        className="inline-flex text-black transition-colors hover:text-blue-600"
-                      >
-                        <Pencil size={14} />
-                      </Link>
-                      <button
-                        type="button"
-                        aria-label={`Delete ${event.title}`}
-                        className="inline-flex text-black transition-colors hover:text-red-600"
-                        onClick={() => setSelectedDeleteId(event.id)}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {data?.items.map((event) => {
+                const preview = getRichContentPreview(event.description, 110);
+
+                return (
+                  <tr key={event.id} className="border-b border-[#D0D0D0]">
+                    <td className="px-3 py-2">
+                      <img
+                        src={event.coverImage}
+                        alt={event.title}
+                        className="h-[48px] w-[66px] object-cover"
+                      />
+                    </td>
+                    <td className="px-3 py-2">
+                      <p className="line-clamp-2 text-sm font-semibold text-black break-words [overflow-wrap:anywhere]">
+                        {event.title}
+                      </p>
+                      <p className="line-clamp-1 text-xs text-black/65 break-words [overflow-wrap:anywhere]">
+                        {preview}
+                      </p>
+                    </td>
+                    <td className="px-3 py-2 text-xs text-black">
+                      {event.category}
+                    </td>
+                    <td className="px-3 py-2 text-xs text-black">
+                      <span className="block truncate">{event.author}</span>
+                    </td>
+                    <td className="px-3 py-2 text-xs text-black">
+                      {new Date(event.eventDate).toLocaleDateString("en-US")}
+                    </td>
+                    <td className="px-3 py-2">
+                      <span className="border border-[#436FFF] px-2 py-0.5 text-[10px] uppercase text-[#436FFF]">
+                        {event.status}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/dashboard/event/edit?id=${event.id}`}
+                          aria-label={`Edit ${event.title}`}
+                          className="inline-flex text-black transition-colors hover:text-blue-600"
+                        >
+                          <Pencil size={14} />
+                        </Link>
+                        <button
+                          type="button"
+                          aria-label={`Delete ${event.title}`}
+                          className="inline-flex text-black transition-colors hover:text-red-600"
+                          onClick={() => setSelectedDeleteId(event.id)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

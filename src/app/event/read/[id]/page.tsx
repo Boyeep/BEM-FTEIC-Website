@@ -9,7 +9,7 @@ interface EventDetailPageProps {
 
 export default function EventDetailPage({ params }: EventDetailPageProps) {
   return (
-    <main className="min-h-screen bg-white pt-6 md:pt-10">
+    <main className="min-h-screen bg-white pt-28 md:pt-32">
       <ScrollReveal delay={40}>
         <EventDetailContainer id={params.id} />
       </ScrollReveal>

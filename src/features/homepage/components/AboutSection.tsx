@@ -7,12 +7,12 @@ export default function AboutSection() {
     <section className="bg-black pb-24 pt-6 md:pt-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-2">
         <ScrollReveal delay={40}>
-          <div className="relative h-[280px] w-full md:h-[360px]">
+          <div className="group relative h-[280px] w-full overflow-hidden md:h-[360px]">
             <Image
               src="/images/Homepage-About-Image.png"
               alt="Homepage about"
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] group-hover:rotate-[0.8deg]"
             />
           </div>
         </ScrollReveal>
