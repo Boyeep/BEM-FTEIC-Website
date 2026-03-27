@@ -44,7 +44,7 @@ export async function cropImageFile({
   targetHeight,
 }: CropImageOptions) {
   const image = await loadImage(imageUrl);
-  const baseScale = Math.max(
+  const baseScale = Math.min(
     frameWidth / image.naturalWidth,
     frameHeight / image.naturalHeight,
   );

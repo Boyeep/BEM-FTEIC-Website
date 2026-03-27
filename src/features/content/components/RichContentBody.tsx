@@ -207,12 +207,13 @@ export default function RichContentBody({ content }: RichContentBodyProps) {
                     <a
                       key={section.id}
                       href={`#${section.id}`}
+                      title={section.text}
                       onClick={(event) => handleSectionClick(event, section.id)}
                       aria-current={
                         activeSectionId === section.id ? "location" : undefined
                       }
                       className={clsxm(
-                        "break-words text-sm leading-relaxed text-black/45 transition-[color,filter] duration-200 hover:text-brand-blue hover:[filter:drop-shadow(0_0_8px_rgba(81,114,232,0.22))]",
+                        "block max-w-full truncate whitespace-nowrap text-sm leading-relaxed text-black/45 transition-[color,filter] duration-200 hover:text-brand-blue hover:[filter:drop-shadow(0_0_8px_rgba(81,114,232,0.22))]",
                         section.level === 3 ? "pl-4" : "",
                         activeSectionId === section.id
                           ? "font-semibold text-brand-blue [filter:drop-shadow(0_0_10px_rgba(81,114,232,0.34))]"
