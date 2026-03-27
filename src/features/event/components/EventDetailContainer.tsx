@@ -1,5 +1,6 @@
 "use client";
 
+import AutoScrollToContentOnMount from "@/features/content/components/AutoScrollToContentOnMount";
 import EventDetail from "@/features/event/components/EventDetail";
 import EventDetailSkeleton from "@/features/event/components/EventDetailSkeleton";
 import { useEventById } from "@/features/event/hooks/useEventById";
@@ -32,5 +33,13 @@ export default function EventDetailContainer({
     );
   }
 
-  return <EventDetail event={data.item} />;
+  return (
+    <>
+      <AutoScrollToContentOnMount
+        targetId="event-detail-content-start"
+        triggerKey={id}
+      />
+      <EventDetail event={data.item} />
+    </>
+  );
 }

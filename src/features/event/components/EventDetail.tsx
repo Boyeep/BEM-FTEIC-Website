@@ -37,7 +37,11 @@ export default function EventDetail({ event }: EventDetailProps) {
         </p>
       </div>
 
-      <Link href={`/event/${department.slug}`} className={backLinkClass}>
+      <Link
+        id="event-detail-content-start"
+        href={`/event/${department.slug}`}
+        className={backLinkClass}
+      >
         <ArrowLeft size={18} />
         Kembali
       </Link>

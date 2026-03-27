@@ -3,6 +3,7 @@
 import BlogDetail from "@/features/blog/components/BlogDetail";
 import BlogDetailSkeleton from "@/features/blog/components/BlogDetailSkeleton";
 import { useBlogById } from "@/features/blog/hooks/useBlogById";
+import AutoScrollToContentOnMount from "@/features/content/components/AutoScrollToContentOnMount";
 
 interface BlogDetailContainerProps {
   id: string;
@@ -30,5 +31,13 @@ export default function BlogDetailContainer({ id }: BlogDetailContainerProps) {
     );
   }
 
-  return <BlogDetail blog={data.item} />;
+  return (
+    <>
+      <AutoScrollToContentOnMount
+        targetId="blog-detail-content-start"
+        triggerKey={id}
+      />
+      <BlogDetail blog={data.item} />
+    </>
+  );
 }

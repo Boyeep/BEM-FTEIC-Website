@@ -1,6 +1,12 @@
-FROM node:20-alpine AS deps
+FROM node:20-alpine AS base
 
-RUN npm install -g pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
+FROM base AS deps
+
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
@@ -8,34 +14,40 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 RUN rm -f ~/.npmrc
 
-FROM node:20-alpine AS builder
+FROM base AS builder
 
-RUN npm install -g pnpm
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ARG NODE_ENV
-ARG API_URL
-ARG SITE_URL
+ARG BUILD_STANDALONE=true
 
-ENV NODE_ENV=$NODE_ENV
-ENV NEXT_PUBLIC_API_URL=$API_URL
-ENV SITE_URL=$SITE_URL
+ENV NODE_ENV=production
+ENV BUILD_STANDALONE=$BUILD_STANDALONE
 
-RUN pnpm build
+# Docker Compose automatically loads `env_file` for the running container, but
+# not for image build-time variable interpolation. Normalize Windows CRLF and
+# source `.env.production` here so `docker compose up -d --build` works without
+# extra CLI flags.
+RUN if [ -f .env.production ]; then tr -d '\r' < .env.production > /tmp/.env.production && set -a && . /tmp/.env.production && set +a; fi && pnpm build
 
-FROM gcr.io/distroless/nodejs20-debian12 as runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-COPY --from=builder /app/public ./public
+ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
 
+RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
+
+COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-EXPOSE 3000
-ENV HOSTNAME "0.0.0.0"
+USER nextjs
 
-CMD ["server.js"]
+EXPOSE 3000
+
+CMD ["node", "server.js"]

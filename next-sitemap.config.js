@@ -1,5 +1,10 @@
 /** @type {import('next-sitemap').IConfig} */
+const siteUrl =
+  process.env.SITE_URL ||
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "http://localhost:3000";
+
 module.exports = {
-  siteUrl: process.env.SITE_URL || "https://bem-fteic-playground.vercel.app", // !CHANGETHIS to your site url (for example: https://example.com)
+  siteUrl,
   generateRobotsTxt: true,
 };

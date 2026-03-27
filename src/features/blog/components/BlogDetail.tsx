@@ -30,7 +30,11 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
         </p>
       </div>
 
-      <Link href="/blog" className={backLinkClass}>
+      <Link
+        id="blog-detail-content-start"
+        href="/blog"
+        className={backLinkClass}
+      >
         <ArrowLeft size={18} />
         Kembali
       </Link>

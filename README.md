@@ -273,6 +273,9 @@ Jalankan file berikut di Supabase SQL Editor:
 2. Tambahkan production URL ke Supabase Auth Redirect URLs
 3. Redeploy
 
+## Deployment (Docker/VPS)
+Panduan singkat deployment VPS tersedia di [docs/deploy/vps.md](docs/deploy/vps.md).
+
 ## Opsional: Backfill creator username
 Kalau ada data blog/event lama yang kolom `author`-nya masih berisi email, jalankan script berikut di Supabase SQL Editor:
 
