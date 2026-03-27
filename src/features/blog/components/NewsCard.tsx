@@ -12,15 +12,16 @@ interface NewsCardProps {
 export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
   const titleClass =
     variant === "small" ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
-
-  const cardHeightClass = variant === "small" ? "" : "h-full";
+  const excerptLineClamp =
+    variant === "medium" ? 7 : variant === "large" ? 4 : 3;
+  const excerptText =
+    variant === "medium" ? blog.contentPreview ?? blog.excerpt : blog.excerpt;
 
   return (
     <Link
       href={`/blog/${blog.id}`}
       className={clsxm(
-        "group block overflow-hidden border border-brand-blue/35 bg-white",
-        cardHeightClass,
+        "group flex h-full flex-col overflow-hidden border border-brand-blue/35 bg-white",
         "shadow-[0_3px_0_0_#5172E8] transition-colors duration-300 hover:bg-[#FCEABF]",
       )}
     >
@@ -35,19 +36,22 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
         </span>
       </div>
 
-      <article className="p-4 md:p-5">
+      <article className="flex flex-1 flex-col p-4 md:p-5">
         <h2
           className={`line-clamp-2 break-words font-bold leading-tight text-black [overflow-wrap:anywhere] ${titleClass}`}
         >
           {blog.title}
         </h2>
-        <p className="mt-3 line-clamp-3 break-words text-[18px]/[1.45] text-black/90 [overflow-wrap:anywhere]">
-          {blog.excerpt}
+        <p
+          className="mt-3 overflow-hidden break-words text-[18px]/[1.45] text-black/90 [display:-webkit-box] [-webkit-box-orient:vertical] [overflow-wrap:anywhere]"
+          style={{ WebkitLineClamp: excerptLineClamp }}
+        >
+          {excerptText}
         </p>
 
         <span
           className={clsxm(
-            "mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-blue",
+            "mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-brand-blue",
             "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
           )}
         >
