@@ -4,9 +4,10 @@ import { type Session, User as SupabaseUser } from "@supabase/supabase-js";
 import { useEffect } from "react";
 
 import { profileService } from "@/features/auth/services/profileService";
+import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { type User } from "@/features/auth/types";
-import { removeToken, setToken } from "@/lib/cookies";
+import { setToken } from "@/lib/cookies";
 import { supabase } from "@/lib/supabase";
 
 const mapUser = async (source: SupabaseUser): Promise<User> => {
@@ -35,17 +36,30 @@ const mapUser = async (source: SupabaseUser): Promise<User> => {
 };
 
 export default function AuthSessionSync() {
-  const { setUser, setAccessToken } = useAuthStore();
+  const { logout, setUser, setAccessToken } = useAuthStore();
 
   useEffect(() => {
     let cancelled = false;
 
+    const clearLocalSession = () => {
+      if (cancelled) return;
+      logout();
+    };
+
     const applySession = async (session: Session | null) => {
       if (!session?.user) {
-        if (cancelled) return;
-        setUser(null);
-        setAccessToken(null);
-        removeToken();
+        clearLocalSession();
+        return;
+      }
+
+      try {
+        await signupWhitelistService.ensureEmailWhitelisted(
+          session.user.email || "",
+          "session",
+        );
+      } catch {
+        await supabase.auth.signOut();
+        clearLocalSession();
         return;
       }
 
@@ -60,10 +74,7 @@ export default function AuthSessionSync() {
     const bootstrap = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) {
-        if (cancelled) return;
-        setUser(null);
-        setAccessToken(null);
-        removeToken();
+        clearLocalSession();
         return;
       }
 
@@ -82,7 +93,7 @@ export default function AuthSessionSync() {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, [setAccessToken, setUser]);
+  }, [logout, setAccessToken, setUser]);
 
   return null;
 }

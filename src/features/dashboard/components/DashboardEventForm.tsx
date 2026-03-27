@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 
 import ImageCropModal from "@/components/form/ImageCropModal";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import RichContentEditor from "@/features/dashboard/components/RichContentEditor";
 import { eventService } from "@/features/event/services/eventService";
 import { EventStatus } from "@/features/event/types";
 
@@ -285,17 +286,21 @@ export default function DashboardEventForm({
           </div>
         </div>
 
-        <div className="mt-5">
-          <label className="mb-2 block text-2xl font-medium text-black">
-            DESCRIPTION
-          </label>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="Write event description here..."
-            className="h-[250px] w-full resize-none border border-[#C8C8C8] bg-transparent p-4 text-base text-black placeholder:text-black/55 outline-none"
-          />
-        </div>
+        <RichContentEditor
+          label="DESCRIPTION"
+          value={description}
+          onChange={setDescription}
+          placeholder="Write event description here..."
+          disabled={isSubmitting}
+          minHeightClass="h-[360px]"
+          onUploadImage={async (file) => {
+            if (!user) {
+              throw new Error("Kamu harus login terlebih dahulu.");
+            }
+
+            return eventService.uploadContentImage(user.id, file);
+          }}
+        />
 
         <div className="mt-6 flex items-center gap-3">
           <button

@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { Blog } from "@/features/blog/types";
+import RichContentBody from "@/features/content/components/RichContentBody";
 
 interface BlogDetailProps {
   blog: Blog;
@@ -13,12 +14,12 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
     month: "long",
     day: "numeric",
   });
-
-  const paragraphs = blog.content.split("\n\n");
+  const backLinkClass =
+    "mb-4 inline-flex items-center gap-2 text-xs font-medium uppercase text-brand-blue transition-[filter] duration-200 hover:[filter:drop-shadow(0_0_10px_rgba(81,114,232,0.45))] md:text-sm";
 
   return (
-    <article className="mx-auto w-full max-w-[88rem] bg-white px-6 pb-6 pt-2 md:px-8 md:pb-10 md:pt-4 lg:px-10">
-      <div className="relative mb-6 h-56 w-full overflow-hidden border border-brand-blue/30 md:h-[360px]">
+    <article className="mx-auto w-full max-w-6xl bg-white px-6 pb-6 pt-2 md:px-8 md:pb-10 md:pt-4 lg:px-10">
+      <div className="relative -mt-4 mb-5 h-56 w-full overflow-hidden border border-brand-blue/30 md:-mt-5 md:mb-6 md:h-[360px]">
         <img
           src={blog.coverImage}
           alt={blog.title}
@@ -29,44 +30,38 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
         </p>
       </div>
 
-      <Link
-        href="/blog"
-        className="mb-4 inline-flex items-center gap-2 text-xs font-medium uppercase text-brand-blue hover:text-brand-gold md:text-sm"
-      >
+      <Link href="/blog" className={backLinkClass}>
         <ArrowLeft size={18} />
         Kembali
       </Link>
 
-      <h1 className="mt-1 max-w-[72rem] break-words pb-1 text-3xl font-bold leading-[1.08] text-black [overflow-wrap:anywhere] md:text-5xl">
+      <h1 className="mt-1 max-w-4xl break-words pb-1 text-[1.75rem] font-bold leading-[1.08] text-black [overflow-wrap:anywhere] md:text-[2.75rem]">
         {blog.title}
       </h1>
-      <div className="mt-5 flex items-center gap-3">
-        {blog.authorAvatarUrl ? (
-          <img
-            src={blog.authorAvatarUrl}
-            alt={`${blog.author} avatar`}
-            className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
-          />
-        ) : (
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold uppercase text-slate-600 md:h-12 md:w-12">
-            {blog.author.slice(0, 1)}
+      <div className="mt-6 max-w-5xl border-b border-black/10 pb-5 pt-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <div className="flex items-center gap-3">
+            {blog.authorAvatarUrl ? (
+              <img
+                src={blog.authorAvatarUrl}
+                alt={`${blog.author} avatar`}
+                className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
+              />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold uppercase text-slate-600 md:h-12 md:w-12">
+                {blog.author.slice(0, 1)}
+              </div>
+            )}
+            <p className="text-lg text-black/60 md:text-xl">{blog.author}</p>
           </div>
-        )}
-        <p className="text-lg text-black/60 md:text-xl">{blog.author}</p>
-      </div>
-      <div className="mt-5 max-w-[78rem] space-y-4 text-base leading-relaxed text-black md:text-xl">
-        {paragraphs.map((paragraph, index) => (
-          <p
-            key={`${blog.id}-paragraph-${index}`}
-            className="break-words [overflow-wrap:anywhere]"
-          >
-            {paragraph}
+          <p className="text-sm font-medium uppercase tracking-[0.12em] text-black/45 sm:text-right">
+            {publishedDate}
           </p>
-        ))}
+        </div>
       </div>
-      <p className="mt-7 text-xl text-brand-blue md:text-2xl">
-        {publishedDate}
-      </p>
+      <div className="mt-8">
+        <RichContentBody content={blog.content} />
+      </div>
     </article>
   );
 }

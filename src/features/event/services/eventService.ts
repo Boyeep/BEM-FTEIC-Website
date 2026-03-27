@@ -7,6 +7,10 @@ import {
   EventSummary,
   UpsertEventPayload,
 } from "@/features/event/types";
+import {
+  getPublicProfileById,
+  getPublicProfilesByIds,
+} from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
 
 type EventRow = {
@@ -20,12 +24,6 @@ type EventRow = {
   status: EventStatus;
   created_at: string;
   created_by?: string | null;
-};
-
-type ProfileRow = {
-  id: string;
-  username: string;
-  avatar_url?: string | null;
 };
 
 const EVENT_COVER_BUCKET =
@@ -57,18 +55,39 @@ function mapRowToSummary(row: EventRow): EventSummary {
   };
 }
 
+async function uploadImage(
+  userId: string,
+  file: File,
+  prefix: string,
+): Promise<string> {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  let filePath = createUniqueUploadPath(userId, prefix, extension);
+
+  let { error: uploadError } = await supabase.storage
+    .from(EVENT_COVER_BUCKET)
+    .upload(filePath, file, { upsert: false });
+
+  if (uploadError?.message?.toLowerCase().includes("lock broken")) {
+    filePath = createUniqueUploadPath(userId, prefix, extension);
+    ({ error: uploadError } = await supabase.storage
+      .from(EVENT_COVER_BUCKET)
+      .upload(filePath, file, { upsert: false }));
+  }
+
+  if (uploadError) {
+    throw new Error(
+      uploadError.message || "Failed to upload image. Please try again.",
+    );
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from(EVENT_COVER_BUCKET).getPublicUrl(filePath);
+  return publicUrl;
+}
+
 async function resolveAuthorProfile(createdBy?: string | null) {
-  if (!createdBy) return null;
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id,username,avatar_url")
-    .eq("id", createdBy)
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) return null;
-  return data as ProfileRow;
+  return getPublicProfileById(createdBy);
 }
 
 async function resolveAuthorProfiles(items: EventSummary[]) {
@@ -80,19 +99,12 @@ async function resolveAuthorProfiles(items: EventSummary[]) {
     return items;
   }
 
-  const uniqueIds = Array.from(new Set(createdByIds));
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id,username,avatar_url")
-    .in("id", uniqueIds);
-
-  if (error || !data) {
+  const profiles = await getPublicProfilesByIds(createdByIds);
+  if (profiles.length === 0) {
     return items;
   }
 
-  const profileMap = new Map(
-    ((data || []) as ProfileRow[]).map((profile) => [profile.id, profile]),
-  );
+  const profileMap = new Map(profiles.map((profile) => [profile.id, profile]));
 
   return items.map((item) => {
     const profile = item.createdBy ? profileMap.get(item.createdBy) : undefined;
@@ -235,31 +247,11 @@ export const eventService = {
   },
 
   uploadCover: async (userId: string, file: File): Promise<string> => {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    let filePath = createUniqueUploadPath(userId, "event-cover", extension);
+    return uploadImage(userId, file, "event-cover");
+  },
 
-    let { error: uploadError } = await supabase.storage
-      .from(EVENT_COVER_BUCKET)
-      .upload(filePath, file, { upsert: false });
-
-    if (uploadError?.message?.toLowerCase().includes("lock broken")) {
-      filePath = createUniqueUploadPath(userId, "event-cover", extension);
-      ({ error: uploadError } = await supabase.storage
-        .from(EVENT_COVER_BUCKET)
-        .upload(filePath, file, { upsert: false }));
-    }
-
-    if (uploadError) {
-      throw new Error(
-        uploadError.message ||
-          "Failed to upload event cover. Please try again.",
-      );
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(EVENT_COVER_BUCKET).getPublicUrl(filePath);
-    return publicUrl;
+  uploadContentImage: async (userId: string, file: File): Promise<string> => {
+    return uploadImage(userId, file, "event-content-image");
   },
 
   createEvent: async (

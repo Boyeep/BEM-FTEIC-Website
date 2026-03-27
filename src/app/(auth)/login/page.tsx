@@ -1,7 +1,16 @@
 // /login page
 
-import LoginForm from "@/features/auth/components/LoginForm";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+import LoginForm from "@/features/auth/components/LoginForm";
+import { getWhitelistedDashboardUser } from "@/features/auth/services/serverAuthAccess";
+
+export default async function LoginPage() {
+  const user = await getWhitelistedDashboardUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return <LoginForm />;
 }

@@ -10,7 +10,7 @@ import {
   Youtube,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, type TransitionEvent } from "react";
+import { type TransitionEvent, useState } from "react";
 
 import { departments } from "@/features/homepage/data/departments";
 

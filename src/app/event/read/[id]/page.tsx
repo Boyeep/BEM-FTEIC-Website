@@ -1,3 +1,4 @@
+import ScrollReveal from "@/components/ScrollReveal";
 import EventDetailContainer from "@/features/event/components/EventDetailContainer";
 
 interface EventDetailPageProps {
@@ -8,8 +9,10 @@ interface EventDetailPageProps {
 
 export default function EventDetailPage({ params }: EventDetailPageProps) {
   return (
-    <main className="min-h-screen bg-white pt-6 md:pt-10">
-      <EventDetailContainer id={params.id} />
+    <main className="min-h-screen bg-white pt-28 md:pt-32">
+      <ScrollReveal delay={40}>
+        <EventDetailContainer id={params.id} />
+      </ScrollReveal>
     </main>
   );
 }

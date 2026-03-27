@@ -20,6 +20,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <noscript>
+          <style>{`
+            .scroll-reveal,
+            .scroll-reveal-hidden,
+            .scroll-reveal-visible {
+              opacity: 1 !important;
+              filter: none !important;
+              transform: none !important;
+              animation: none !important;
+            }
+          `}</style>
+        </noscript>
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
