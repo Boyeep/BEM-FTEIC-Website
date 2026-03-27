@@ -91,8 +91,8 @@ export default function KabinetDivisionPageContent({
                 delay={60 + idx * 20}
                 className="h-full"
               >
-                <article className="group mx-auto flex h-full w-full max-w-[21.25rem] items-center gap-3 border-l-[10px] border-black bg-[#E8B95A] p-[1.05rem] text-left text-black transition-transform duration-300 hover:-translate-y-1 md:min-h-[188px] md:max-w-[22.5rem] md:gap-4 md:p-[1.15rem]">
-                  <div className="relative aspect-square w-[7.25rem] shrink-0 overflow-hidden bg-[#F1CB74] md:w-[8.5rem]">
+                <article className="group mx-auto flex h-full w-full max-w-[21.25rem] flex-col items-center gap-4 border-t-[10px] border-black bg-[#E8B95A] p-[1.05rem] text-black transition-transform duration-300 hover:-translate-y-1 md:min-h-[188px] md:max-w-[22.5rem] md:flex-row md:items-center md:gap-4 md:border-l-[10px] md:border-t-0 md:p-[1.15rem]">
+                  <div className="relative aspect-square w-full max-w-[7.75rem] shrink-0 overflow-hidden bg-[#F1CB74] md:w-[8.5rem] md:max-w-none">
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.3),rgba(0,0,0,0.03))]" />
                     <div className="relative flex h-full w-full items-center justify-center">
                       {member.imageUrl ? (
@@ -113,11 +113,11 @@ export default function KabinetDivisionPageContent({
                     </div>
                   </div>
 
-                  <div className="flex min-w-0 flex-1 flex-col items-start justify-center">
-                    <h3 className="break-words text-[1.2rem] font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-[1.65rem]">
+                  <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center md:items-start md:text-left">
+                    <h3 className="break-words text-[1.05rem] font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-[1.65rem]">
                       {member.name}
                     </h3>
-                    <p className="mt-2 break-words text-[0.95rem] leading-relaxed font-medium text-black [overflow-wrap:anywhere] md:text-[1.05rem]">
+                    <p className="mt-2 break-words text-[0.9rem] leading-relaxed font-medium text-black [overflow-wrap:anywhere] md:text-[1.05rem]">
                       {member.position}
                     </p>
                   </div>
