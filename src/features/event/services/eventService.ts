@@ -55,6 +55,37 @@ function mapRowToSummary(row: EventRow): EventSummary {
   };
 }
 
+async function uploadImage(
+  userId: string,
+  file: File,
+  prefix: string,
+): Promise<string> {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  let filePath = createUniqueUploadPath(userId, prefix, extension);
+
+  let { error: uploadError } = await supabase.storage
+    .from(EVENT_COVER_BUCKET)
+    .upload(filePath, file, { upsert: false });
+
+  if (uploadError?.message?.toLowerCase().includes("lock broken")) {
+    filePath = createUniqueUploadPath(userId, prefix, extension);
+    ({ error: uploadError } = await supabase.storage
+      .from(EVENT_COVER_BUCKET)
+      .upload(filePath, file, { upsert: false }));
+  }
+
+  if (uploadError) {
+    throw new Error(
+      uploadError.message || "Failed to upload image. Please try again.",
+    );
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from(EVENT_COVER_BUCKET).getPublicUrl(filePath);
+  return publicUrl;
+}
+
 async function resolveAuthorProfile(createdBy?: string | null) {
   return getPublicProfileById(createdBy);
 }
@@ -216,31 +247,11 @@ export const eventService = {
   },
 
   uploadCover: async (userId: string, file: File): Promise<string> => {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    let filePath = createUniqueUploadPath(userId, "event-cover", extension);
+    return uploadImage(userId, file, "event-cover");
+  },
 
-    let { error: uploadError } = await supabase.storage
-      .from(EVENT_COVER_BUCKET)
-      .upload(filePath, file, { upsert: false });
-
-    if (uploadError?.message?.toLowerCase().includes("lock broken")) {
-      filePath = createUniqueUploadPath(userId, "event-cover", extension);
-      ({ error: uploadError } = await supabase.storage
-        .from(EVENT_COVER_BUCKET)
-        .upload(filePath, file, { upsert: false }));
-    }
-
-    if (uploadError) {
-      throw new Error(
-        uploadError.message ||
-          "Failed to upload event cover. Please try again.",
-      );
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(EVENT_COVER_BUCKET).getPublicUrl(filePath);
-    return publicUrl;
+  uploadContentImage: async (userId: string, file: File): Promise<string> => {
+    return uploadImage(userId, file, "event-content-image");
   },
 
   createEvent: async (

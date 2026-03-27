@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useVisitorCount } from "@/features/analytics/hooks/useVisitorCount";
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
 import { blogService } from "@/features/blog/services/blogService";
+import { getRichContentPreview } from "@/features/content/richContent";
 import ActionTable, {
   type ActionRow,
 } from "@/features/dashboard/components/ActionTable";
@@ -42,7 +43,7 @@ export default function DashboardOverviewPage() {
     eventData?.items.map((event) => ({
       id: event.id,
       title: event.title,
-      description: event.description,
+      description: getRichContentPreview(event.description, 140),
       cover: event.coverImage,
       status: event.status,
     })) || [];

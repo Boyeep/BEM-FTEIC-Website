@@ -11,6 +11,7 @@ import ImageCropModal from "@/components/form/ImageCropModal";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { blogService } from "@/features/blog/services/blogService";
 import { BlogStatus } from "@/features/blog/types";
+import RichContentEditor from "@/features/dashboard/components/RichContentEditor";
 
 const DEPARTMENT_OPTIONS = [
   "FTEIC",
@@ -270,17 +271,20 @@ export default function DashboardBlogForm({
           </div>
         </div>
 
-        <div className="mt-5">
-          <label className="mb-2 block text-2xl font-medium text-black">
-            CONTENT
-          </label>
-          <textarea
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            placeholder="Write your content here..."
-            className="h-[380px] w-full resize-none border border-[#C8C8C8] bg-transparent p-4 text-base text-black placeholder:text-black/55 outline-none"
-          />
-        </div>
+        <RichContentEditor
+          label="CONTENT"
+          value={content}
+          onChange={setContent}
+          placeholder="Write your blog content here..."
+          disabled={isSubmitting}
+          onUploadImage={async (file) => {
+            if (!user) {
+              throw new Error("Kamu harus login terlebih dahulu.");
+            }
+
+            return blogService.uploadContentImage(user.id, file);
+          }}
+        />
 
         <div className="mt-6 flex items-center gap-3">
           <button

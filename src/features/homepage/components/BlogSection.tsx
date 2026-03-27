@@ -61,12 +61,12 @@ export default function BlogSection() {
           <ScrollReveal delay={80}>
             <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
               <article className="lg:col-span-7">
-                <Link href={`/blog/${highlight.id}`}>
+                <Link href={`/blog/${highlight.id}`} className="group block">
                   <div className="relative h-88 w-full overflow-hidden md:h-[28rem]">
                     <img
                       src={highlight.coverImage}
                       alt={highlight.title}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 </Link>
@@ -84,12 +84,12 @@ export default function BlogSection() {
               <div className="space-y-5 lg:col-span-5">
                 {rest.map((blog) => (
                   <article key={blog.id} className="flex gap-4">
-                    <Link href={`/blog/${blog.id}`}>
+                    <Link href={`/blog/${blog.id}`} className="group block">
                       <div className="relative h-24 w-44 shrink-0 overflow-hidden md:h-28 md:w-48">
                         <img
                           src={blog.coverImage}
                           alt={blog.title}
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
                     </Link>

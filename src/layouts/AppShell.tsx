@@ -17,19 +17,11 @@ const AUTH_ROUTES = new Set([
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthRoute = AUTH_ROUTES.has(pathname);
-  const isReadBlogPage = pathname.startsWith("/blog/");
-  const isReadEventPage = pathname.startsWith("/event/read/");
   const isKabinetStrukturPage = pathname === "/kabinet/struktur";
   const isDashboardPage = pathname.startsWith("/dashboard");
 
-  const hideNavbar =
-    isAuthRoute || isReadBlogPage || isReadEventPage || isDashboardPage;
-  const hideFooter =
-    isAuthRoute ||
-    isReadBlogPage ||
-    isReadEventPage ||
-    isKabinetStrukturPage ||
-    isDashboardPage;
+  const hideNavbar = isAuthRoute || isDashboardPage;
+  const hideFooter = isAuthRoute || isKabinetStrukturPage || isDashboardPage;
 
   useEffect(() => {
     void visitorService.trackVisit(pathname);
