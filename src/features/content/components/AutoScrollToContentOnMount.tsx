@@ -29,7 +29,7 @@ export default function AutoScrollToContentOnMount({
       const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-      const visualOffset = window.innerWidth >= 768 ? 72 : 52;
+      const visualOffset = window.innerWidth >= 768 ? 84 : 60;
       const targetTop = Math.max(
         0,
         targetElement.getBoundingClientRect().top +

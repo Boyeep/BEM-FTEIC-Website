@@ -4,6 +4,7 @@ export interface BlogSummary {
   id: string;
   title: string;
   excerpt: string;
+  contentPreview?: string;
   author: string;
   authorAvatarUrl?: string | null;
   category: string;

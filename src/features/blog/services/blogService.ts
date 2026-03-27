@@ -55,6 +55,7 @@ function mapRowToSummary(row: BlogRow): BlogSummary {
     id: row.id,
     title: row.title,
     excerpt: row.excerpt,
+    contentPreview: buildExcerpt(row.content, 360),
     author: row.author,
     category: row.category,
     coverImage: row.cover_image,
@@ -72,10 +73,10 @@ function mapRowToBlog(row: BlogRow): Blog {
   };
 }
 
-function buildExcerpt(content: string) {
+function buildExcerpt(content: string, maxLength = 160) {
   const compact = getPlainTextFromRichContent(content);
-  if (compact.length <= 160) return compact;
-  return `${compact.slice(0, 157)}...`;
+  if (compact.length <= maxLength) return compact;
+  return `${compact.slice(0, Math.max(0, maxLength - 3))}...`;
 }
 
 async function uploadImage(
