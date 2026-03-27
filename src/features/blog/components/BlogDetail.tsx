@@ -19,7 +19,7 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
 
   return (
     <article className="mx-auto w-full max-w-6xl bg-white px-6 pb-6 pt-2 md:px-8 md:pb-10 md:pt-4 lg:px-10">
-      <div className="relative -mt-4 mb-5 h-56 w-full overflow-hidden border border-brand-blue/30 md:-mt-5 md:mb-6 md:h-[360px]">
+      <div className="relative mx-auto -mt-4 mb-5 aspect-[16/9] w-full max-w-5xl overflow-hidden border border-brand-blue/30 md:-mt-5 md:mb-6">
         <img
           src={blog.coverImage}
           alt={blog.title}
