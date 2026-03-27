@@ -39,22 +39,24 @@ export default function BlogDetail({ blog }: BlogDetailProps) {
         {blog.title}
       </h1>
       <div className="mt-6 max-w-5xl border-b border-black/10 pb-5 pt-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3 sm:gap-6">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             {blog.authorAvatarUrl ? (
               <img
                 src={blog.authorAvatarUrl}
                 alt={`${blog.author} avatar`}
-                className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
+                className="h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10 md:h-12 md:w-12"
               />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold uppercase text-slate-600 md:h-12 md:w-12">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[11px] font-semibold uppercase text-slate-600 sm:h-10 sm:w-10 sm:text-xs md:h-12 md:w-12">
                 {blog.author.slice(0, 1)}
               </div>
             )}
-            <p className="text-lg text-black/60 md:text-xl">{blog.author}</p>
+            <p className="truncate text-base text-black/60 sm:text-lg md:text-xl">
+              {blog.author}
+            </p>
           </div>
-          <p className="text-sm font-medium uppercase tracking-[0.12em] text-black/45 sm:text-right">
+          <p className="shrink-0 text-[11px] font-medium uppercase tracking-[0.12em] text-black/45 sm:text-sm sm:text-right">
             {publishedDate}
           </p>
         </div>

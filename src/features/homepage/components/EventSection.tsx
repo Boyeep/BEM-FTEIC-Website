@@ -124,13 +124,13 @@ function DepartmentCardFace({
         </p>
 
         {onControlClick ? (
-          <>
+          <div className="mt-auto flex flex-col items-start gap-5 pt-6">
             <Link
               href={slide.href}
               target="_blank"
               rel="noreferrer"
               className={[
-                "mt-6 inline-block w-fit text-sm font-medium uppercase transition-colors duration-300",
+                "inline-block w-fit text-sm font-medium uppercase transition-colors duration-300",
                 slide.variant === "department" || slide.variant === "program"
                   ? "relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
                   : "",
@@ -152,7 +152,7 @@ function DepartmentCardFace({
               onClick={onControlClick}
               disabled={isFlipping}
               className={[
-                "relative mt-auto inline-block w-fit pt-5 text-left text-sm font-medium uppercase after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full disabled:cursor-not-allowed disabled:opacity-70",
+                "relative inline-block w-fit text-left text-sm font-medium uppercase after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full disabled:cursor-not-allowed disabled:opacity-70",
                 isProgramFace
                   ? "text-white"
                   : [
@@ -166,7 +166,7 @@ function DepartmentCardFace({
             >
               {slide.controlLabel}
             </button>
-          </>
+          </div>
         ) : (
           <Link
             href={slide.href}
