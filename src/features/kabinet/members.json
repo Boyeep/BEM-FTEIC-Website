@@ -1,0 +1,312 @@
+{
+  "BPH": [
+    {
+      "name": "Ilman Afif Al Arif",
+      "position": "Ketua BEM FTEIC 2026",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Mirza Zaidan 'Ilma",
+      "position": "Sekretaris Jendral 1",
+      "imageUrl": null
+    },
+    {
+      "name": "Bramantio Ramayudha",
+      "position": "Sekretaris Jendral 2",
+      "imageUrl": null
+    },
+    {
+      "name": "Eric",
+      "position": "Sekretaris Umum 1",
+      "imageUrl": null
+    },
+    {
+      "name": "Ichsan Ramadhan",
+      "position": "Sekretaris Umum 2",
+      "imageUrl": null
+    },
+    {
+      "name": "Sarah",
+      "position": "Bendahara 1",
+      "imageUrl": null
+    },
+    {
+      "name": "Thalia Harnum Fathina",
+      "position": "Bendahara 2",
+      "imageUrl": null
+    }
+  ],
+  "Organizational Affairs": [
+    {
+      "name": "Achmad Najwa Maruf",
+      "position": "Kabiro Keorganisasian",
+      "imageUrl": null
+    },
+    {
+      "name": "Habil Lirobi",
+      "position": "Wakabiro Keorganisasian",
+      "imageUrl": null
+    },
+    {
+      "name": "Faaqih",
+      "position": "Kabiro Personalia",
+      "imageUrl": null
+    },
+    {
+      "name": "Thoriq Hilmuddin",
+      "position": "Wakabiro Personalia",
+      "imageUrl": null
+    },
+    {
+      "name": "Yoshio Andhika Pratama",
+      "position": "Asisten Biro Personalia",
+      "imageUrl": null
+    },
+    {
+      "name": "Zulkarnaen Ramdhani",
+      "position": "Asisten Biro Personalia",
+      "imageUrl": null
+    },
+    {
+      "name": "Azizah Muthiah Aini",
+      "position": "Asisten Biro Personalia",
+      "imageUrl": null
+    }
+  ],
+  "Department Secretary": [
+    {
+      "name": "Nawra Afroza Jannatul Firdaus",
+      "position": "Kabakor",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Arrayyan",
+      "position": "Wakabakor 1",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Rizqy Aulia",
+      "position": "Wakabakor 2",
+      "imageUrl": null
+    },
+    {
+      "name": "Indhira Ayu Puspita Ningrum",
+      "position": "Sekben 1",
+      "imageUrl": null
+    },
+    {
+      "name": "Eilada Kaylie Aruneendria",
+      "position": "Sekben 2",
+      "imageUrl": null
+    },
+    {
+      "name": "Zonandhita Ismarina",
+      "position": "Kabiro MR",
+      "imageUrl": null
+    },
+    {
+      "name": "Hanun Khoirun Nisa",
+      "position": "Kabiro HR",
+      "imageUrl": null
+    },
+    {
+      "name": "Rahmat Rafif Danandra",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Moh. Fawwaz Azalia Alim",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Sofyanul Hajar Bayhaqqi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Naufal Dzaki Hidayat",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Rafi Putra Rosadi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Putri Lenggo Genni",
+      "position": "STAFF",
+      "imageUrl": null
+    }
+  ],
+  "Internal Affairs": [
+    {
+      "position": "Kadep Dagri",
+      "name": "Hasan",
+      "imageUrl": null
+    },
+    {
+      "position": "Wakadep Dagri",
+      "name": "Aqila Zahira Puteri Arifin",
+      "imageUrl": null
+    },
+    {
+      "position": "Kabiro Internal",
+      "name": "Zinedine Zidane Dhanardi",
+      "imageUrl": null
+    },
+    {
+      "position": "Kabiro Minat Bakat",
+      "name": "Alila Syifa Ramadhani",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Muhammad Assaifunnadhif Alkhifdzi",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Emmanuela Hosanna Sianturi",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Naufal Nendra Prayata",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Mayda Salma Laila Zahra",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Nashwa Nurcinta M",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Nafis Faqih Allmuzaky Maolidi",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Nabila Hadi Amadea",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Fathur Ramadhani Nur Rofiq",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Ahmad 'Aaqila Akbar",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Fikri Aulia Husein",
+      "imageUrl": null
+    },
+    {
+      "position": "STAFF",
+      "name": "Jeff Rehobot Hasian L Gaol",
+      "imageUrl": null
+    }
+  ],
+  "External Affairs": [
+    {
+      "name": "Muhammad Rizqi Fadhlurrahman",
+      "position": "Kadep Lugri",
+      "imageUrl": null
+    },
+    {
+      "name": "Widya Firdausi Ahla Samariansyah",
+      "position": "Wakadep Lugri",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhamad Razka Pramata",
+      "position": "Kabiro Medfo",
+      "imageUrl": null
+    },
+    {
+      "name": "Razzan Yozha Putra",
+      "position": "Kabiro Hublu",
+      "imageUrl": null
+    },
+    {
+      "name": "Nindita Putri Aisyah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Darlene Syarafina Wyanetta",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Bagas Aryo Dananjoyo",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Tabina Fayola Zalianty",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Dzaky Haady",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Iqbal Aflah Al Farisi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Faiz Alfangie",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Elmira Araminta Tansy",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Amellya Rashida Shabirah Putri",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Sinaga, Nobel Hans Valentino",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Adelia Zahrasanti Bintoro",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Valerine Marcella Rau",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Naufal Akmal Muzakki",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Chenata Andara Imansyah",
+      "position": "STAFF",
+      "imageUrl": null
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import members from "./members.json";
+
 export interface KabinetMember {
   name: string;
   position: string;
@@ -29,36 +31,41 @@ function withDefaultMembers(
 }
 
 export const KABINET_DIVISIONS: KabinetDivision[] = [
-  withDefaultMembers({
+  {
     slug: "bph",
     title: "BPH Division",
     description:
       "The BPH (Badan Perwakilan Himpunan) is responsible for ensuring the effectiveness, accountability, and sustainability of all organizational programs within the Himpunan Student Executive Board of FTEIC. This body plays a vital role in monitoring program implementation, evaluating quarterly achievements, and maintaining structured reporting systems across all departments.",
-  }),
-  withDefaultMembers({
+    members: members.BPH,
+  },
+  {
     slug: "organizational-affairs",
     title: "Organizational Affairs Division",
     description:
       "The Organizational Affairs Department within the Student Executive Board is responsible for ensuring the effectiveness, accountability, and sustainability of all organizational programs in BEM FTEIC. This department plays a vital role in monitoring program implementation, evaluating quarterly achievements, and maintaining structured reporting systems across all departments.",
-  }),
-  withDefaultMembers({
+    members: members["Organizational Affairs"],
+  },
+  {
     slug: "department-secretary",
     title: "Department Secretary (SekDep) Division",
     description:
       "Department Secretary is an individual entrusted with the responsibilities of organizing and maintaining records, managing correspondence, and performing various administrative tasks on behalf of an organization or an individual.",
-  }),
-  withDefaultMembers({
+    members: members["Department Secretary"],
+  },
+  {
     slug: "internal-affairs",
     title: "Internal Affairs (Dagri) Division",
     description:
       "The Department of Internal Affairs is a department that plays a role in maintaining and improving harmony among FTEIC students, as well as providing a platform for students to develop their interests and talents.",
-  }),
-  withDefaultMembers({
+    members: members["Internal Affairs"],
+  },
+  {
     slug: "external-affairs",
     title: "External Affairs (Lugri) Division",
     description:
       "This is a department in BEM FTEIC responsible for maintaining relationships with stakeholders and creating creative content related to BEM FTEIC. It acts as a bridge between BEM FTEIC and external parties, ensuring effective communication and collaboration. Additionally, it oversees the production of engaging and innovative content that reflects the goals and activities of BEM FTEIC, aiming to inform, inspire, and connect with its audience.",
-  }),
+    members: members["External Affairs"],
+  },
   withDefaultMembers({
     slug: "entrepreneurship",
     title: "Entrepreneurship (KWU) Division",
