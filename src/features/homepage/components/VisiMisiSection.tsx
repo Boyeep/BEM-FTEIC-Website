@@ -10,8 +10,9 @@ export default function VisiMisiSection() {
               VISI
             </h3>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-black/90 md:text-2xl">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-              elementum massa, eu nunc dignissim, vel rhoncus.
+              Mewujudkan BEM FTEIC yang adaptif dan harmonis sebagai elevator
+              pengembangan kapasitas mahasiswa FTEIC serta berperan komprehensif
+              dalam masyarakat.
             </p>
           </div>
         </ScrollReveal>
@@ -22,15 +23,22 @@ export default function VisiMisiSection() {
               MISI
             </h3>
             <ul className="mt-6 list-disc space-y-2 pl-7 text-lg leading-relaxed text-black/90 md:text-2xl">
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
               <li>
-                Ut elementum massa tempus nec eu nunc dignissim, vel rhoncus
-                justo semper dolor sit amet.
+                Mengoptimalkan sistem serta budaya kerja BEM FTEIC yang adaptif,
+                profesional, dan humanis sebagai fondasi organisasi yang
+                responsif terhadap dinamika zaman.
               </li>
-              <li>Duis ante mauris, malesuada vitae ultrices, id non leo.</li>
               <li>
-                Ut vel tortor quis enim tortor quis enim facilisis tempus nec
-                ornare dolor elementum.
+                Memperkuat sinergi kelembagaan dan memperluas jejaring strategis
+                BEM FTEIC baik di tingkat internal maupun eksternal.
+              </li>
+              <li>
+                Mengembangkan kapasitas, ruang aktualisasi, dan nilai keilmuan
+                mahasiswa FTEIC secara berkelanjutan.
+              </li>
+              <li>
+                Menjaga citra kelembagaan, mendorong kemandirian organisasi,
+                serta menguatkan peran sosial BEM FTEIC yang berdampak nyata.
               </li>
             </ul>
           </div>
