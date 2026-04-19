@@ -64,7 +64,7 @@ export default function HeroSection() {
       }}
     >
       <Image
-        src="/images/Homepage-Hero-Image.png"
+        src="/images/Homepage-Hero-Image.JPG"
         alt="Homepage hero"
         fill
         priority

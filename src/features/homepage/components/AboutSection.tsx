@@ -9,7 +9,7 @@ export default function AboutSection() {
         <ScrollReveal delay={40}>
           <div className="group relative h-[280px] w-full overflow-hidden md:h-[360px]">
             <Image
-              src="/images/Homepage-About-Image.png"
+              src="/images/Homepage-About-Image.JPG"
               alt="Homepage about"
               fill
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] group-hover:rotate-[0.8deg]"
@@ -18,11 +18,47 @@ export default function AboutSection() {
         </ScrollReveal>
         <ScrollReveal delay={90}>
           <div className="text-white">
-            <h2 className="text-4xl font-extrabold md:text-5xl">ELECTICS</h2>
-            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-              elementum massa eu nunc dignissim, vel rhoncus justo semper. Duis
-              ante mauris, ipsum dolor sit amet malesuada vitae ultrices.
+            <h2 className="text-4xl font-extrabold md:text-5xl text-center mb-12">
+              Mars FTEIC ITS
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Electics
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Bersatu dalam perbedaan
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Bersama menggapai tuju
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Pegang teguh integritas
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Gaungkan suara perubahan
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Bersama, membangun, solidaritas
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Electics, Electics
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Jiwa raga ku korbankan
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Jatuh bangkit Bersama
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Cahaya Emasku
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Arahkan Pijakmu
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Halaui Rintangan
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 md:text-2xl text-center italic">
+              Jayalah Electicsku
             </p>
           </div>
         </ScrollReveal>
