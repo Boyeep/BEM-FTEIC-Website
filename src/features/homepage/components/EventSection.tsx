@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import ScrollReveal from "@/components/ScrollReveal";
+import SwipeSideHint from "@/components/SwipeSideHint";
 import {
   type Department,
   defaultDepartmentImage,
@@ -280,22 +281,24 @@ export default function EventSection() {
     <section className="bg-[#F3F3F3] py-20">
       <div className="mx-auto max-w-6xl px-6">
         <ScrollReveal delay={40}>
-          <h3 className="text-4xl font-extrabold uppercase text-[#1D4ED8] md:text-5xl">
+          <h3 className="text-center text-4xl font-extrabold uppercase text-[#1D4ED8] md:text-left md:text-5xl">
             Departemen
           </h3>
         </ScrollReveal>
 
-        <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+        <div className="-mx-6 mt-10 flex w-auto snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
           {departments.map((department, index) => (
             <ScrollReveal
               key={department.name}
               delay={70 + index * 20}
-              className="h-full"
+              className="h-full w-[calc(100vw-3rem)] shrink-0 snap-center md:w-full"
             >
               <DepartmentCard department={department} />
             </ScrollReveal>
           ))}
         </div>
+
+        <SwipeSideHint tone="light" />
       </div>
     </section>
   );
