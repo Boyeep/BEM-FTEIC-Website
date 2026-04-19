@@ -11,9 +11,13 @@ interface NewsCardProps {
 
 export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
   const titleClass =
-    variant === "small" ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
-  const excerptLineClamp =
-    variant === "medium" ? 7 : variant === "large" ? 4 : 3;
+    variant === "small" ? "text-xl md:text-2xl" : "text-xl md:text-3xl";
+  const excerptClampClass =
+    variant === "medium"
+      ? "[-webkit-line-clamp:3] md:[-webkit-line-clamp:7]"
+      : variant === "large"
+        ? "[-webkit-line-clamp:3] md:[-webkit-line-clamp:4]"
+        : "[-webkit-line-clamp:3]";
   const excerptText =
     variant === "medium" ? blog.contentPreview ?? blog.excerpt : blog.excerpt;
 
@@ -43,8 +47,10 @@ export default function NewsCard({ blog, variant = "small" }: NewsCardProps) {
           {blog.title}
         </h2>
         <p
-          className="mt-3 overflow-hidden break-words text-[18px]/[1.45] text-black/90 [display:-webkit-box] [-webkit-box-orient:vertical] [overflow-wrap:anywhere]"
-          style={{ WebkitLineClamp: excerptLineClamp }}
+          className={clsxm(
+            "mt-3 overflow-hidden break-words text-base/[1.45] text-black/90 [display:-webkit-box] [-webkit-box-orient:vertical] [overflow-wrap:anywhere] md:text-[18px]/[1.45]",
+            excerptClampClass,
+          )}
         >
           {excerptText}
         </p>
