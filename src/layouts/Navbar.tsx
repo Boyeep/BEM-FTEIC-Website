@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronUp, MoveUpRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -71,6 +72,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) return;
+
+    setMobileEventOpen(false);
+    setMobileKabinetOpen(false);
+  }, [mobileMenuOpen]);
+
   const textClass = isTransparentState ? "text-white" : "text-black";
   const desktopNavItemClass = clsxm(
     "inline-flex items-center gap-1 pb-1 transition-[filter] duration-200 md:gap-2",
@@ -96,9 +104,20 @@ export default function Navbar() {
         <div className="mx-auto flex w-full max-w-[1720px] items-center justify-between">
           <Link
             href="/"
-            className={`text-3xl font-extrabold leading-none md:text-4xl ${textClass}`}
+            className={clsxm(
+              "inline-flex items-center gap-2 text-3xl font-extrabold leading-none md:gap-3 md:text-4xl",
+              textClass,
+            )}
           >
-            BEM FTEIC
+            <Image
+              src="/images/event-departemen-logo/logo-bem-fteic.png"
+              alt="FTEIC logo"
+              width={40}
+              height={40}
+              className="h-8 w-8 object-contain md:h-10 md:w-10"
+              priority
+            />
+            <span>BEM FTEIC</span>
           </Link>
 
           <div className="relative md:hidden">
@@ -115,8 +134,16 @@ export default function Navbar() {
                 )}
               />
             </button>
-            {mobileMenuOpen ? (
-              <div className="absolute right-0 top-full z-50 mt-2 w-56 border border-black/20 bg-[#FCD704] text-black">
+            <div
+              aria-hidden={!mobileMenuOpen}
+              className={clsxm(
+                "absolute right-0 top-full z-50 mt-2 w-56 origin-top-right border border-black/20 bg-[#FCD704] text-black shadow-[0_14px_28px_rgba(0,0,0,0.18)] transition-all duration-200 ease-out",
+                mobileMenuOpen
+                  ? "translate-y-0 scale-100 opacity-100"
+                  : "pointer-events-none -translate-y-2 scale-95 opacity-0",
+              )}
+            >
+              <div className="overflow-hidden">
                 <Link
                   href="/blog"
                   className="block border-b border-black/20 px-4 py-3 text-sm font-semibold uppercase"
@@ -144,20 +171,29 @@ export default function Navbar() {
                       )}
                     />
                   </button>
-                  {mobileEventOpen ? (
-                    <div className="border-t border-black/20 bg-[#FCD704]">
-                      {EVENT_NAV_ITEMS.map((item) => (
-                        <Link
-                          key={`mobile-event-${item.label}`}
-                          href={item.href}
-                          className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase text-black transition-colors hover:bg-black hover:text-[#FCD704] active:bg-black active:text-[#FCD704] last:border-b-0"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                  <div
+                    className={clsxm(
+                      "grid overflow-hidden transition-[grid-template-rows,opacity] duration-200 ease-out",
+                      mobileEventOpen
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="border-t border-black/20 bg-[#FCD704]">
+                        {EVENT_NAV_ITEMS.map((item) => (
+                          <Link
+                            key={`mobile-event-${item.label}`}
+                            href={item.href}
+                            className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase text-black transition-colors hover:bg-black hover:text-[#FCD704] active:bg-black active:text-[#FCD704] last:border-b-0"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  ) : null}
+                  </div>
                 </div>
                 <div className="border-b border-black/20">
                   <button
@@ -179,20 +215,29 @@ export default function Navbar() {
                       )}
                     />
                   </button>
-                  {mobileKabinetOpen ? (
-                    <div className="border-t border-black/20 bg-[#FCD704]">
-                      {kabinetItems.map((item) => (
-                        <Link
-                          key={`mobile-kabinet-${item.label}`}
-                          href={item.href}
-                          className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase text-black transition-colors hover:bg-black hover:text-[#FCD704] active:bg-black active:text-[#FCD704] last:border-b-0"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                  <div
+                    className={clsxm(
+                      "grid overflow-hidden transition-[grid-template-rows,opacity] duration-200 ease-out",
+                      mobileKabinetOpen
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="border-t border-black/20 bg-[#FCD704]">
+                        {kabinetItems.map((item) => (
+                          <Link
+                            key={`mobile-kabinet-${item.label}`}
+                            href={item.href}
+                            className="block border-b border-black/20 bg-[#FCD704] px-4 py-2 text-xs uppercase text-black transition-colors hover:bg-black hover:text-[#FCD704] active:bg-black active:text-[#FCD704] last:border-b-0"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  ) : null}
+                  </div>
                 </div>
                 <Link
                   href="/galeri"
@@ -202,7 +247,7 @@ export default function Navbar() {
                   Galeri
                 </Link>
               </div>
-            ) : null}
+            </div>
           </div>
 
           <nav
@@ -236,11 +281,24 @@ export default function Navbar() {
                   )}
                 />
               </button>
-              {openMenu === "event" ? (
-                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
+              <div
+                aria-hidden={openMenu !== "event"}
+                className={clsxm(
+                  "absolute left-1/2 top-full -translate-x-1/2 pt-2 transition-all duration-200 ease-out",
+                  openMenu === "event"
+                    ? "translate-y-0 opacity-100"
+                    : "pointer-events-none -translate-y-1 opacity-0",
+                )}
+              >
+                <div
+                  className={clsxm(
+                    "origin-top transition-transform duration-200 ease-out [filter:drop-shadow(0_10px_20px_rgba(0,0,0,0.12))]",
+                    openMenu === "event" ? "scale-100" : "scale-95",
+                  )}
+                >
                   <DropdownList items={EVENT_NAV_ITEMS} />
                 </div>
-              ) : null}
+              </div>
             </div>
 
             <div
@@ -264,11 +322,24 @@ export default function Navbar() {
                   )}
                 />
               </button>
-              {openMenu === "kabinet" ? (
-                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
+              <div
+                aria-hidden={openMenu !== "kabinet"}
+                className={clsxm(
+                  "absolute left-1/2 top-full -translate-x-1/2 pt-2 transition-all duration-200 ease-out",
+                  openMenu === "kabinet"
+                    ? "translate-y-0 opacity-100"
+                    : "pointer-events-none -translate-y-1 opacity-0",
+                )}
+              >
+                <div
+                  className={clsxm(
+                    "origin-top transition-transform duration-200 ease-out [filter:drop-shadow(0_10px_20px_rgba(0,0,0,0.12))]",
+                    openMenu === "kabinet" ? "scale-100" : "scale-95",
+                  )}
+                >
                   <DropdownList items={kabinetItems} />
                 </div>
-              ) : null}
+              </div>
             </div>
 
             <Link
