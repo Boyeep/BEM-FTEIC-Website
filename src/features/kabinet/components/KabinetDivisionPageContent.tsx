@@ -84,40 +84,40 @@ export default function KabinetDivisionPageContent({
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-2 gap-x-5 gap-y-8 md:gap-x-7 md:gap-y-12 xl:grid-cols-3 xl:gap-x-8 xl:gap-y-14">
+          <div className="grid grid-cols-2 gap-3 md:gap-5 xl:grid-cols-3 xl:gap-6">
             {division.members.map((member, idx) => (
               <ScrollReveal
                 key={`kabinet-member-${idx}`}
                 delay={60 + idx * 20}
                 className="h-full"
               >
-                <article className="group mx-auto flex h-full w-full max-w-[21.25rem] flex-col items-center gap-4 border-t-[10px] border-black bg-[#E8B95A] p-[1.05rem] text-black transition-transform duration-300 hover:-translate-y-1 md:min-h-[188px] md:max-w-[22.5rem] md:flex-row md:items-center md:gap-4 md:border-l-[10px] md:border-t-0 md:p-[1.15rem]">
-                  <div className="relative aspect-square w-full max-w-[7.75rem] shrink-0 overflow-hidden bg-[#F1CB74] md:w-[8.5rem] md:max-w-none">
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.3),rgba(0,0,0,0.03))]" />
+                <article className="group mx-auto flex h-full w-full max-w-[17.5rem] flex-col overflow-hidden rounded-[22px] bg-black text-white shadow-[7px_7px_0_0_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[10px_10px_0_0_rgba(0,0,0,0.22)] md:max-w-[18.5rem]">
+                  <div className="relative aspect-[4/4.7] w-full overflow-hidden bg-[#F1CB74]">
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.26),rgba(0,0,0,0.05))]" />
                     <div className="relative flex h-full w-full items-center justify-center">
                       {member.imageUrl ? (
                         <img
                           src={member.imageUrl}
                           alt={member.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-contain object-bottom p-2 transition-transform duration-500 group-hover:scale-[1.03]"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-[#F1CB74]">
                           <UserRound
                             size={56}
                             strokeWidth={1.8}
-                            className="text-black/26 md:h-16 md:w-16"
+                            className="text-black/28 md:h-14 md:w-14"
                           />
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center md:items-start md:text-left">
-                    <h3 className="break-words text-[1.05rem] font-bold leading-tight text-black [overflow-wrap:anywhere] md:text-[1.65rem]">
+                  <div className="flex min-w-0 flex-1 flex-col justify-end bg-black px-3.5 pb-4 pt-3 md:px-4">
+                    <h3 className="min-h-[2.3rem] break-words text-[1.02rem] font-extrabold leading-[1.05] text-[#FCD704] [overflow-wrap:anywhere] md:min-h-[2.8rem] md:text-[1.28rem]">
                       {member.name}
                     </h3>
-                    <p className="mt-2 break-words text-[0.9rem] leading-relaxed font-medium text-black [overflow-wrap:anywhere] md:text-[1.05rem]">
+                    <p className="mt-1.5 break-words text-[0.8rem] font-medium leading-relaxed text-white/82 [overflow-wrap:anywhere] md:text-[0.9rem]">
                       {member.position}
                     </p>
                   </div>
