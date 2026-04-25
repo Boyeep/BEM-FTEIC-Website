@@ -23,6 +23,7 @@ export const departments: Department[] = [
     description:
       "Departemen dengan dua program studi sarjana yang bisa ditelusuri langsung dari kartu ini.",
     href: "https://www.its.ac.id/telektro/id/departemen-teknik-elektro-its/",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-elektro.jpeg",
     programs: [
       {
         name: "Teknik Elektro",
@@ -44,6 +45,7 @@ export const departments: Department[] = [
       "Departemen dengan tiga program studi sarjana yang bisa ditelusuri melalui animasi flip kartu.",
     href: "https://www.its.ac.id/informatika/id/departemen-teknik-informatika/",
     titleClassName: "text-[1.85rem] md:text-[28px]",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-informatika.jpeg",
     programs: [
       {
         name: "Teknik Informatika",
@@ -70,6 +72,7 @@ export const departments: Department[] = [
     description:
       "Departemen dengan dua program studi sarjana yang bisa dijelajahi lewat flip card.",
     href: "https://www.its.ac.id/si/",
+    imageSrc: "/images/event-departemen-image/Gedung-sistem-informasi.jpeg",
     programs: [
       {
         name: "Sistem Informasi",
@@ -87,18 +90,24 @@ export const departments: Department[] = [
   },
   {
     name: "Teknik Komputer",
-    description: "Ut vel tortor quis enim facilisis tempus nec ornare dolor.",
+    description:
+      "Departemen yang berfokus pada integrasi perangkat lunak dan perangkat keras untuk teknologi masa depan.",
     href: "https://www.its.ac.id/komputer/id/departemen-teknik-komputer-its/",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-komputer.jpeg",
   },
   {
     name: "Teknik Biomedik",
-    description: "Ut vel tortor quis enim facilisis tempus nec ornare dolor.",
+    description:
+      "Departemen yang berfokus pada analisa dan sintesa yang kuat dalam bidang spesialisasi Instrumentasi Biomedik, Pengolahan  Sinyal Biomedik, Biomekanika, Kontrol Biomedik, Biomaterial.",
     href: "https://www.its.ac.id/tbiomedik/id/beranda/",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-biomedik.jpeg",
   },
   {
     name: "Teknologi Informasi",
-    description: "Ut vel tortor quis enim facilisis tempus nec ornare dolor.",
+    description:
+      "Departemen yang berfokus pada perencananan dan pengelolaan teknologi informasi yang aman, meliputi instalasi, integrasi, kastamisasi, dan pemeliharaan.",
     href: "https://www.its.ac.id/it/id/departemen-teknologi-informasi/",
     titleClassName: "text-[1.85rem] md:text-[28px]",
+    imageSrc: "/images/event-departemen-image/Gedung-teknologi-informasi.jpeg",
   },
 ];

@@ -8,6 +8,7 @@ const departments = [
     address: "PQCW+7WH, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Informatika+ITS/data=!4m2!3m1!1s0x0:0x2b2bcdafc68c9a28?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-teknik-informatika.jpeg",
     marker: { x: "60%", y: "42%" },
   },
   {
@@ -15,6 +16,7 @@ const departments = [
     address: "Kampus ITS, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Sistem+Informasi+ITS/data=!4m2!3m1!1s0x0:0x83df57e6a93ef2c2?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-sistem-informasi.jpeg",
     marker: { x: "57%", y: "48%" },
   },
   {
@@ -22,6 +24,7 @@ const departments = [
     address: "PQ8W+9M4, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Biomedik+FTE+ITS/data=!4m2!3m1!1s0x0:0x60ffe474f4c725e6?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-teknik-biomedik.jpeg",
     marker: { x: "58%", y: "68%" },
   },
   {
@@ -29,6 +32,7 @@ const departments = [
     address: "Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "http://google.com/maps/place/Departemen+Teknik+Komputer/data=!4m2!3m1!1s0x0:0xfa255422237d84eb?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-teknik-komputer.jpeg",
     marker: { x: "58%", y: "72%" },
   },
   {
@@ -37,6 +41,7 @@ const departments = [
       "Gedung B, C & AJ Kampus Institut Teknologi Sepuluh Nopember, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60111",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Elektro/data=!4m2!3m1!1s0x0:0xced029db5d680974?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-teknik-elektro.jpeg",
     marker: { x: "56%", y: "74%" },
   },
   {
@@ -45,6 +50,7 @@ const departments = [
       "Gedung Tower 2 ITS, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Gedung+Tower+2+ITS/data=!4m2!3m1!1s0x0:0xd021ec310d46b640?sa=X&ved=1t:2428&ictx=111",
+    imageSrc: "images/event-departemen-image/Gedung-teknologi-informasi.jpeg",
     marker: { x: "52%", y: "74%" },
   },
 ];
@@ -110,7 +116,7 @@ export default function LocationSection() {
               <article key={department.name} className="w-full shrink-0">
                 <div className="h-[310px] w-full overflow-hidden bg-white">
                   <img
-                    src="/images/Event-Rektorat-Image.png"
+                    src={department.imageSrc}
                     alt={department.name}
                     className="h-full w-full object-cover"
                   />
