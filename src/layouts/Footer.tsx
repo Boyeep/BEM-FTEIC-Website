@@ -155,17 +155,17 @@ export default function Footer() {
   return (
     <footer className="mt-10 overflow-hidden bg-black text-white">
       <div className="mx-auto max-w-[1460px] px-8 pb-0 pt-6 md:px-16 md:pb-20">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
-          <div>
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-5">
+          <div className="md:col-span-2">
             <h2 className="text-5xl font-extrabold uppercase">BEM FTEIC ITS</h2>
             <div className="mt-7 space-y-3 text-xl text-white/70">
               <p className="flex items-center gap-3">
                 <Phone size={18} />
-                +62 123-4567-8901
+                +62 852-3658-9132 (Mas Ilman)
               </p>
               <p className="flex items-center gap-3">
                 <Mail size={18} />
-                email@email.com
+                bemfteicits2603@gmail.com
               </p>
             </div>
           </div>
