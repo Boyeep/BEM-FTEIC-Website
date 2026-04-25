@@ -308,5 +308,319 @@
       "position": "STAFF",
       "imageUrl": null
     }
+  ],
+
+  "Entrepreneurship": [
+    {
+      "name": "Moh. Rafi Agustian",
+      "position": "Kadep KWU",
+      "imageUrl": null
+    },
+    {
+      "name": "Rifqi",
+      "position": "Wakadep KWU",
+      "imageUrl": null
+    },
+    {
+      "name": "Astrid Meilandra",
+      "position": "Kabiro Ekraf",
+      "imageUrl": null
+    },
+    {
+      "name": "Manta",
+      "position": "Kabiro Event",
+      "imageUrl": null
+    },
+    {
+      "name": "Firdaus Ahnaf Hasbullah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Nabil Athalafirja Dharmawan",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Nayaka Shafarrel Razaan Nalaprasya",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Oscaryavat Viryavan",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Aisyah Salma Alifia",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Abdul mahdy mappincara",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Brena Sio Artha Josiana",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Zevanya Maghviranov Pramono",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Denis Zaidan Zaki Arrafi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Nabilla Salsa Pramuditya",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Aurelyo Nouvabryano Akhmad",
+      "position": "STAFF",
+      "imageUrl": null
+    }
+  ],
+  "Student Resources Development": [
+    {
+      "name": "Jeremia Kevin Alexander Jagardo Malau",
+      "position": "Kadep PSDM",
+      "imageUrl": null
+    },
+    {
+      "name": "Annisa Retno Kurniasari",
+      "position": "Wakadep PSDM",
+      "imageUrl": null
+    },
+    {
+      "name": "Missy Tiffaini Novlensia Sinaga",
+      "position": "Kabiro",
+      "imageUrl": null
+    },
+    {
+      "name": "Theo Kawalisa Pinem",
+      "position": "Kabiro",
+      "imageUrl": null
+    },
+    {
+      "name": "Fika Arka Nuriyah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Syaira Azzahra Salsabila",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Andrya Sausan Salsabila",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Munazalaty Zahwa Ahyari Suudiyah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Himawan Rakha Bhadra",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Alya Hasna Fadilah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Mochammad Irfan Sandy",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Justin Issac Siregar",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Rasya Izza Maira",
+      "position": "STAFF",
+      "imageUrl": null
+    }
+  ],
+  "Social Affairs and Technology": [
+    {
+      "name": "Nafadiya Mumtaza",
+      "position": "Kadep Sosmas",
+      "imageUrl": null
+    },
+    {
+      "name": "Keisha Adisti Athaillah",
+      "position": "Wakadep Sosmas",
+      "imageUrl": null
+    },
+    {
+      "name": "Efan Ramdhani",
+      "position": "Kabiro Kajian",
+      "imageUrl": null
+    },
+    {
+      "name": "M. Hidayaturrahman",
+      "position": "Kabiro Pengmas",
+      "imageUrl": null
+    },
+    {
+      "name": "Alif As'ad Ramadhan",
+      "position": "Kabiro Edukasi",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Sandhika Setiawan",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Ajeng Nadya Arofani",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Annisa Fathinatuzzahra",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Nayara Aldevida",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Riyannizaar Dwi Amarullah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Agha Avicenna",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Sylvina Syah Fitri",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Luthfi Irfani",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Ernest Hamonangan Hutapea",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Theresia Ivona Priska Hamananerming Mahal",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Swinsty Quen Sella Pratasis",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Syahdu Szenovera Maharani",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Gabriel Nathan Simanungkalit",
+      "position": "STAFF",
+      "imageUrl": null
+    }
+  ],
+  "Research and Technology": [
+    {
+      "name": "Keindra Dante Hidayat",
+      "position": "Kadep Ristek",
+      "imageUrl": null
+    },
+    {
+      "name": "Janice",
+      "position": "Wakadep Ristek",
+      "imageUrl": null
+    },
+    {
+      "name": "Alifia",
+      "position": "Kabiro Pengembangan",
+      "imageUrl": null
+    },
+    {
+      "name": "Einstein Pio Hutasoit",
+      "position": "Kabiro Kajian",
+      "imageUrl": null
+    },
+    {
+      "name": "Alvia Marisa",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Nasywa Raida",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Azka Razaqqi Irnantyo",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Mohammad Farrel Firzatullah",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Elvaretta Khiara Salsabilla",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Asyifa Abida Rosjadi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Charity Almas Kolibri Harianja",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "M. Rafli Al Mutawakkil",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Muhammad Zaki Firdausi Fuady",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Faris Aribowo Suwardi",
+      "position": "STAFF",
+      "imageUrl": null
+    },
+    {
+      "name": "Viola Herlina Wati",
+      "position": "STAFF",
+      "imageUrl": null
+    }
   ]
 }
