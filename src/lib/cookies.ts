@@ -9,10 +9,18 @@ export const getToken = (): string =>
 
 export const setToken = (token: string) => {
   cookies.set(TOKEN_COOKIE_KEY, token, { path: "/" });
-  cookies.set(LEGACY_TOKEN_COOKIE_KEY, token, { path: "/" });
+  try {
+    cookies.set(LEGACY_TOKEN_COOKIE_KEY, token, { path: "/" });
+  } catch (error) {
+    // Ignore invalid cookie name errors for legacy tokens
+  }
 };
 
 export const removeToken = () => {
   cookies.remove(TOKEN_COOKIE_KEY, { path: "/" });
-  cookies.remove(LEGACY_TOKEN_COOKIE_KEY, { path: "/" });
+  try {
+    cookies.remove(LEGACY_TOKEN_COOKIE_KEY, { path: "/" });
+  } catch (error) {
+    // Ignore invalid cookie name errors for legacy tokens
+  }
 };
