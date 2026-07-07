@@ -1,10 +1,17 @@
+import type { Metadata } from "next";
+
 import ScrollReveal from "@/components/ScrollReveal";
 import BlogDetailContainer from "@/features/blog/components/BlogDetailContainer";
+import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface BlogDetailPageProps {
   params: {
     id: string;
   };
+}
+
+export function generateMetadata({ params }: BlogDetailPageProps): Metadata {
+  return createCanonicalMetadataFromSegments("blog", params.id);
 }
 
 export default function BlogDetailPage({ params }: BlogDetailPageProps) {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import KabinetDivisionPageContent from "@/features/kabinet/components/KabinetDivisionPageContent";
@@ -5,6 +6,7 @@ import {
   KABINET_DIVISIONS,
   getKabinetDivisionBySlug,
 } from "@/features/kabinet/data";
+import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface KabinetDivisionPageProps {
   params: {
@@ -14,6 +16,18 @@ interface KabinetDivisionPageProps {
 
 export function generateStaticParams() {
   return KABINET_DIVISIONS.map((item) => ({ slug: item.slug }));
+}
+
+export function generateMetadata({
+  params,
+}: KabinetDivisionPageProps): Metadata {
+  const division = getKabinetDivisionBySlug(params.slug);
+
+  if (!division) {
+    return {};
+  }
+
+  return createCanonicalMetadataFromSegments("kabinet", params.slug);
 }
 
 export default function KabinetDivisionPage({

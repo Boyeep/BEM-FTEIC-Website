@@ -5,6 +5,10 @@ import ErrorPanel from "@/components/error/ErrorPanel";
 
 export const metadata: Metadata = {
   title: "403",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ForbiddenPage() {

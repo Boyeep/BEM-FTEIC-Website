@@ -1,75 +1,10 @@
-"use client";
+import type { Metadata } from "next";
 
-import { useCallback, useState } from "react";
+import BlogPage from "@/features/blog/components/BlogPage";
+import { createCanonicalMetadata } from "@/lib/seo";
 
-import ScrollReveal from "@/components/ScrollReveal";
-import BlogPageContent from "@/features/blog/components/BlogPageContent";
-import BlogPageError from "@/features/blog/components/BlogPageError";
-import BlogPageHeader from "@/features/blog/components/BlogPageHeader";
-import BlogPageLoadingGrid from "@/features/blog/components/BlogPageLoadingGrid";
-import Pagination from "@/features/blog/components/Pagination";
-import { useBlogs } from "@/features/blog/hooks/useBlogs";
+export const metadata: Metadata = createCanonicalMetadata("/blog");
 
-const PAGE_SIZE = 11;
-
-export default function BlogPage() {
-  const [page, setPage] = useState(1);
-  const { data, isPending, isError, error, refetch, isFetching } = useBlogs({
-    page,
-    limit: PAGE_SIZE,
-  });
-
-  const handlePageChange = useCallback((nextPage: number) => {
-    setPage(nextPage);
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
-  }, []);
-
-  return (
-    <main className="min-h-screen bg-white px-4 pb-16 pt-32">
-      <section className="mx-auto w-full max-w-6xl">
-        <ScrollReveal delay={40}>
-          <BlogPageHeader />
-        </ScrollReveal>
-
-        {isError ? (
-          <ScrollReveal delay={70}>
-            <BlogPageError message={error.message} onRetry={() => refetch()} />
-          </ScrollReveal>
-        ) : null}
-
-        <ScrollReveal delay={80}>
-          {isPending ? (
-            <BlogPageLoadingGrid size={PAGE_SIZE} />
-          ) : (
-            <BlogPageContent items={data?.items.slice(0, PAGE_SIZE) ?? []} />
-          )}
-        </ScrollReveal>
-
-        {isFetching && !isPending ? (
-          <ScrollReveal delay={100}>
-            <p className="mt-4 text-sm text-slate-500">Updating posts...</p>
-          </ScrollReveal>
-        ) : null}
-
-        {data ? (
-          <ScrollReveal delay={110}>
-            <Pagination
-              currentPage={data.pagination.page}
-              totalPages={data.pagination.totalPages}
-              onPageChange={handlePageChange}
-            />
-          </ScrollReveal>
-        ) : null}
-      </section>
-    </main>
-  );
+export default function BlogIndexPage() {
+  return <BlogPage />;
 }

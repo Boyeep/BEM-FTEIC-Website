@@ -1,0 +1,34 @@
+{
+  "productionSiteUrl": "https://bem-fteic.com",
+  "legacyHostnames": [
+    "bem-fteic-playground.vercel.app",
+    "www.bem-fteic-playground.vercel.app",
+    "bem-fteic.vercel.app",
+    "www.bem-fteic.vercel.app",
+    "www.bem-fteic.com"
+  ],
+  "sitemapExcludePaths": [
+    "/dashboard",
+    "/dashboard/*",
+    "/dashboard/**",
+    "/login",
+    "/signup",
+    "/confirm-email",
+    "/check-inbox",
+    "/error",
+    "/forbidden",
+    "/service-unavailable",
+    "/event"
+  ],
+  "robotsDisallowPaths": [
+    "/dashboard",
+    "/dashboard/*",
+    "/login",
+    "/signup",
+    "/confirm-email",
+    "/check-inbox",
+    "/error",
+    "/forbidden",
+    "/service-unavailable"
+  ]
+}

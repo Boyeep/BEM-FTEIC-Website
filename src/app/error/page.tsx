@@ -5,6 +5,10 @@ import ErrorPanel from "@/components/error/ErrorPanel";
 
 export const metadata: Metadata = {
   title: "Error - Something went wrong",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ErrorPage() {

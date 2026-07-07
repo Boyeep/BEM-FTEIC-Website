@@ -1,10 +1,17 @@
+import type { Metadata } from "next";
+
 import ScrollReveal from "@/components/ScrollReveal";
 import EventDetailContainer from "@/features/event/components/EventDetailContainer";
+import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface EventDetailPageProps {
   params: {
     id: string;
   };
+}
+
+export function generateMetadata({ params }: EventDetailPageProps): Metadata {
+  return createCanonicalMetadataFromSegments("event", "read", params.id);
 }
 
 export default function EventDetailPage({ params }: EventDetailPageProps) {

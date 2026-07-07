@@ -1,9 +1,18 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /login
+Disallow: /signup
+Disallow: /confirm-email
+Disallow: /check-inbox
+Disallow: /error
+Disallow: /forbidden
+Disallow: /service-unavailable
 
 # Host
-Host: https://bem-fteic-playground.vercel.app
+Host: https://bem-fteic.com
 
 # Sitemaps
-Sitemap: https://bem-fteic-playground.vercel.app/sitemap.xml
+Sitemap: https://bem-fteic.com/sitemap.xml
