@@ -64,10 +64,11 @@ export default function HeroSection() {
       }}
     >
       <Image
-        src="/images/Homepage-Hero-Image.JPG"
-        alt="Homepage hero"
+        src="/images/Homepage-FTEIC-Group-Image.webp"
+        alt="Keluarga BEM FTEIC ITS"
         fill
         priority
+        sizes="100vw"
         className="object-cover"
       />
       <div className="absolute inset-0 bg-black/35" />

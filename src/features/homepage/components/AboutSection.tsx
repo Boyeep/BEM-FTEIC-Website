@@ -25,9 +25,10 @@ export default function AboutSection() {
         <ScrollReveal delay={40}>
           <div className="group relative h-[280px] w-full overflow-hidden md:h-[360px]">
             <Image
-              src="/images/Homepage-About-Image.JPG"
-              alt="Homepage about"
+              src="/images/Homepage-FTEIC-Group-Image.webp"
+              alt="Keluarga BEM FTEIC ITS bersama mahasiswa FTEIC"
               fill
+              sizes="(min-width: 768px) 50vw, 100vw"
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] group-hover:rotate-[0.8deg]"
             />
           </div>

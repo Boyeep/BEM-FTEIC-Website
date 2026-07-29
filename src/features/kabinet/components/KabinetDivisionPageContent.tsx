@@ -1,6 +1,7 @@
 "use client";
 
 import { UserRound } from "lucide-react";
+import Image from "next/image";
 import { type MouseEvent } from "react";
 
 import ScrollReveal from "@/components/ScrollReveal";
@@ -96,10 +97,17 @@ export default function KabinetDivisionPageContent({
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.26),rgba(0,0,0,0.05))]" />
                     <div className="relative flex h-full w-full items-center justify-center">
                       {member.imageUrl ? (
-                        <img
+                        <Image
                           src={member.imageUrl}
                           alt={member.name}
-                          className="h-full w-full object-contain object-bottom p-2 transition-transform duration-500 group-hover:scale-[1.03]"
+                          fill
+                          sizes="(min-width: 1280px) 296px, (min-width: 768px) 280px, 50vw"
+                          className={`object-cover transition-transform duration-500 group-hover:scale-[1.03] ${
+                            member.name === "DIEN FADILLAH PRIHARDINI" ||
+                            member.name === "Afsal Murtaza"
+                              ? "object-top"
+                              : "object-center"
+                          }`}
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-[#F1CB74]">
