@@ -286,8 +286,6 @@ export default function EventSection() {
           </h3>
         </ScrollReveal>
 
-        <SwipeSideHint tone="light" />
-
         <div className="-mx-6 mt-10 flex w-auto snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
           {departments.map((department, index) => (
             <ScrollReveal
@@ -299,6 +297,8 @@ export default function EventSection() {
             </ScrollReveal>
           ))}
         </div>
+
+        <SwipeSideHint tone="light" />
       </div>
     </section>
   );
