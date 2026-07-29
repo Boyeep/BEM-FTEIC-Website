@@ -20,6 +20,30 @@ const pages = [
   { label: "Kabinet", href: "/#kabinet" },
   { label: "Galeri", href: "/galeri" },
 ];
+
+const socialLinks = [
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@bemfteic.its",
+    icon: Music2,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/bem-fteic/",
+    icon: Linkedin,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/bemfteic.its/",
+    icon: Instagram,
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/results?search_query=BEM+FTEIC+ITS",
+    icon: Youtube,
+  },
+];
+
 function FooterDepartmentItem({
   department,
 }: {
@@ -159,14 +183,28 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h2 className="text-5xl font-extrabold uppercase">BEM FTEIC ITS</h2>
             <div className="mt-7 space-y-3 text-xl text-white/70">
-              <p className="flex items-center gap-3">
-                <Phone size={18} />
-                +62 852-3658-9132 (Mas Ilman)
-              </p>
-              <p className="flex items-center gap-3">
-                <Mail size={18} />
-                bemfteicits2603@gmail.com
-              </p>
+              <a
+                href="https://wa.me/6285236589132"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Hubungi Mas Ilman melalui WhatsApp di +62 852-3658-9132"
+                className="group flex w-fit items-center gap-3 rounded-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FCD704] focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+              >
+                <Phone size={18} aria-hidden="true" />
+                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0_2px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-200 group-hover:bg-[length:100%_2px]">
+                  +62 852-3658-9132 (Mas Ilman)
+                </span>
+              </a>
+              <a
+                href="mailto:bemfteicits2603@gmail.com"
+                aria-label="Kirim email ke bemfteicits2603@gmail.com"
+                className="group flex w-fit items-center gap-3 rounded-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FCD704] focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+              >
+                <Mail size={18} aria-hidden="true" />
+                <span className="break-all bg-[linear-gradient(currentColor,currentColor)] bg-[length:0_2px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-200 group-hover:bg-[length:100%_2px]">
+                  bemfteicits2603@gmail.com
+                </span>
+              </a>
             </div>
           </div>
 
@@ -208,43 +246,32 @@ export default function Footer() {
                 <h3 className="mb-2 text-2xl font-semibold uppercase md:mb-3">
                   Social
                 </h3>
-                <div className="flex items-center gap-3 text-white">
-                  <Link
-                    href="#"
-                    aria-label="TikTok"
-                    className="hover:text-[#FCD704]"
-                  >
-                    <Music2 size={22} />
-                  </Link>
-                  <Link
-                    href="#"
-                    aria-label="LinkedIn"
-                    className="hover:text-[#FCD704]"
-                  >
-                    <Linkedin size={22} />
-                  </Link>
-                  <Link
-                    href="#"
-                    aria-label="Instagram"
-                    className="hover:text-[#FCD704]"
-                  >
-                    <Instagram size={22} />
-                  </Link>
-                  <Link
-                    href="#"
-                    aria-label="YouTube"
-                    className="hover:text-[#FCD704]"
-                  >
-                    <Youtube size={22} />
-                  </Link>
+                <div className="flex items-center gap-1 text-white">
+                  {socialLinks.map((social) => {
+                    const SocialIcon = social.icon;
+
+                    return (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Buka ${social.label} BEM FTEIC ITS`}
+                        title={social.label}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 hover:bg-white/10 hover:text-[#FCD704] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FCD704]"
+                      >
+                        <SocialIcon size={22} aria-hidden="true" />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <p className="translate-y-14 mt-5 text-lg text-white/80 md:mt-8">
-          © Lorem ipsum dolor sit amet 2026. Consectetur adipiscing elit.
+        <p className="mt-12 text-sm text-white/70 md:mt-16 md:text-base">
+          © 2026 BEM FTEIC ITS. Seluruh hak cipta dilindungi.
         </p>
       </div>
 
