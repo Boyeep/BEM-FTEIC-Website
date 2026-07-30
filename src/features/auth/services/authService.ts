@@ -3,8 +3,8 @@
 // Centralizes all auth HTTP requests.
 
 import { profileService } from "@/features/auth/services/profileService";
-import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import { syncServerSession } from "@/features/auth/services/serverSessionService";
+import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import {
   LoginRequest,
   LoginResponse,

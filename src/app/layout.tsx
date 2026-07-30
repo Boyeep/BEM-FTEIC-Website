@@ -5,8 +5,8 @@ import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 
 import Providers from "@/app/providers";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import AppShell from "@/layouts/AppShell";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 

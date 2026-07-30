@@ -6,9 +6,9 @@ import {
   GaleriSortBy,
   UpsertGaleriPayload,
 } from "@/features/galeri/types";
+import { api } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
-import { api } from "@/lib/api";
 
 type GaleriRow = {
   id: string;

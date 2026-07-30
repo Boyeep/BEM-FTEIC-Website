@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
 import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 export async function uploadImageToAPI(file: File): Promise<string> {
   const apiURL = process.env.NEXT_PUBLIC_API_URL_PROD?.replace(/\/$/, "");

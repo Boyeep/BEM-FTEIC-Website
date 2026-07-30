@@ -1,284 +1,135 @@
-# BEM FTEIC Front-End
+# BEM FTEIC Website
 
-Website resmi BEM FTEIC berbasis Next.js (App Router) dengan public pages + admin dashboard, terintegrasi Supabase untuk autentikasi, blog, event, galeri, dan statistik visitor.
+Frontend resmi BEM FTEIC berbasis Next.js App Router. Halaman publik membaca konten terpublikasi, sedangkan dashboard admin menggunakan API backend terautentikasi untuk mengelola blog, event, galeri, profil, dan whitelist pendaftaran.
 
-## Fitur Utama
+## Production
 
-### Public pages
-- Homepage: hero, about, birokrasi, event, blog, location
-- Blog list + detail (`/blog`, `/blog/[id]`)
-- Event list + filter department + detail (`/event`, `/event/[department]`, `/event/read/[id]`)
-- Galeri (`/galeri`)
-- Kabinet (`/kabinet/[slug]`, `/kabinet/struktur`)
+- Website: <https://bem-fteic.com>
+- API: <https://api.bem-fteic.com>
+- Runtime: Docker Compose di VPS, frontend pada port grup `8001`
+- Database dan autentikasi: Supabase
+- Deployment: GitHub Actions setiap push ke `main`
 
-### Authentication
-- Login, signup, check inbox, confirm email
-- Sinkronisasi profil user (nama + avatar) dengan Supabase Auth
+`www.bem-fteic.com` diarahkan ke domain utama. Vercel tidak digunakan sebagai runtime production.
 
-### Admin dashboard
-- Overview statistik (blog, event, galeri, visitors)
-- CRUD Blog:
-  - `/dashboard/blog/overview`
-  - `/dashboard/blog/create`
-  - `/dashboard/blog/edit?id=<id>`
-- CRUD Event:
-  - `/dashboard/event/overview`
-  - `/dashboard/event/create`
-  - `/dashboard/event/edit?id=<id>`
-- CRUD Galeri:
-  - `/dashboard/galeri/overview`
-  - `/dashboard/galeri/create`
-  - `/dashboard/galeri/edit?id=<id>`
+## Fitur
 
-## Tech Stack
-- Next.js 14 (App Router)
-- React + TypeScript
-- Tailwind CSS
-- TanStack Query
-- Zustand
-- Supabase (Auth, Postgres, Storage)
-- Biome (lint/format)
+- Homepage, blog, event, galeri, dan halaman kabinet
+- Login, signup whitelist, konfirmasi email, dan session cookie aman
+- Dashboard dengan role `admin`
+- CRUD blog, event, dan galeri melalui backend
+- Pengelolaan profil dan signup whitelist
+- Upload gambar melalui backend
+- Sitemap dan metadata SEO
 
-## Struktur Project
-- `src/app` - routes (public, auth, dashboard, API)
-- `src/features/auth` - auth flow, profile service/store
-- `src/features/blog` - logic blog (public + dashboard)
-- `src/features/event` - logic event (public + dashboard)
-- `src/features/galeri` - logic galeri (public + dashboard)
-- `src/features/dashboard` - komponen/halaman dashboard
-- `src/layouts` - global + dashboard layout/navigation
+## Stack
 
-## Local Development
+- Next.js 16 dan React 19
+- TypeScript dan Tailwind CSS
+- TanStack Query dan Zustand
+- Supabase Auth serta PostgreSQL
+- Biome
+- Docker Compose dan Nginx
 
-### Prasyarat
-- Node.js 18+ (disarankan 20+)
-- pnpm
+## Struktur
 
-### Jalankan lokal
-1. Install dependencies
+```text
+src/app/           route App Router
+src/features/      fitur dan domain logic
+src/components/    komponen UI bersama
+src/layouts/       navbar, footer, dan app shell
+src/lib/           API client dan utilitas
+deploy/nginx/      reverse proxy container frontend
+docs/deploy/       catatan operasional VPS
+```
+
+Skema database tidak disimpan di frontend. Sumber migrasi resmi berada di repository backend pada `database/migrations`.
+
+## Menjalankan Lokal
+
+Prasyarat:
+
+- Node.js 20+
+- pnpm 9
+- backend lokal atau API production yang dapat diakses
+- project Supabase
+
 ```bash
 pnpm install
-```
-
-2. Buat environment file
-```bash
 cp .env.example .env.local
-```
-Atau di PowerShell:
-```powershell
-Copy-Item .env.example .env.local
-```
-Lalu isi nilai Supabase sesuai project kamu.
-
-3. Start dev server
-```bash
 pnpm dev
 ```
 
-Aplikasi akan berjalan di `http://localhost:3000`.
+PowerShell:
 
-## Environment Variables
-
-Lihat acuan lengkap di `.env.example`.
-
-### Wajib
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_SITE_URL`
-
-### Opsional
-- `NEXT_PUBLIC_RUN_MODE` (`development`/`production`)
-- `NEXT_PUBLIC_API_URL_DEV`
-- `NEXT_PUBLIC_API_URL_PROD`
-- `NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET`
-- `NEXT_PUBLIC_SUPABASE_BLOG_COVER_BUCKET`
-- `NEXT_PUBLIC_SUPABASE_EVENT_COVER_BUCKET`
-- `NEXT_PUBLIC_SUPABASE_GALERI_BUCKET`
-
-## Scripts
-- `pnpm dev` - jalankan development server
-- `pnpm build` - build production
-- `pnpm start` - jalankan hasil build
-- `pnpm postbuild` - generate sitemap
-- `pnpm lint` - lint check (Biome)
-- `pnpm lint:write` - auto-fix lint issues
-- `pnpm format` - cek formatting
-- `pnpm format:write` - auto-format
-- `pnpm check` - lint + format check (Biome)
-- `pnpm check:write` - auto-fix check issues
-- `pnpm typecheck` - TypeScript type check
-- `pnpm validate` - check + typecheck
-
-## Supabase Setup
-
-### 1. Auth configuration
-- Enable Email provider
-- Set site URL dan redirect URL:
-  - `http://localhost:3000/confirm-email` (local)
-  - production URL setara
-
-### 1.1 Supabase confirm email template
-Copy ini ke `Authentication > Email Templates > Confirm signup`:
-
-```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Konfirmasi Email</title>
-  </head>
-  <body
-    style="
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #4f73e4 0%, #dfe3ef 100%);
-    "
-  >
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td align="center" style="padding: 56px 16px">
-          <table
-            role="presentation"
-            width="100%"
-            cellpadding="0"
-            cellspacing="0"
-            border="0"
-            style="
-              max-width: 620px;
-              background: #f5f5f5;
-              border-radius: 16px;
-            "
-          >
-            <tr>
-              <td align="center" style="padding: 40px 24px 20px 24px">
-                <div style="font-size: 26px; line-height: 1; color: #e0b14d">✉</div>
-                <div
-                  style="
-                    margin-top: 10px;
-                    font-size: 34px;
-                    line-height: 1;
-                    font-weight: 800;
-                    color: #e0b14d;
-                    letter-spacing: 1px;
-                  "
-                >
-                  ELECTICS
-                </div>
-
-                <div
-                  style="
-                    margin-top: 34px;
-                    font-size: 38px;
-                    line-height: 1.15;
-                    font-weight: 800;
-                    color: #1f1f1f;
-                  "
-                >
-                  Konfirmasi Email
-                </div>
-
-                <div
-                  style="
-                    margin-top: 18px;
-                    font-size: 24px;
-                    line-height: 1.35;
-                    font-weight: 700;
-                    color: #2a2a2a;
-                  "
-                >
-                  Klik tombol <span style="color: #e0b14d">Confirm</span> untuk<br />
-                  melakukan konfirmasi akun<br />
-                  Electics - mu
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 0 16px 16px 16px">
-                <a
-                  href="{{ .ConfirmationURL }}"
-                  style="
-                    display: block;
-                    width: 100%;
-                    box-sizing: border-box;
-                    text-align: center;
-                    text-decoration: none;
-                    text-transform: uppercase;
-                    font-size: 40px;
-                    line-height: 1.2;
-                    font-weight: 800;
-                    color: #111111;
-                    background: #e0b14d;
-                    border-radius: 14px;
-                    padding: 20px 18px;
-                  "
-                >
-                  Confirm
-                </a>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+```powershell
+pnpm install
+Copy-Item .env.example .env.local
+pnpm dev
 ```
 
-### 2. Profiles table
-Jalankan file berikut di Supabase SQL Editor:
+Aplikasi tersedia di <http://localhost:3000>.
 
-- [docs/sql/setup-profiles.sql](docs/sql/setup-profiles.sql)
+## Environment
 
-### 3. Signup/login whitelist
-Jalankan file berikut di Supabase SQL Editor:
+Gunakan `.env.example` sebagai acuan:
 
-- [docs/sql/setup-signup-whitelist.sql](docs/sql/setup-signup-whitelist.sql)
+```env
+NEXT_PUBLIC_RUN_MODE=development
+NEXT_PUBLIC_API_URL_DEV=http://localhost:8080
+NEXT_PUBLIC_API_URL_PROD=https://api.bem-fteic.com
+NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_SITE_URL=https://bem-fteic.com
+```
 
-### 4. Blogs table
-Jalankan file berikut di Supabase SQL Editor:
+Jangan commit `.env.local`, `.env.production`, service-role key, database password, atau SSH private key.
 
-- [docs/sql/setup-blogs.sql](docs/sql/setup-blogs.sql)
+## Supabase
 
-### 5. Events table
-Jalankan file berikut di Supabase SQL Editor:
+Konfigurasi Auth production:
 
-- [docs/sql/setup-events.sql](docs/sql/setup-events.sql)
+- Site URL: `https://bem-fteic.com`
+- Redirect URL: `https://bem-fteic.com/**`
+- Redirect URL: `https://www.bem-fteic.com/**`
+- Redirect URL lokal: `http://localhost:3000/**`
+- Before User Created hook: schema `public`, function `hook_validate_signup`
 
-### 6. Galeri table
-Jalankan file berikut di Supabase SQL Editor:
+Frontend hanya menggunakan anon key. Otorisasi admin, validasi input, dan mutation konten dilakukan backend. Migrasi backend mengelola tabel, fungsi, trigger, grant, dan RLS.
 
-- [docs/sql/setup-galeri.sql](docs/sql/setup-galeri.sql)
+## Quality Checks
 
-### 7. Storage buckets
-Buat bucket public berikut:
-- `avatars`
-- `blog-covers`
-- `event-covers`
-- `galeri-images`
+```bash
+pnpm validate
+pnpm build
+pnpm audit --prod --audit-level=high
+```
 
-Untuk tiap bucket, gunakan policy:
-- public `select`
-- authenticated `insert/update` hanya di folder miliknya:
-  - `(storage.foldername(name))[1] = auth.uid()::text`
+## Deployment
 
-### 8. Visitor analytics table (dashboard Visitors card)
-Jalankan file berikut di Supabase SQL Editor:
+Push ke `main` menjalankan validasi, membangun image bertag commit SHA, dan melakukan deployment ke VPS menggunakan:
 
-- [docs/sql/setup-site-visitors.sql](docs/sql/setup-site-visitors.sql)
+```bash
+sudo docker compose -p group1 up -d
+```
 
-## Deployment (Vercel)
-1. Set semua env vars yang dibutuhkan di Project Settings
-2. Tambahkan production URL ke Supabase Auth Redirect URLs
-3. Redeploy
+Workflow melakukan readiness check dan rollback ke image terakhir yang berhasil apabila deployment gagal. Detail operasional terdapat di [docs/deploy/vps.md](docs/deploy/vps.md).
 
-## Deployment (Docker/VPS)
-Panduan singkat deployment VPS tersedia di [docs/deploy/vps.md](docs/deploy/vps.md).
+Konfigurasi domain grup berada di:
 
-## Opsional: Backfill creator username
-Kalau ada data blog/event lama yang kolom `author`-nya masih berisi email, jalankan script berikut di Supabase SQL Editor:
+```text
+/nginx-configs/group1/group1.conf
+```
 
-- [docs/sql/backfill-creator-usernames.sql](docs/sql/backfill-creator-usernames.sql)
+Terapkan perubahan dengan:
 
-(18/03/2026)
+```bash
+sudo apply-nginx-group1.sh
+```
+
+Mapping production:
+
+- `bem-fteic.com` dan `www.bem-fteic.com` → `127.0.0.1:8001`
+- `api.bem-fteic.com` → `127.0.0.1:8002`
+
+Jangan menjalankan `setup-domain-group1.sh` setelah mapping khusus ini tanpa mengecek ulang config, karena script tersebut mengarahkan seluruh hostname ke port frontend.

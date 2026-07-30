@@ -1,7 +1,7 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
 
-import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
 import { api } from "@/lib/api";
+import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
 
 type ProfileRow = {
   id: string;

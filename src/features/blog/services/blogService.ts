@@ -10,13 +10,13 @@ import {
   getPlainTextFromRichContent,
   getRichContentWordCount,
 } from "@/features/content/richContent";
+import { api } from "@/lib/api";
 import {
   getPublicProfileById,
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
 import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
-import { api } from "@/lib/api";
 
 type BlogRow = {
   id: string;

@@ -7,13 +7,13 @@ import {
   EventSummary,
   UpsertEventPayload,
 } from "@/features/event/types";
+import { api } from "@/lib/api";
 import {
   getPublicProfileById,
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
 import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
-import { api } from "@/lib/api";
 
 type EventRow = {
   id: string;

@@ -4,11 +4,11 @@ import { type Session, User as SupabaseUser } from "@supabase/supabase-js";
 import { useEffect } from "react";
 
 import { profileService } from "@/features/auth/services/profileService";
-import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import {
   clearServerSession,
   syncServerSession,
 } from "@/features/auth/services/serverSessionService";
+import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { type User } from "@/features/auth/types";
 import { supabase } from "@/lib/supabase";

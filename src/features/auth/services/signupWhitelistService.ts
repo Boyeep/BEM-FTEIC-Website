@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
 import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 type SignupWhitelistRow = {
   id: string;
