@@ -36,6 +36,7 @@ export default function LoginForm() {
   }, [isAuthenticated, router]);
 
   const onSubmit = (data: LoginRequest) => {
+    if (isPending) return;
     login(data);
   };
 
@@ -104,7 +105,8 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full bg-[#EBB85E] hover:brightness-95 text-black font-bold py-3 rounded-[10px] uppercase tracking-wider transition-all mt-4"
+            aria-busy={isPending}
+            className="mt-4 min-h-11 w-full rounded-[10px] bg-[#EBB85E] py-3 font-bold uppercase tracking-wider text-black transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending ? "Logging in..." : "LOGIN"}
           </button>

@@ -17,7 +17,7 @@ export function useLoginMutation(redirectTo: string = "/") {
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
     onSuccess: (data) => {
       login(data.user, data.accessToken);
-      toast.success("Login successful!");
+      toast.success("Login berhasil.", { id: "login-result" });
       router.push(redirectTo);
     },
     onError: (error: unknown) => {
@@ -25,7 +25,7 @@ export function useLoginMutation(redirectTo: string = "/") {
         error instanceof Error
           ? error.message
           : "Login failed. Please try again.";
-      toast.error(message);
+      toast.error(message, { id: "login-result" });
     },
   });
 }

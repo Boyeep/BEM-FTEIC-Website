@@ -72,13 +72,13 @@ describe("finalizeAdminSession", () => {
     expect(syncServerSession).not.toHaveBeenCalled();
   });
 
-  it("falls back to auth metadata when profile bootstrap is unavailable", async () => {
-    ensureForUser.mockRejectedValueOnce(new Error("profile unavailable"));
+  it("does not misclassify profile API failures as a missing admin role", async () => {
+    const failure = new Error("authentication service unavailable");
+    ensureForUser.mockRejectedValueOnce(failure);
     const { finalizeAdminSession } = await import("./sessionFinalizer");
-    const result = await finalizeAdminSession(user, "token");
-    expect(assertAdmin).toHaveBeenCalledWith(undefined);
-    expect(result.username).toBe("Admin");
-    expect(syncServerSession).toHaveBeenCalledWith("token");
+    await expect(finalizeAdminSession(user, "token")).rejects.toBe(failure);
+    expect(assertAdmin).not.toHaveBeenCalled();
+    expect(syncServerSession).not.toHaveBeenCalled();
   });
 
   it("does not sync a server session when admin authorization fails", async () => {
@@ -105,5 +105,16 @@ describe("finalizeAdminSession", () => {
       "token",
     );
     expect(ensureEmailWhitelisted).toHaveBeenCalledWith("", "session");
+  });
+
+  it("shares one finalization across concurrent auth listeners", async () => {
+    const { finalizeAdminSession } = await import("./sessionFinalizer");
+    const first = finalizeAdminSession(user, "shared-token");
+    const second = finalizeAdminSession(user, "shared-token");
+    expect(second).toBe(first);
+    await Promise.all([first, second]);
+    expect(ensureEmailWhitelisted).toHaveBeenCalledTimes(1);
+    expect(ensureForUser).toHaveBeenCalledTimes(1);
+    expect(syncServerSession).toHaveBeenCalledTimes(1);
   });
 });

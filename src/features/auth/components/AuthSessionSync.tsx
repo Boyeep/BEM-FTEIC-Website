@@ -1,42 +1,12 @@
 "use client";
 
-import { type Session, User as SupabaseUser } from "@supabase/supabase-js";
+import { type Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 
-import { profileService } from "@/features/auth/services/profileService";
-import {
-  clearServerSession,
-  syncServerSession,
-} from "@/features/auth/services/serverSessionService";
-import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
+import { clearServerSession } from "@/features/auth/services/serverSessionService";
+import { finalizeAdminSession } from "@/features/auth/services/sessionFinalizer";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { type User } from "@/features/auth/types";
 import { supabase } from "@/lib/supabase";
-
-const mapUser = async (source: SupabaseUser): Promise<User> => {
-  let profile = null;
-  try {
-    profile = await profileService.ensureForUser(source);
-  } catch {
-    profile = null;
-  }
-
-  return {
-    id: source.id,
-    email: profile?.email || source.email || "",
-    username:
-      profile?.username ||
-      (typeof source.user_metadata?.username === "string"
-        ? source.user_metadata.username
-        : source.email || ""),
-    avatarUrl:
-      profile?.avatar_url ||
-      (typeof source.user_metadata?.avatar_url === "string"
-        ? source.user_metadata.avatar_url
-        : null),
-    createdAt: source.created_at,
-  };
-};
 
 export default function AuthSessionSync() {
   const { logout, setUser, setAccessToken } = useAuthStore();
@@ -57,26 +27,16 @@ export default function AuthSessionSync() {
       }
 
       try {
-        await signupWhitelistService.ensureEmailWhitelisted(
-          session.user.email || "",
-          "session",
+        const user = await finalizeAdminSession(
+          session.user,
+          session.access_token,
         );
-        const profile = await profileService.getById(session.user.id);
-        if (profile?.role !== "admin") {
-          throw new Error("Admin role required");
-        }
+        if (cancelled) return;
+        setUser(user);
+        setAccessToken(session.access_token);
       } catch {
-        await supabase.auth.signOut();
         clearLocalSession();
-        return;
       }
-
-      const mappedUser = await mapUser(session.user);
-      if (cancelled) return;
-
-      setUser(mappedUser);
-      setAccessToken(session.access_token);
-      await syncServerSession(session.access_token);
     };
 
     const bootstrap = async () => {
