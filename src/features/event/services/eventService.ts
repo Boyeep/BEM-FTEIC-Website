@@ -12,6 +12,7 @@ import {
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
+import { uploadImageToAPI } from "@/lib/upload";
 
 type EventRow = {
   id: string;
@@ -25,21 +26,6 @@ type EventRow = {
   created_at: string;
   created_by?: string | null;
 };
-
-const EVENT_COVER_BUCKET =
-  process.env.NEXT_PUBLIC_SUPABASE_EVENT_COVER_BUCKET || "event-covers";
-
-function createUniqueUploadPath(
-  userId: string,
-  prefix: string,
-  extension: string,
-) {
-  const randomPart =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  return `${userId}/${prefix}-${randomPart}.${extension}`;
-}
 
 function mapRowToSummary(row: EventRow): EventSummary {
   return {
@@ -56,34 +42,11 @@ function mapRowToSummary(row: EventRow): EventSummary {
 }
 
 async function uploadImage(
-  userId: string,
+  _userId: string,
   file: File,
-  prefix: string,
+  _prefix: string,
 ): Promise<string> {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  let filePath = createUniqueUploadPath(userId, prefix, extension);
-
-  let { error: uploadError } = await supabase.storage
-    .from(EVENT_COVER_BUCKET)
-    .upload(filePath, file, { upsert: false });
-
-  if (uploadError?.message?.toLowerCase().includes("lock broken")) {
-    filePath = createUniqueUploadPath(userId, prefix, extension);
-    ({ error: uploadError } = await supabase.storage
-      .from(EVENT_COVER_BUCKET)
-      .upload(filePath, file, { upsert: false }));
-  }
-
-  if (uploadError) {
-    throw new Error(
-      uploadError.message || "Failed to upload image. Please try again.",
-    );
-  }
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(EVENT_COVER_BUCKET).getPublicUrl(filePath);
-  return publicUrl;
+  return uploadImageToAPI(file);
 }
 
 async function resolveAuthorProfile(createdBy?: string | null) {

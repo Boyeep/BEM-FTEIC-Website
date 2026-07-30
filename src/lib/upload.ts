@@ -1,0 +1,31 @@
+import { supabase } from "@/lib/supabase";
+
+export async function uploadImageToAPI(file: File): Promise<string> {
+  const apiURL = process.env.NEXT_PUBLIC_API_URL_PROD?.replace(/\/$/, "");
+  if (!apiURL) {
+    throw new Error("NEXT_PUBLIC_API_URL_PROD is not configured");
+  }
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session?.access_token) {
+    throw new Error("You must be signed in to upload an image");
+  }
+
+  const body = new FormData();
+  body.append("file", file);
+
+  const response = await fetch(`${apiURL}/uploads/images`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+    },
+    body,
+  });
+  const payload = (await response.json()) as { url?: string; error?: string };
+  if (!response.ok || !payload.url) {
+    throw new Error(payload.error || "Failed to upload image");
+  }
+  return payload.url;
+}

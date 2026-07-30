@@ -7,6 +7,7 @@ import {
   UpsertGaleriPayload,
 } from "@/features/galeri/types";
 import { supabase } from "@/lib/supabase";
+import { uploadImageToAPI } from "@/lib/upload";
 
 type GaleriRow = {
   id: string;
@@ -17,26 +18,11 @@ type GaleriRow = {
   created_at: string;
 };
 
-const GALERI_BUCKET =
-  process.env.NEXT_PUBLIC_SUPABASE_GALERI_BUCKET || "galeri-images";
-
 function normalizeExternalLink(rawLink: string) {
   const trimmed = rawLink.trim();
   if (!trimmed) return "";
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
   return `https://${trimmed}`;
-}
-
-function createUniqueUploadPath(
-  userId: string,
-  prefix: string,
-  extension: string,
-) {
-  const randomPart =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  return `${userId}/${prefix}-${randomPart}.${extension}`;
 }
 
 function mapRow(row: GaleriRow): GaleriItem {
@@ -139,32 +125,8 @@ export const galeriService = {
     return { item: mapRow(data as GaleriRow) };
   },
 
-  uploadImage: async (userId: string, file: File): Promise<string> => {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    let filePath = createUniqueUploadPath(userId, "galeri", extension);
-
-    let { error: uploadError } = await supabase.storage
-      .from(GALERI_BUCKET)
-      .upload(filePath, file, { upsert: false });
-
-    if (uploadError?.message?.toLowerCase().includes("lock broken")) {
-      filePath = createUniqueUploadPath(userId, "galeri", extension);
-      ({ error: uploadError } = await supabase.storage
-        .from(GALERI_BUCKET)
-        .upload(filePath, file, { upsert: false }));
-    }
-
-    if (uploadError) {
-      throw new Error(
-        uploadError.message ||
-          "Failed to upload galeri image. Please try again.",
-      );
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(GALERI_BUCKET).getPublicUrl(filePath);
-    return publicUrl;
+  uploadImage: async (_userId: string, file: File): Promise<string> => {
+    return uploadImageToAPI(file);
   },
 
   createGaleri: async (

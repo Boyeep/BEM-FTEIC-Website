@@ -1,6 +1,7 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
 
 import { supabase } from "@/lib/supabase";
+import { uploadImageToAPI } from "@/lib/upload";
 
 type ProfileRow = {
   id: string;
@@ -72,21 +73,7 @@ export const profileService = {
   },
 
   uploadAvatar: async (userId: string, file: File): Promise<ProfileRow> => {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const bucket = process.env.NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET || "avatars";
-    const filePath = `${userId}/avatar-${Date.now()}.${extension}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from(bucket)
-      .upload(filePath, file, { upsert: true });
-
-    if (uploadError) {
-      throw new Error(uploadError.message || "Failed to upload avatar");
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(bucket).getPublicUrl(filePath);
+    const publicUrl = await uploadImageToAPI(file);
 
     const { data, error } = await supabase
       .from("profiles")
