@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 
 type SignupWhitelistRow = {
   id: string;
@@ -6,6 +7,7 @@ type SignupWhitelistRow = {
   created_at: string;
   created_by?: string | null;
 };
+type APIEnvelope<T> = { success: boolean; data: T };
 
 export interface SignupWhitelistEntry {
   id: string;
@@ -109,16 +111,9 @@ export const signupWhitelistService = {
   },
 
   getEntries: async (): Promise<SignupWhitelistEntry[]> => {
-    const { data, error } = await supabase
-      .from("signup_whitelist")
-      .select("id,email,created_at,created_by")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      throw new Error(mapWhitelistErrorMessage(error.message));
-    }
-
-    return ((data || []) as SignupWhitelistRow[]).map(mapRowToEntry);
+    const { data } =
+      await api.get<APIEnvelope<SignupWhitelistRow[]>>("/admin/whitelist");
+    return (data.data || []).map(mapRowToEntry);
   },
 
   addEntry: async (
@@ -131,39 +126,15 @@ export const signupWhitelistService = {
       throw new Error("Masukkan email yang valid.");
     }
 
-    const { data, error } = await supabase
-      .from("signup_whitelist")
-      .insert({
-        email: normalizedEmail,
-        created_by: createdBy,
-      })
-      .select("id,email,created_at,created_by")
-      .single();
-
-    if (error) {
-      if (error.code === "23505") {
-        throw new Error("Email ini sudah ada di whitelist.");
-      }
-
-      throw new Error(mapWhitelistErrorMessage(error.message));
-    }
-
-    return mapRowToEntry(data as SignupWhitelistRow);
+    const { data } = await api.post<APIEnvelope<SignupWhitelistRow>>(
+      "/admin/whitelist",
+      { email: normalizedEmail },
+    );
+    void createdBy;
+    return mapRowToEntry(data.data);
   },
 
   removeEntry: async (id: string): Promise<void> => {
-    const { data, error } = await supabase
-      .from("signup_whitelist")
-      .delete()
-      .eq("id", id)
-      .select("id");
-
-    if (error) {
-      throw new Error(mapWhitelistErrorMessage(error.message));
-    }
-
-    if (!data || data.length === 0) {
-      throw new Error("Email whitelist tidak berhasil dihapus.");
-    }
+    await api.delete(`/admin/whitelist/${id}`);
   },
 };

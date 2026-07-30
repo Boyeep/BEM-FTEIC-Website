@@ -1,11 +1,13 @@
 import DashboardEditGaleriPage from "@/features/dashboard/components/DashboardEditGaleriPage";
 
 interface EditGaleriRouteProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function EditGaleriRoute({ params }: EditGaleriRouteProps) {
-  return <DashboardEditGaleriPage id={params.id} />;
+export default async function EditGaleriRoute({
+  params,
+}: EditGaleriRouteProps) {
+  return <DashboardEditGaleriPage id={(await params).id} />;
 }

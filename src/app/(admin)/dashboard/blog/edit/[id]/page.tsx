@@ -1,11 +1,11 @@
 import DashboardEditBlogPage from "@/features/dashboard/components/DashboardEditBlogPage";
 
 interface EditBlogRouteProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function EditBlogRoute({ params }: EditBlogRouteProps) {
-  return <DashboardEditBlogPage id={params.id} />;
+export default async function EditBlogRoute({ params }: EditBlogRouteProps) {
+  return <DashboardEditBlogPage id={(await params).id} />;
 }

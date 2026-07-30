@@ -3,15 +3,15 @@ import { NextResponse } from "next/server";
 import { galeriService } from "@/features/galeri/services/galeriService";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(_request: Request, context: RouteContext) {
   try {
-    const response = await galeriService.getDashboardGaleriById(
-      context.params.id,
+    const response = await galeriService.getPublicGaleriById(
+      (await context.params).id,
     );
     return NextResponse.json(response);
   } catch (error) {

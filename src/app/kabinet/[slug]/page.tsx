@@ -9,31 +9,32 @@ import {
 import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface KabinetDivisionPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export function generateStaticParams() {
   return KABINET_DIVISIONS.map((item) => ({ slug: item.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
-}: KabinetDivisionPageProps): Metadata {
-  const division = getKabinetDivisionBySlug(params.slug);
+}: KabinetDivisionPageProps): Promise<Metadata> {
+  const resolved = await params;
+  const division = getKabinetDivisionBySlug(resolved.slug);
 
   if (!division) {
     return {};
   }
 
-  return createCanonicalMetadataFromSegments("kabinet", params.slug);
+  return createCanonicalMetadataFromSegments("kabinet", resolved.slug);
 }
 
-export default function KabinetDivisionPage({
+export default async function KabinetDivisionPage({
   params,
 }: KabinetDivisionPageProps) {
-  const division = getKabinetDivisionBySlug(params.slug);
+  const division = getKabinetDivisionBySlug((await params).slug);
 
   if (!division) {
     notFound();

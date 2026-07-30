@@ -34,14 +34,12 @@ export const visitorService = {
   },
 
   getVisitorCount: async (): Promise<number> => {
-    const { count, error } = await supabase
-      .from("site_visitors")
-      .select("id", { count: "exact", head: true });
+    const { data, error } = await supabase.rpc("get_visitor_count");
 
     if (error) {
       throw new Error(error.message || "Failed to fetch visitor count");
     }
 
-    return count || 0;
+    return Number(data) || 0;
   },
 };

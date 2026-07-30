@@ -1,11 +1,11 @@
 import DashboardEditEventPage from "@/features/dashboard/components/DashboardEditEventPage";
 
 interface EditEventRouteProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function EditEventRoute({ params }: EditEventRouteProps) {
-  return <DashboardEditEventPage id={params.id} />;
+export default async function EditEventRoute({ params }: EditEventRouteProps) {
+  return <DashboardEditEventPage id={(await params).id} />;
 }

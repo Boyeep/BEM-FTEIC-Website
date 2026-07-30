@@ -9,31 +9,32 @@ import {
 import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface EventDepartmentPageProps {
-  params: {
+  params: Promise<{
     department: string;
-  };
+  }>;
 }
 
 export function generateStaticParams() {
   return EVENT_DEPARTMENTS.map((item) => ({ department: item.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
-}: EventDepartmentPageProps): Metadata {
-  const department = getEventDepartmentBySlug(params.department);
+}: EventDepartmentPageProps): Promise<Metadata> {
+  const resolved = await params;
+  const department = getEventDepartmentBySlug(resolved.department);
 
   if (!department) {
     return {};
   }
 
-  return createCanonicalMetadataFromSegments("event", params.department);
+  return createCanonicalMetadataFromSegments("event", resolved.department);
 }
 
-export default function EventDepartmentPage({
+export default async function EventDepartmentPage({
   params,
 }: EventDepartmentPageProps) {
-  const department = getEventDepartmentBySlug(params.department);
+  const department = getEventDepartmentBySlug((await params).department);
 
   if (!department) {
     notFound();

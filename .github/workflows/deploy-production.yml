@@ -36,7 +36,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Type check
-        run: pnpm typecheck
+        run: |
+          pnpm typecheck
+          pnpm lint
+          pnpm audit --prod --audit-level=high
 
   deploy:
     needs: validate
@@ -58,6 +61,18 @@ jobs:
           mv "$RUNNER_TEMP/frontend-source.tar.gz" frontend-source.tar.gz
 
       - name: Upload source to VPS
+        id: upload
+        continue-on-error: true
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: frontend-source.tar.gz
+          target: /tmp
+
+      - name: Retry source upload
+        if: steps.upload.outcome == 'failure'
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -80,6 +95,7 @@ jobs:
             ARCHIVE="/tmp/frontend-source.tar.gz"
 
             mkdir -p "$APP_DIR"
+            rm -f "$APP_DIR/src/middleware.ts"
             tar -xzf "$ARCHIVE" -C "$APP_DIR"
             rm -f "$ARCHIVE"
 
@@ -90,11 +106,27 @@ jobs:
               exit 1
             fi
 
-            sudo docker compose -p group1 config --quiet
-            sudo docker compose -p group1 up -d --build app nginx
+            RELEASE_TAG="${{ github.sha }}"
+            PREVIOUS_TAG="$(cat .last-successful-frontend-image 2>/dev/null || echo latest)"
+            select_tag() {
+              printf 'FRONTEND_IMAGE_TAG=%s\n' "$1" > .frontend-deploy.env
+            }
+
+            select_tag "$RELEASE_TAG"
+            sudo docker compose -p group1 --env-file .frontend-deploy.env config --quiet
+            sudo docker compose -p group1 --env-file .frontend-deploy.env build app
+            sudo docker compose -p group1 --env-file .frontend-deploy.env up -d app nginx
             sudo docker compose -p group1 restart nginx
 
-            curl --retry 15 --retry-delay 3 --retry-connrefused --retry-all-errors \
-              --fail --silent --show-error http://127.0.0.1:8001/ > /dev/null
+            if ! curl --retry 15 --retry-delay 3 --retry-connrefused --retry-all-errors \
+              --fail --silent --show-error http://127.0.0.1:8001/ > /dev/null; then
+              echo "Readiness failed; rolling back frontend to $PREVIOUS_TAG..."
+              select_tag "$PREVIOUS_TAG"
+              sudo docker compose -p group1 --env-file .frontend-deploy.env up -d app nginx
+              sudo docker compose -p group1 restart nginx
+              exit 1
+            fi
 
-            sudo docker compose -p group1 ps app nginx
+            printf '%s\n' "$RELEASE_TAG" > .last-successful-frontend-image
+            select_tag "$RELEASE_TAG"
+            sudo docker compose -p group1 --env-file .frontend-deploy.env ps app nginx

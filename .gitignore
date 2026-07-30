@@ -30,6 +30,8 @@ npm-debug.log*
 .env
 .env.production
 .env*.local
+.frontend-deploy.env
+.last-successful-frontend-image
 
 # vercel
 .vercel

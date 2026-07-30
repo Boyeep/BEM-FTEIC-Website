@@ -1,5 +1,6 @@
 services:
   app:
+    image: group1-app:${FRONTEND_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile

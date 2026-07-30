@@ -3,14 +3,16 @@ import { NextResponse } from "next/server";
 import { blogService } from "@/features/blog/services/blogService";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(_request: Request, context: RouteContext) {
   try {
-    const response = await blogService.getPublicBlogById(context.params.id);
+    const response = await blogService.getPublicBlogById(
+      (await context.params).id,
+    );
     return NextResponse.json(response);
   } catch (error) {
     const message =

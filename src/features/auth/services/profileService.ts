@@ -1,7 +1,7 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
 
-import { supabase } from "@/lib/supabase";
-import { uploadImageToAPI } from "@/lib/upload";
+import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { api } from "@/lib/api";
 
 type ProfileRow = {
   id: string;
@@ -9,7 +9,9 @@ type ProfileRow = {
   username: string;
   avatar_url?: string | null;
   updated_at?: string;
+  role?: "member" | "admin";
 };
+type APIEnvelope<T> = { success: boolean; data: T };
 
 const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
   id: user.id,
@@ -26,66 +28,34 @@ const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
 
 export const profileService = {
   getById: async (userId: string): Promise<ProfileRow | null> => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id,email,username,avatar_url,updated_at")
-      .eq("id", userId)
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(error.message || "Failed to load profile");
-    }
-
-    return data;
+    const { data } = await api.get<APIEnvelope<ProfileRow>>("/me");
+    void userId;
+    return data.data;
   },
 
   ensureForUser: async (user: SupabaseUser): Promise<ProfileRow> => {
     const existing = await profileService.getById(user.id);
-    if (existing) return existing;
-
-    const fallback = mapFallbackProfile(user);
-    const { data, error } = await supabase
-      .from("profiles")
-      .upsert(fallback, { onConflict: "id" })
-      .select("id,email,username,avatar_url,updated_at")
-      .single();
-
-    if (error) {
-      throw new Error(error.message || "Failed to create profile");
-    }
-
-    return data;
+    return existing || mapFallbackProfile(user);
   },
 
   updateName: async (userId: string, username: string): Promise<ProfileRow> => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ username })
-      .eq("id", userId)
-      .select("id,email,username,avatar_url,updated_at")
-      .single();
-
-    if (error) {
-      throw new Error(error.message || "Failed to update profile name");
-    }
-
-    return data;
+    const current = await profileService.getById(userId);
+    const { data } = await api.put<APIEnvelope<ProfileRow>>("/me", {
+      username,
+      avatar_url: current?.avatar_url || "",
+    });
+    return data.data;
   },
 
   uploadAvatar: async (userId: string, file: File): Promise<ProfileRow> => {
     const publicUrl = await uploadImageToAPI(file);
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ avatar_url: publicUrl })
-      .eq("id", userId)
-      .select("id,email,username,avatar_url,updated_at")
-      .single();
-
-    if (error) {
-      throw new Error(error.message || "Failed to save avatar URL");
-    }
-
-    return data;
+    const current = await profileService.getById(userId);
+    const { data } = await api.put<APIEnvelope<ProfileRow>>("/me", {
+      username: current?.username || "Admin",
+      avatar_url: publicUrl,
+    });
+    await deleteImageFromAPI(current?.avatar_url);
+    return data.data;
   },
 };

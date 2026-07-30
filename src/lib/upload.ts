@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 
 export async function uploadImageToAPI(file: File): Promise<string> {
   const apiURL = process.env.NEXT_PUBLIC_API_URL_PROD?.replace(/\/$/, "");
@@ -31,4 +32,9 @@ export async function uploadImageToAPI(file: File): Promise<string> {
     throw new Error(payload.error?.message || "Failed to upload image");
   }
   return payload.data.url;
+}
+
+export async function deleteImageFromAPI(url?: string | null): Promise<void> {
+  if (!url || !url.includes("/uploads/")) return;
+  await api.delete("/uploads/images", { params: { url } });
 }

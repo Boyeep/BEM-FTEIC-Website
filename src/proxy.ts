@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { CANONICAL_HOSTNAME, REDIRECT_HOSTNAMES } from "@/lib/site";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const host = request.headers.get("host");
 
   if (!host) {

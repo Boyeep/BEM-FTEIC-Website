@@ -5,20 +5,22 @@ import BlogDetailContainer from "@/features/blog/components/BlogDetailContainer"
 import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface BlogDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export function generateMetadata({ params }: BlogDetailPageProps): Metadata {
-  return createCanonicalMetadataFromSegments("blog", params.id);
+export async function generateMetadata({
+  params,
+}: BlogDetailPageProps): Promise<Metadata> {
+  return createCanonicalMetadataFromSegments("blog", (await params).id);
 }
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   return (
     <main className="min-h-screen bg-white pt-28 md:pt-32">
       <ScrollReveal delay={40}>
-        <BlogDetailContainer id={params.id} />
+        <BlogDetailContainer id={(await params).id} />
       </ScrollReveal>
     </main>
   );

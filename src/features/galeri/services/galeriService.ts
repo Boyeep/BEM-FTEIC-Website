@@ -7,7 +7,8 @@ import {
   UpsertGaleriPayload,
 } from "@/features/galeri/types";
 import { supabase } from "@/lib/supabase";
-import { uploadImageToAPI } from "@/lib/upload";
+import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { api } from "@/lib/api";
 
 type GaleriRow = {
   id: string;
@@ -16,7 +17,9 @@ type GaleriRow = {
   image_url: string;
   taken_at: string;
   created_at: string;
+  category?: GaleriDepartment;
 };
+type APIEnvelope<T> = { success: boolean; data: T };
 
 function normalizeExternalLink(rawLink: string) {
   const trimmed = rawLink.trim();
@@ -55,18 +58,8 @@ export const galeriService = {
         count: "exact",
       });
 
-    if (department === "teknik_elektro") {
-      query = query.ilike("title", "%elektro%");
-    } else if (department === "teknik_informatika") {
-      query = query.ilike("title", "%informatika%");
-    } else if (department === "sistem_informasi") {
-      query = query.ilike("title", "%sistem informasi%");
-    } else if (department === "teknik_komputer") {
-      query = query.ilike("title", "%komputer%");
-    } else if (department === "teknik_biomedik") {
-      query = query.ilike("title", "%biomedik%");
-    } else if (department === "teknologi_informasi") {
-      query = query.ilike("title", "%teknologi informasi%");
+    if (department !== "all") {
+      query = query.eq("category", department);
     }
 
     if (sortBy === "oldest") {
@@ -102,27 +95,48 @@ export const galeriService = {
     };
   },
 
+  getPublicGaleriById: async (id: string): Promise<GaleriDetailResponse> => {
+    const { data, error } = await supabase
+      .from("galeri")
+      .select("id,title,link,image_url,taken_at,created_at,category")
+      .eq("id", id.trim())
+      .maybeSingle();
+    if (error || !data)
+      throw new Error(error?.message || "Galeri item not found.");
+    return { item: mapRow(data as GaleriRow) };
+  },
+
   getDashboardGaleri: async (
     page: number,
     limit: number,
   ): Promise<GaleriListResponse> => {
-    return galeriService.getPublicGaleri(page, limit);
+    const { data } = await api.get<APIEnvelope<GaleriRow[]>>("/admin/gallery");
+    const safeLimit = Math.max(1, Math.floor(limit || 10));
+    const totalItems = data.data.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
+    const normalizedPage = Math.min(
+      Math.max(1, Math.floor(page || 1)),
+      totalPages,
+    );
+    const start = (normalizedPage - 1) * safeLimit;
+    return {
+      items: data.data.slice(start, start + safeLimit).map(mapRow),
+      pagination: {
+        page: normalizedPage,
+        limit: safeLimit,
+        totalItems,
+        totalPages,
+        hasNextPage: normalizedPage < totalPages,
+        hasPreviousPage: normalizedPage > 1,
+      },
+    };
   },
 
   getDashboardGaleriById: async (id: string): Promise<GaleriDetailResponse> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("galeri")
-      .select("id,title,link,image_url,taken_at,created_at")
-      .eq("id", normalizedId)
-      .limit(1)
-      .maybeSingle();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Galeri item not found.");
-    }
-
-    return { item: mapRow(data as GaleriRow) };
+    const { data } = await api.get<APIEnvelope<GaleriRow>>(
+      `/admin/gallery/${id.trim()}`,
+    );
+    return { item: mapRow(data.data) };
   },
 
   uploadImage: async (_userId: string, file: File): Promise<string> => {
@@ -133,66 +147,36 @@ export const galeriService = {
     payload: UpsertGaleriPayload,
     userId: string,
   ): Promise<GaleriDetailResponse> => {
-    const { data, error } = await supabase
-      .from("galeri")
-      .insert({
-        title: payload.title,
-        link: normalizeExternalLink(payload.link),
-        image_url: payload.imageUrl || "",
-        taken_at: payload.takenAt,
-        created_by: userId,
-      })
-      .select("id,title,link,image_url,taken_at,created_at")
-      .single();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Failed to create galeri item");
-    }
-
-    return { item: mapRow(data as GaleriRow) };
+    const { data } = await api.post<APIEnvelope<GaleriRow>>("/admin/gallery", {
+      title: payload.title,
+      link: normalizeExternalLink(payload.link),
+      image_url: payload.imageUrl || "",
+      taken_at: payload.takenAt,
+      category: "all",
+    });
+    void userId;
+    return { item: mapRow(data.data) };
   },
 
   updateGaleri: async (
     id: string,
     payload: UpsertGaleriPayload,
   ): Promise<void> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("galeri")
-      .update({
-        title: payload.title,
-        link: normalizeExternalLink(payload.link),
-        image_url: payload.imageUrl,
-        taken_at: payload.takenAt,
-      })
-      .eq("id", normalizedId)
-      .select("id")
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(error.message || "Failed to update galeri item");
-    }
-
-    if (!data) {
-      throw new Error(
-        "Galeri tidak ter-update. Data ini kemungkinan bukan milik akun yang login.",
-      );
+    const existing = await galeriService.getDashboardGaleriById(id);
+    await api.put(`/admin/gallery/${id.trim()}`, {
+      title: payload.title,
+      link: normalizeExternalLink(payload.link),
+      image_url: payload.imageUrl,
+      taken_at: payload.takenAt,
+    });
+    if (existing.item.imageUrl !== payload.imageUrl) {
+      await deleteImageFromAPI(existing.item.imageUrl);
     }
   },
 
   deleteGaleri: async (id: string): Promise<void> => {
-    const { data, error } = await supabase
-      .from("galeri")
-      .delete()
-      .eq("id", id)
-      .select("id");
-
-    if (error) {
-      throw new Error(error.message || "Failed to delete galeri item");
-    }
-
-    if (!data || data.length === 0) {
-      throw new Error("Galeri tidak terhapus. Cek policy DELETE di Supabase.");
-    }
+    const existing = await galeriService.getDashboardGaleriById(id);
+    await api.delete(`/admin/gallery/${id}`);
+    await deleteImageFromAPI(existing.item.imageUrl);
   },
 };

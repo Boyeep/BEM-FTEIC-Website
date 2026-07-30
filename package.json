@@ -20,21 +20,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.98.0",
-    "@tanstack/react-query": "^5.32.0",
-    "axios": "^1.8.4",
+    "@supabase/supabase-js": "^2.111.0",
+    "@tanstack/react-query": "^5.101.4",
+    "axios": "^1.19.0",
     "clsx": "^2.1.0",
-    "cssnano": "^6.0.3",
+    "cssnano": "^8.0.2",
     "lucide-react": "^0.574.0",
-    "next": "14.2.1",
+    "next": "16.2.11",
     "next-sitemap": "^4.2.3",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-hook-form": "^7.51.3",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-hook-form": "^7.83.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.1.0",
     "tailwind-merge": "^2.2.2",
-    "universal-cookie": "^7.1.0",
     "zustand": "^4.5.7"
   },
   "devDependencies": {
@@ -42,14 +41,21 @@
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
-    "postcss": "^8",
+    "postcss": "^8.5.25",
     "scheduler": "^0.23.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/runtime": "7.29.7",
+      "postcss": "8.5.25",
+      "sharp": "0.35.0"
+    }
   }
 }

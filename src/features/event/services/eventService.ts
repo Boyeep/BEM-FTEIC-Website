@@ -12,7 +12,8 @@ import {
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
-import { uploadImageToAPI } from "@/lib/upload";
+import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { api } from "@/lib/api";
 
 type EventRow = {
   id: string;
@@ -26,6 +27,31 @@ type EventRow = {
   created_at: string;
   created_by?: string | null;
 };
+type APIEnvelope<T> = { success: boolean; data: T };
+
+function paginateEvents(
+  rows: EventRow[],
+  page: number,
+  limit: number,
+): EventListResponse {
+  const safePage = Math.max(1, Math.floor(page || 1));
+  const safeLimit = Math.max(1, Math.floor(limit || 10));
+  const totalItems = rows.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
+  const normalizedPage = Math.min(safePage, totalPages);
+  const start = (normalizedPage - 1) * safeLimit;
+  return {
+    items: rows.slice(start, start + safeLimit).map(mapRowToSummary),
+    pagination: {
+      page: normalizedPage,
+      limit: safeLimit,
+      totalItems,
+      totalPages,
+      hasNextPage: normalizedPage < totalPages,
+      hasPreviousPage: normalizedPage > 1,
+    },
+  };
+}
 
 function mapRowToSummary(row: EventRow): EventSummary {
   return {
@@ -125,6 +151,7 @@ export const eventService = {
         "id,title,description,author,category,cover_image,event_date,status,created_at,created_by",
         { count: "exact" },
       );
+    query = query.eq("status", "PUBLISHED");
 
     if (startDate) {
       query = query.gte("event_date", startDate);
@@ -175,29 +202,42 @@ export const eventService = {
     };
   },
 
-  getDashboardEvents: async (
-    page: number,
-    limit: number,
-  ): Promise<EventListResponse> => {
-    return eventService.getPublicEvents(page, limit);
-  },
-
-  getDashboardEventById: async (id: string): Promise<EventDetailResponse> => {
-    const normalizedId = id.trim();
+  getPublicEventById: async (id: string): Promise<EventDetailResponse> => {
     const { data, error } = await supabase
       .from("events")
       .select(
         "id,title,description,author,category,cover_image,event_date,status,created_at,created_by",
       )
-      .eq("id", normalizedId)
-      .limit(1)
+      .eq("id", id.trim())
+      .eq("status", "PUBLISHED")
       .maybeSingle();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Event not found.");
-    }
-
+    if (error || !data) throw new Error(error?.message || "Event not found.");
     const mapped = mapRowToSummary(data as EventRow);
+    const profile = await resolveAuthorProfile(mapped.createdBy);
+    return {
+      item: {
+        ...mapped,
+        author: profile?.username || mapped.author,
+        authorAvatarUrl: profile?.avatar_url || null,
+      },
+    };
+  },
+
+  getDashboardEvents: async (
+    page: number,
+    limit: number,
+  ): Promise<EventListResponse> => {
+    const { data } = await api.get<APIEnvelope<EventRow[]>>("/admin/events");
+    const result = paginateEvents(data.data || [], page, limit);
+    result.items = await resolveAuthorProfiles(result.items);
+    return result;
+  },
+
+  getDashboardEventById: async (id: string): Promise<EventDetailResponse> => {
+    const { data } = await api.get<APIEnvelope<EventRow>>(
+      `/admin/events/${id.trim()}`,
+    );
+    const mapped = mapRowToSummary(data.data);
     const profile = await resolveAuthorProfile(mapped.createdBy);
 
     return {
@@ -222,73 +262,41 @@ export const eventService = {
     authorName: string,
     createdBy: string,
   ): Promise<EventDetailResponse> => {
-    const { data, error } = await supabase
-      .from("events")
-      .insert({
-        title: payload.title,
-        description: payload.description,
-        author: authorName.trim(),
-        category: payload.category,
-        cover_image: payload.coverImage || "",
-        event_date: payload.eventDate,
-        status: payload.status,
-        created_by: createdBy,
-      })
-      .select(
-        "id,title,description,author,category,cover_image,event_date,status,created_at,created_by",
-      )
-      .single();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Failed to create event");
-    }
-
-    return { item: mapRowToSummary(data as EventRow) };
+    const { data } = await api.post<APIEnvelope<EventRow>>("/admin/events", {
+      title: payload.title,
+      description: payload.description,
+      author: authorName.trim(),
+      category: payload.category,
+      cover_image: payload.coverImage || "",
+      event_date: payload.eventDate,
+      status: payload.status,
+    });
+    void createdBy;
+    return { item: mapRowToSummary(data.data) };
   },
 
   updateEvent: async (
     id: string,
     payload: UpsertEventPayload,
   ): Promise<void> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("events")
-      .update({
-        title: payload.title,
-        description: payload.description,
-        category: payload.category,
-        cover_image: payload.coverImage,
-        event_date: payload.eventDate,
-        status: payload.status,
-      })
-      .eq("id", normalizedId)
-      .select("id")
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(error.message || "Failed to update event");
-    }
-
-    if (!data) {
-      throw new Error(
-        "Event tidak ter-update. Data ini kemungkinan bukan milik akun yang login.",
-      );
+    const existing = await eventService.getDashboardEventById(id);
+    await api.put(`/admin/events/${id.trim()}`, {
+      title: payload.title,
+      description: payload.description,
+      author: existing.item.author,
+      category: payload.category,
+      cover_image: payload.coverImage,
+      event_date: payload.eventDate,
+      status: payload.status,
+    });
+    if (existing.item.coverImage !== payload.coverImage) {
+      await deleteImageFromAPI(existing.item.coverImage);
     }
   },
 
   deleteEvent: async (id: string): Promise<void> => {
-    const { data, error } = await supabase
-      .from("events")
-      .delete()
-      .eq("id", id)
-      .select("id");
-
-    if (error) {
-      throw new Error(error.message || "Failed to delete event");
-    }
-
-    if (!data || data.length === 0) {
-      throw new Error("Event tidak terhapus. Cek policy DELETE di Supabase.");
-    }
+    const existing = await eventService.getDashboardEventById(id);
+    await api.delete(`/admin/events/${id}`);
+    await deleteImageFromAPI(existing.item.coverImage);
   },
 };

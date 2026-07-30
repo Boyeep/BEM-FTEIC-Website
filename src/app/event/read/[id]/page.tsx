@@ -5,20 +5,28 @@ import EventDetailContainer from "@/features/event/components/EventDetailContain
 import { createCanonicalMetadataFromSegments } from "@/lib/seo";
 
 interface EventDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export function generateMetadata({ params }: EventDetailPageProps): Metadata {
-  return createCanonicalMetadataFromSegments("event", "read", params.id);
+export async function generateMetadata({
+  params,
+}: EventDetailPageProps): Promise<Metadata> {
+  return createCanonicalMetadataFromSegments(
+    "event",
+    "read",
+    (await params).id,
+  );
 }
 
-export default function EventDetailPage({ params }: EventDetailPageProps) {
+export default async function EventDetailPage({
+  params,
+}: EventDetailPageProps) {
   return (
     <main className="min-h-screen bg-white pt-28 md:pt-32">
       <ScrollReveal delay={40}>
-        <EventDetailContainer id={params.id} />
+        <EventDetailContainer id={(await params).id} />
       </ScrollReveal>
     </main>
   );

@@ -4,6 +4,7 @@
 
 import { profileService } from "@/features/auth/services/profileService";
 import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
+import { syncServerSession } from "@/features/auth/services/serverSessionService";
 import {
   LoginRequest,
   LoginResponse,
@@ -47,6 +48,11 @@ export const authService = {
     } catch {
       profile = null;
     }
+    if (profile?.role !== "admin") {
+      await supabase.auth.signOut();
+      throw new Error("Akun ini tidak memiliki role admin.");
+    }
+    await syncServerSession(data.session.access_token);
 
     const fallbackUsername =
       typeof data.user.user_metadata?.username === "string"
@@ -150,6 +156,11 @@ export const authService = {
     } catch {
       profile = null;
     }
+    if (profile?.role !== "admin") {
+      await supabase.auth.signOut();
+      throw new Error("Akun ini tidak memiliki role admin.");
+    }
+    await syncServerSession(session.access_token);
 
     const fallbackUsername =
       typeof user.user_metadata?.username === "string"

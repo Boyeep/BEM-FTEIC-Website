@@ -3,15 +3,15 @@ import { NextResponse } from "next/server";
 import { eventService } from "@/features/event/services/eventService";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(_request: Request, context: RouteContext) {
   try {
-    const response = await eventService.getDashboardEventById(
-      context.params.id,
+    const response = await eventService.getPublicEventById(
+      (await context.params).id,
     );
     return NextResponse.json(response);
   } catch (error) {

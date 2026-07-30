@@ -1,10 +1,7 @@
 import axios, { AxiosError } from "axios";
-import { GetServerSidePropsContext } from "next/types";
-import Cookies from "universal-cookie";
 
-import { getToken } from "@/lib/cookies";
+import { supabase } from "@/lib/supabase";
 import { UninterceptedApiError } from "@/types/api";
-const context = <GetServerSidePropsContext>{};
 
 export const baseURL =
   process.env.NEXT_PUBLIC_RUN_MODE === "development"
@@ -23,18 +20,13 @@ export const api = axios.create({
 api.defaults.withCredentials = false;
 const isBrowser = typeof window !== "undefined";
 
-api.interceptors.request.use(function (config) {
+api.interceptors.request.use(async function (config) {
   if (config.headers) {
     let token: string | undefined;
 
-    if (!isBrowser) {
-      if (!context)
-        throw "Api Context not found. You must call `setApiContext(context)` before calling api on server-side";
-
-      const cookies = new Cookies(context.req?.headers.cookie);
-      token = cookies.get("flexoo_token") || cookies.get("@flexoo/token");
-    } else {
-      token = getToken();
+    if (isBrowser) {
+      const { data } = await supabase.auth.getSession();
+      token = data.session?.access_token;
     }
 
     config.headers.Authorization = token ? `Bearer ${token}` : "";
@@ -48,6 +40,12 @@ api.interceptors.response.use(
     return config;
   },
   (error: AxiosError<UninterceptedApiError>) => {
+    const backendError = error.response?.data as UninterceptedApiError & {
+      error?: { message?: string };
+    };
+    if (backendError?.error?.message) {
+      return Promise.reject(new Error(backendError.error.message));
+    }
     // parse error
     if (error.response?.data.message) {
       return Promise.reject({

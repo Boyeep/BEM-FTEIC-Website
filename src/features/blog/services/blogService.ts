@@ -15,7 +15,8 @@ import {
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
 import { supabase } from "@/lib/supabase";
-import { uploadImageToAPI } from "@/lib/upload";
+import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { api } from "@/lib/api";
 
 type BlogRow = {
   id: string;
@@ -30,6 +31,32 @@ type BlogRow = {
   created_at: string;
   created_by?: string | null;
 };
+
+type APIEnvelope<T> = { success: boolean; data: T };
+
+function paginateBlogs(
+  rows: BlogRow[],
+  page: number,
+  limit: number,
+): BlogListResponse {
+  const safePage = Math.max(1, Math.floor(page || 1));
+  const safeLimit = Math.max(1, Math.floor(limit || 10));
+  const totalItems = rows.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
+  const normalizedPage = Math.min(safePage, totalPages);
+  const start = (normalizedPage - 1) * safeLimit;
+  return {
+    items: rows.slice(start, start + safeLimit).map(mapRowToSummary),
+    pagination: {
+      page: normalizedPage,
+      limit: safeLimit,
+      totalItems,
+      totalPages,
+      hasNextPage: normalizedPage < totalPages,
+      hasPreviousPage: normalizedPage > 1,
+    },
+  };
+}
 
 function estimateReadingTimeMinutes(content: string) {
   const words = getRichContentWordCount(content);
@@ -185,62 +212,17 @@ export const blogService = {
     page: number,
     limit: number,
   ): Promise<BlogListResponse> => {
-    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
-    const safeLimit =
-      Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : 10;
-    const from = (safePage - 1) * safeLimit;
-    const to = from + safeLimit - 1;
-
-    const { data, count, error } = await supabase
-      .from("blogs")
-      .select(
-        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at,created_by",
-        { count: "exact" },
-      )
-      .order("created_at", { ascending: false })
-      .range(from, to);
-
-    if (error) {
-      throw new Error(error.message || "Failed to fetch dashboard blogs");
-    }
-
-    const totalItems = count || 0;
-    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
-    const normalizedPage = Math.min(safePage, totalPages);
-
-    const items = await resolveAuthorProfiles(
-      ((data || []) as BlogRow[]).map(mapRowToSummary),
-    );
-
-    return {
-      items,
-      pagination: {
-        page: normalizedPage,
-        limit: safeLimit,
-        totalItems,
-        totalPages,
-        hasNextPage: normalizedPage < totalPages,
-        hasPreviousPage: normalizedPage > 1,
-      },
-    };
+    const { data } = await api.get<APIEnvelope<BlogRow[]>>("/admin/blogs");
+    const result = paginateBlogs(data.data || [], page, limit);
+    result.items = await resolveAuthorProfiles(result.items);
+    return result;
   },
 
   getDashboardBlogById: async (id: string): Promise<BlogDetailResponse> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("blogs")
-      .select(
-        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at,created_by",
-      )
-      .eq("id", normalizedId)
-      .limit(1)
-      .maybeSingle();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Blog post not found.");
-    }
-
-    const mapped = mapRowToBlog(data as BlogRow);
+    const { data } = await api.get<APIEnvelope<BlogRow>>(
+      `/admin/blogs/${id.trim()}`,
+    );
+    const mapped = mapRowToBlog(data.data);
     const profile = await resolveAuthorProfile(mapped.createdBy);
 
     return {
@@ -265,72 +247,40 @@ export const blogService = {
     authorName: string,
     createdBy: string,
   ): Promise<BlogDetailResponse> => {
-    const now = new Date().toISOString();
-    const { data, error } = await supabase
-      .from("blogs")
-      .insert({
-        title: payload.title,
-        excerpt: buildExcerpt(payload.content),
-        author: authorName.trim(),
-        category: payload.category,
-        cover_image: payload.coverImage || "",
-        content: payload.content,
-        status: payload.status,
-        published_at: now,
-        created_by: createdBy,
-      })
-      .select(
-        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at,created_by",
-      )
-      .single();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Failed to create blog");
-    }
-
-    return { item: mapRowToBlog(data as BlogRow) };
+    const { data } = await api.post<APIEnvelope<BlogRow>>("/admin/blogs", {
+      title: payload.title,
+      excerpt: buildExcerpt(payload.content),
+      author: authorName.trim(),
+      category: payload.category,
+      cover_image: payload.coverImage || "",
+      content: payload.content,
+      status: payload.status,
+      published_at: new Date().toISOString(),
+    });
+    void createdBy;
+    return { item: mapRowToBlog(data.data) };
   },
 
   updateBlog: async (id: string, payload: UpsertBlogPayload): Promise<void> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("blogs")
-      .update({
-        title: payload.title,
-        excerpt: buildExcerpt(payload.content),
-        category: payload.category,
-        cover_image: payload.coverImage,
-        content: payload.content,
-        status: payload.status,
-      })
-      .eq("id", normalizedId)
-      .select("id")
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(error.message || "Failed to update blog");
-    }
-
-    if (!data) {
-      throw new Error(
-        "Blog tidak ter-update. Data ini kemungkinan bukan milik akun yang login.",
-      );
+    const existing = await blogService.getDashboardBlogById(id);
+    await api.put(`/admin/blogs/${id.trim()}`, {
+      title: payload.title,
+      excerpt: buildExcerpt(payload.content),
+      author: existing.item.author,
+      category: payload.category,
+      cover_image: payload.coverImage,
+      content: payload.content,
+      status: payload.status,
+      published_at: existing.item.publishedAt,
+    });
+    if (existing.item.coverImage !== payload.coverImage) {
+      await deleteImageFromAPI(existing.item.coverImage);
     }
   },
 
   deleteBlog: async (id: string): Promise<void> => {
-    const { data, error } = await supabase
-      .from("blogs")
-      .delete()
-      .eq("id", id)
-      .select("id");
-
-    if (error) {
-      throw new Error(error.message || "Failed to delete blog");
-    }
-
-    if (!data || data.length === 0) {
-      throw new Error("Blog tidak terhapus. Cek policy DELETE di Supabase.");
-    }
+    const existing = await blogService.getDashboardBlogById(id);
+    await api.delete(`/admin/blogs/${id}`);
+    await deleteImageFromAPI(existing.item.coverImage);
   },
 };
