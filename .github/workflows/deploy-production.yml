@@ -54,6 +54,7 @@ jobs:
             --exclude=.next \
             --exclude=node_modules \
             --exclude=.env.local \
+            --exclude=frontend-source.tar.gz \
             -czf frontend-source.tar.gz .
 
       - name: Upload source to VPS
