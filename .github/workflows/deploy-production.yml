@@ -93,7 +93,7 @@ jobs:
             sudo docker compose -p group1 config --quiet
             sudo docker compose -p group1 up -d --build app nginx
 
-            curl --retry 15 --retry-delay 3 --retry-connrefused \
+            curl --retry 15 --retry-delay 3 --retry-connrefused --retry-all-errors \
               --fail --silent --show-error http://127.0.0.1:8001/ > /dev/null
 
             sudo docker compose -p group1 ps app nginx
