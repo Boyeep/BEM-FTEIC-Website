@@ -111,9 +111,11 @@ jobs:
               exit 1
             fi
 
+            tr -d '\r' < .env.production > /tmp/frontend-production.env
             set -a
-            . ./.env.production
+            . /tmp/frontend-production.env
             set +a
+            rm -f /tmp/frontend-production.env
             case "${NEXT_PUBLIC_API_URL_PROD:-}" in
               https://api.bem-fteic.com|https://api.bem-fteic.com/) ;;
               *)
