@@ -9,10 +9,6 @@ import {
 } from "@/features/event/types";
 import { api } from "@/lib/api";
 import { listParams, mapApiPagination } from "@/lib/pagination";
-import {
-  getPublicProfileById,
-  getPublicProfilesByIds,
-} from "@/lib/public-profiles";
 import { uploadImageToAPI } from "@/lib/upload";
 import { ApiPage, ApiSuccess } from "@/types/api";
 
@@ -28,13 +24,19 @@ type EventRow = {
   publication_status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   created_at: string;
   created_by?: string | null;
+  author_profile?: {
+    id: string;
+    username: string;
+    avatar_url?: string | null;
+  } | null;
 };
 function mapRowToSummary(row: EventRow): EventSummary {
   return {
     id: row.id,
     title: row.title,
     description: row.description,
-    author: row.author,
+    author: row.author_profile?.username || row.author,
+    authorAvatarUrl: row.author_profile?.avatar_url || null,
     category: row.category,
     coverImage: row.cover_image,
     eventDate: row.event_date,
@@ -50,40 +52,6 @@ async function uploadImage(
   _prefix: string,
 ): Promise<string> {
   return uploadImageToAPI(file);
-}
-
-async function resolveAuthorProfile(createdBy?: string | null) {
-  return getPublicProfileById(createdBy);
-}
-
-async function resolveAuthorProfiles(items: EventSummary[]) {
-  const createdByIds = items
-    .map((item) => item.createdBy)
-    .filter((createdBy): createdBy is string => Boolean(createdBy));
-
-  if (createdByIds.length === 0) {
-    return items;
-  }
-
-  const profiles = await getPublicProfilesByIds(createdByIds);
-  if (profiles.length === 0) {
-    return items;
-  }
-
-  const profileMap = new Map(profiles.map((profile) => [profile.id, profile]));
-
-  return items.map((item) => {
-    const profile = item.createdBy ? profileMap.get(item.createdBy) : undefined;
-    if (!profile) {
-      return item;
-    }
-
-    return {
-      ...item,
-      author: profile.username || item.author,
-      authorAvatarUrl: profile.avatar_url || null,
-    };
-  });
 }
 
 export const eventService = {
@@ -126,9 +94,7 @@ export const eventService = {
         sort: sortBy,
       },
     });
-    const items = await resolveAuthorProfiles(
-      data.data.items.map(mapRowToSummary),
-    );
+    const items = data.data.items.map(mapRowToSummary);
     return {
       items,
       pagination: mapApiPagination(data.data),
@@ -139,15 +105,7 @@ export const eventService = {
     const { data } = await api.get<ApiSuccess<EventRow>>(
       `/events/${id.trim()}`,
     );
-    const mapped = mapRowToSummary(data.data);
-    const profile = await resolveAuthorProfile(mapped.createdBy);
-    return {
-      item: {
-        ...mapped,
-        author: profile?.username || mapped.author,
-        authorAvatarUrl: profile?.avatar_url || null,
-      },
-    };
+    return { item: mapRowToSummary(data.data) };
   },
 
   getDashboardEvents: async (
@@ -159,7 +117,7 @@ export const eventService = {
       { params: listParams(page, limit) },
     );
     return {
-      items: await resolveAuthorProfiles(data.data.items.map(mapRowToSummary)),
+      items: data.data.items.map(mapRowToSummary),
       pagination: mapApiPagination(data.data),
     };
   },
@@ -168,16 +126,7 @@ export const eventService = {
     const { data } = await api.get<ApiSuccess<EventRow>>(
       `/admin/events/${id.trim()}`,
     );
-    const mapped = mapRowToSummary(data.data);
-    const profile = await resolveAuthorProfile(mapped.createdBy);
-
-    return {
-      item: {
-        ...mapped,
-        author: profile?.username || mapped.author,
-        authorAvatarUrl: profile?.avatar_url || null,
-      },
-    };
+    return { item: mapRowToSummary(data.data) };
   },
 
   uploadCover: async (userId: string, file: File): Promise<string> => {

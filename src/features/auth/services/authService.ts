@@ -1,7 +1,5 @@
-import { User as SupabaseUser } from "@supabase/supabase-js";
-
 import { profileService } from "@/features/auth/services/profileService";
-import { syncServerSession } from "@/features/auth/services/serverSessionService";
+import { finalizeAdminSession } from "@/features/auth/services/sessionFinalizer";
 import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import {
   LoginRequest,
@@ -11,49 +9,7 @@ import {
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from "@/features/auth/types";
-import { supabase } from "@/lib/supabase";
-
-async function ensureCurrentSessionIsWhitelisted(email?: string | null) {
-  try {
-    await signupWhitelistService.ensureEmailWhitelisted(email || "", "session");
-  } catch (error) {
-    await supabase.auth.signOut();
-    throw error;
-  }
-}
-
-async function finalizeAdminSession(user: SupabaseUser, accessToken: string) {
-  await ensureCurrentSessionIsWhitelisted(user.email);
-
-  let profile = null;
-  try {
-    profile = await profileService.ensureForUser(user);
-  } catch {
-    profile = null;
-  }
-  if (profile?.role !== "admin") {
-    await supabase.auth.signOut();
-    throw new Error("Akun ini tidak memiliki role admin.");
-  }
-  await syncServerSession(accessToken);
-
-  const fallbackUsername =
-    typeof user.user_metadata?.username === "string"
-      ? user.user_metadata.username
-      : user.email || "";
-
-  return {
-    id: user.id,
-    email: profile?.email || user.email || "",
-    username: profile?.username || fallbackUsername,
-    avatarUrl:
-      profile?.avatar_url ||
-      (typeof user.user_metadata?.avatar_url === "string"
-        ? user.user_metadata.avatar_url
-        : null),
-    createdAt: user.created_at,
-  };
-}
+import { supabaseAuthGateway } from "./supabaseAuthGateway";
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -62,10 +18,10 @@ export const authService = {
       "login",
     );
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: normalizedEmail,
-      password: credentials.password,
-    });
+    const { data, error } = await supabaseAuthGateway.signIn(
+      normalizedEmail,
+      credentials.password,
+    );
 
     if (error || !data.session || !data.user) {
       throw new Error(error?.message || "Login failed");
@@ -84,16 +40,12 @@ export const authService = {
     );
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-    const { data, error } = await supabase.auth.signUp({
-      email: normalizedEmail,
-      password: payload.password,
-      options: {
-        data: {
-          username: payload.username.trim(),
-        },
-        emailRedirectTo: `${siteUrl}/confirm-email`,
-      },
-    });
+    const { data, error } = await supabaseAuthGateway.signUp(
+      normalizedEmail,
+      payload.password,
+      payload.username.trim(),
+      `${siteUrl}/confirm-email`,
+    );
 
     if (error) {
       throw new Error(error.message || "Signup failed");
@@ -116,25 +68,23 @@ export const authService = {
     payload: VerifyEmailRequest,
   ): Promise<VerifyEmailResponse> => {
     if (payload.code) {
-      const { error } = await supabase.auth.exchangeCodeForSession(
-        payload.code,
-      );
+      const { error } = await supabaseAuthGateway.exchangeCode(payload.code);
       if (error) {
         throw new Error(error.message || "Email verification failed");
       }
     } else if (payload.accessToken && payload.refreshToken) {
-      const { error } = await supabase.auth.setSession({
-        access_token: payload.accessToken,
-        refresh_token: payload.refreshToken,
-      });
+      const { error } = await supabaseAuthGateway.setSession(
+        payload.accessToken,
+        payload.refreshToken,
+      );
       if (error) {
         throw new Error(error.message || "Email verification failed");
       }
     } else if (payload.tokenHash && payload.type) {
-      const { error } = await supabase.auth.verifyOtp({
-        token_hash: payload.tokenHash,
-        type: payload.type,
-      });
+      const { error } = await supabaseAuthGateway.verifyOtp(
+        payload.tokenHash,
+        payload.type,
+      );
       if (error) {
         throw new Error(error.message || "Email verification failed");
       }
@@ -142,7 +92,7 @@ export const authService = {
       throw new Error("Missing verification parameters");
     }
 
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await supabaseAuthGateway.getSession();
     const session = data.session;
     const user = session?.user;
 

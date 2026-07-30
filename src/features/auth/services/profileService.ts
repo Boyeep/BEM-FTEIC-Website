@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
 import { ApiSuccess } from "@/types/api";
 
-type ProfileRow = {
+export type Profile = {
   id: string;
   email: string;
   username: string;
@@ -13,7 +13,7 @@ type ProfileRow = {
   role?: "member" | "admin";
 };
 
-const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
+const mapFallbackProfile = (user: SupabaseUser): Profile => ({
   id: user.id,
   email: user.email || "",
   username:
@@ -27,31 +27,31 @@ const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
 });
 
 export const profileService = {
-  getById: async (userId: string): Promise<ProfileRow | null> => {
-    const { data } = await api.get<ApiSuccess<ProfileRow>>("/me");
+  getById: async (userId: string): Promise<Profile | null> => {
+    const { data } = await api.get<ApiSuccess<Profile>>("/me");
     void userId;
     return data.data;
   },
 
-  ensureForUser: async (user: SupabaseUser): Promise<ProfileRow> => {
+  ensureForUser: async (user: SupabaseUser): Promise<Profile> => {
     const existing = await profileService.getById(user.id);
     return existing || mapFallbackProfile(user);
   },
 
-  updateName: async (userId: string, username: string): Promise<ProfileRow> => {
+  updateName: async (userId: string, username: string): Promise<Profile> => {
     const current = await profileService.getById(userId);
-    const { data } = await api.put<ApiSuccess<ProfileRow>>("/me", {
+    const { data } = await api.put<ApiSuccess<Profile>>("/me", {
       username,
       avatar_url: current?.avatar_url || "",
     });
     return data.data;
   },
 
-  uploadAvatar: async (userId: string, file: File): Promise<ProfileRow> => {
+  uploadAvatar: async (userId: string, file: File): Promise<Profile> => {
     const publicUrl = await uploadImageToAPI(file);
 
     const current = await profileService.getById(userId);
-    const { data } = await api.put<ApiSuccess<ProfileRow>>("/me", {
+    const { data } = await api.put<ApiSuccess<Profile>>("/me", {
       username: current?.username || "Admin",
       avatar_url: publicUrl,
     });
