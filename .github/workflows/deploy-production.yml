@@ -96,8 +96,11 @@ jobs:
             ARCHIVE="/tmp/frontend-source.tar.gz"
 
             mkdir -p "$APP_DIR"
-            rm -f "$APP_DIR/src/middleware.ts"
-            rm -f "$APP_DIR/src/lib/cookies.ts"
+            find "$APP_DIR" -mindepth 1 -maxdepth 1 \
+              ! -name '.env.production' \
+              ! -name '.deploy.env' \
+              ! -name '.last-successful-image' \
+              -exec rm -rf -- {} +
             tar -xzf "$ARCHIVE" -C "$APP_DIR"
             rm -f "$ARCHIVE"
 
