@@ -96,6 +96,7 @@ jobs:
 
             mkdir -p "$APP_DIR"
             rm -f "$APP_DIR/src/middleware.ts"
+            rm -f "$APP_DIR/src/lib/cookies.ts"
             tar -xzf "$ARCHIVE" -C "$APP_DIR"
             rm -f "$ARCHIVE"
 
