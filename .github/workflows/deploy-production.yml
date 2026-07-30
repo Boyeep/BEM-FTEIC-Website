@@ -111,6 +111,17 @@ jobs:
               exit 1
             fi
 
+            set -a
+            . ./.env.production
+            set +a
+            case "${NEXT_PUBLIC_API_URL_PROD:-}" in
+              https://api.bem-fteic.com|https://api.bem-fteic.com/) ;;
+              *)
+                echo "Invalid NEXT_PUBLIC_API_URL_PROD for production deployment"
+                exit 1
+                ;;
+            esac
+
             RELEASE_TAG="${{ github.sha }}"
             PREVIOUS_TAG="$(cat .last-successful-frontend-image 2>/dev/null || echo latest)"
             select_tag() {

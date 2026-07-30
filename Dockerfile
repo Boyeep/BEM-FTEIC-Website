@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -32,7 +32,7 @@ ENV BUILD_STANDALONE=$BUILD_STANDALONE
 # extra CLI flags.
 RUN if [ -f .env.production ]; then tr -d '\r' < .env.production > /tmp/.env.production && set -a && . /tmp/.env.production && set +a; fi && pnpm build
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 

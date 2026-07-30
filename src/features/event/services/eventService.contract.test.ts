@@ -61,7 +61,6 @@ afterAll(() => server.close());
 
 describe("event API contract", () => {
   it("maps lifecycle, publication, pagination, and embedded author", async () => {
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://supabase.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
@@ -93,7 +92,6 @@ describe("event API contract", () => {
         HttpResponse.json({ success: true, data: eventRow }),
       ),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { eventService } = await import("./eventService");
@@ -133,7 +131,6 @@ describe("event API contract", () => {
         return new HttpResponse(null, { status: 204 });
       }),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { eventService } = await import("./eventService");

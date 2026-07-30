@@ -57,7 +57,6 @@ afterAll(() => server.close());
 
 describe("blog API contract", () => {
   it("maps pagination and embedded author without a profile request", async () => {
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://supabase.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
@@ -86,7 +85,6 @@ describe("blog API contract", () => {
         ),
       ),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://supabase.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
@@ -109,7 +107,6 @@ describe("blog API contract", () => {
         HttpResponse.json({ success: true, data: blogRow }),
       ),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { blogService } = await import("./blogService");
@@ -146,7 +143,6 @@ describe("blog API contract", () => {
         return new HttpResponse(null, { status: 204 });
       }),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { blogService } = await import("./blogService");

@@ -50,7 +50,7 @@ Skema database tidak disimpan di frontend. Sumber migrasi resmi berada di reposi
 
 Prasyarat:
 
-- Node.js 20+
+- Node.js 22+
 - pnpm 9
 - backend lokal atau API production yang dapat diakses
 - project Supabase
@@ -76,7 +76,6 @@ Aplikasi tersedia di <http://localhost:3000>.
 Gunakan `.env.example` sebagai acuan:
 
 ```env
-NEXT_PUBLIC_RUN_MODE=development
 NEXT_PUBLIC_API_URL_DEV=http://localhost:8080
 NEXT_PUBLIC_API_URL_PROD=https://api.bem-fteic.com
 NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_REF.supabase.co

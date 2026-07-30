@@ -51,7 +51,6 @@ afterAll(() => server.close());
 
 describe("gallery API contract", () => {
   it("maps category, date, and pagination", async () => {
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://supabase.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
@@ -77,7 +76,6 @@ describe("gallery API contract", () => {
         HttpResponse.json({ success: true, data: galleryRow }),
       ),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { galeriService } = await import("./galeriService");
@@ -114,7 +112,6 @@ describe("gallery API contract", () => {
         return new HttpResponse(null, { status: 204 });
       }),
     );
-    vi.stubEnv("NEXT_PUBLIC_RUN_MODE", "production");
     vi.stubEnv("NEXT_PUBLIC_API_URL_PROD", "https://api.test");
     vi.resetModules();
     const { galeriService } = await import("./galeriService");

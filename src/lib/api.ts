@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { ApiFailure } from "@/types/api";
 
 export const baseURL =
-  process.env.NEXT_PUBLIC_RUN_MODE === "development"
+  process.env.NODE_ENV === "development"
     ? process.env.NEXT_PUBLIC_API_URL_DEV
     : process.env.NEXT_PUBLIC_API_URL_PROD;
 
