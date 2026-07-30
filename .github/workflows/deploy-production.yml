@@ -1,0 +1,98 @@
+name: Deploy Frontend Production
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+
+concurrency:
+  group: frontend-production-group1
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm typecheck
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package source
+        run: |
+          tar \
+            --exclude=.git \
+            --exclude=.next \
+            --exclude=node_modules \
+            --exclude=.env.local \
+            -czf frontend-source.tar.gz .
+
+      - name: Upload source to VPS
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: frontend-source.tar.gz
+          target: /tmp
+
+      - name: Deploy with Docker Compose
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 15m
+          script: |
+            set -eu
+
+            APP_DIR="$HOME/app"
+            ARCHIVE="/tmp/frontend-source.tar.gz"
+
+            mkdir -p "$APP_DIR"
+            tar -xzf "$ARCHIVE" -C "$APP_DIR"
+            rm -f "$ARCHIVE"
+
+            cd "$APP_DIR"
+
+            if [ ! -f .env.production ]; then
+              echo "Missing $APP_DIR/.env.production"
+              exit 1
+            fi
+
+            sudo docker compose -p group1 config --quiet
+            sudo docker compose -p group1 up -d --build app nginx
+
+            curl --retry 15 --retry-delay 3 --retry-connrefused \
+              --fail --silent --show-error http://127.0.0.1:8001/ > /dev/null
+
+            sudo docker compose -p group1 ps app nginx
