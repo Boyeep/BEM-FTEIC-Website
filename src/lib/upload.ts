@@ -23,9 +23,12 @@ export async function uploadImageToAPI(file: File): Promise<string> {
     },
     body,
   });
-  const payload = (await response.json()) as { url?: string; error?: string };
-  if (!response.ok || !payload.url) {
-    throw new Error(payload.error || "Failed to upload image");
+  const payload = (await response.json()) as {
+    data?: { url?: string };
+    error?: { message?: string };
+  };
+  if (!response.ok || !payload.data?.url) {
+    throw new Error(payload.error?.message || "Failed to upload image");
   }
-  return payload.url;
+  return payload.data.url;
 }
