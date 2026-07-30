@@ -10,18 +10,12 @@ import toast from "react-hot-toast";
 import ImageCropModal from "@/components/form/ImageCropModal";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import RichContentEditor from "@/features/dashboard/components/RichContentEditor";
+import { EVENT_DEPARTMENTS } from "@/features/event/department";
 import { eventService } from "@/features/event/services/eventService";
-import { EventStatus } from "@/features/event/types";
+import { EventStatus, PublicationStatus } from "@/features/event/types";
+import { queryKeys } from "@/lib/queryKeys";
 
-const DEPARTMENT_OPTIONS = [
-  "FTEIC",
-  "TEKNIK ELEKTRO",
-  "TEKNIK INFORMATIKA",
-  "SISTEM INFORMASI",
-  "TEKNIK KOMPUTER",
-  "TEKNIK BIOMEDIK",
-  "TEKNOLOGI INFORMASI",
-];
+const DEPARTMENT_OPTIONS = EVENT_DEPARTMENTS.map((item) => item.category);
 
 interface DashboardEventFormProps {
   mode: "create" | "edit";
@@ -33,6 +27,7 @@ interface DashboardEventFormProps {
     coverImage: string;
     eventDate: string;
     status: EventStatus;
+    publicationStatus: PublicationStatus;
   };
 }
 
@@ -56,6 +51,9 @@ export default function DashboardEventForm({
   );
   const [status, setStatus] = useState<EventStatus>(
     initialValues?.status ?? "ONGOING",
+  );
+  const [publicationStatus, setPublicationStatus] = useState<PublicationStatus>(
+    initialValues?.publicationStatus ?? "PUBLISHED",
   );
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [pendingCropFile, setPendingCropFile] = useState<File | null>(null);
@@ -110,6 +108,7 @@ export default function DashboardEventForm({
             description,
             eventDate,
             status,
+            publicationStatus,
             coverImage: finalCoverImage,
           },
           user.username || user.email,
@@ -126,14 +125,15 @@ export default function DashboardEventForm({
           description,
           eventDate,
           status,
+          publicationStatus,
           coverImage: finalCoverImage,
         });
         toast.success("Event berhasil diperbarui.");
       }
 
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["events"] }),
-        queryClient.invalidateQueries({ queryKey: ["dashboard-events"] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.admin.all }),
       ]);
 
       router.push("/dashboard/event/overview");
@@ -276,7 +276,31 @@ export default function DashboardEventForm({
                 className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
               >
                 <option value="ONGOING">ONGOING</option>
+                <option value="UPCOMING">UPCOMING</option>
                 <option value="ENDED">ENDED</option>
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black transition-transform duration-300 ease-out group-focus-within:rotate-180"
+              />
+            </label>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-2xl font-medium text-black">
+              PUBLICATION
+            </label>
+            <label className="group relative block">
+              <select
+                value={publicationStatus}
+                onChange={(event) =>
+                  setPublicationStatus(event.target.value as PublicationStatus)
+                }
+                className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
+              >
+                <option value="DRAFT">DRAFT</option>
+                <option value="PUBLISHED">PUBLISHED</option>
+                <option value="ARCHIVED">ARCHIVED</option>
               </select>
               <ChevronDown
                 size={18}

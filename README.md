@@ -1,6 +1,6 @@
 # BEM FTEIC Website
 
-Frontend resmi BEM FTEIC berbasis Next.js App Router. Halaman publik membaca konten terpublikasi, sedangkan dashboard admin menggunakan API backend terautentikasi untuk mengelola blog, event, galeri, profil, dan whitelist pendaftaran.
+Frontend resmi BEM FTEIC berbasis Next.js App Router. Seluruh data konten publik dan admin melewati Go API; Supabase client di browser hanya digunakan untuk autentikasi.
 
 ## Production
 
@@ -29,6 +29,7 @@ Frontend resmi BEM FTEIC berbasis Next.js App Router. Halaman publik membaca kon
 - TanStack Query dan Zustand
 - Supabase Auth serta PostgreSQL
 - Biome
+- Vitest
 - Docker Compose dan Nginx
 
 ## Struktur
@@ -38,7 +39,7 @@ src/app/           route App Router
 src/features/      fitur dan domain logic
 src/components/    komponen UI bersama
 src/layouts/       navbar, footer, dan app shell
-src/lib/           API client dan utilitas
+src/lib/           API contract, query keys, pagination, dan utilitas
 deploy/nginx/      reverse proxy container frontend
 docs/deploy/       catatan operasional VPS
 ```
@@ -95,12 +96,13 @@ Konfigurasi Auth production:
 - Redirect URL lokal: `http://localhost:3000/**`
 - Before User Created hook: schema `public`, function `hook_validate_signup`
 
-Frontend hanya menggunakan anon key. Otorisasi admin, validasi input, dan mutation konten dilakukan backend. Migrasi backend mengelola tabel, fungsi, trigger, grant, dan RLS.
+Frontend hanya menggunakan anon key untuk Supabase Auth. Otorisasi admin, validasi input, query/mutation konten, pagination, dan media lifecycle dilakukan backend. Migrasi backend mengelola tabel, fungsi, trigger, grant, dan RLS.
 
 ## Quality Checks
 
 ```bash
 pnpm validate
+pnpm test
 pnpm build
 pnpm audit --prod --audit-level=high
 ```

@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { signupWhitelistService } from "@/features/auth/services/signupWhitelistService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function DashboardWhitelistPage() {
   const queryClient = useQueryClient();
@@ -21,7 +22,7 @@ export default function DashboardWhitelistPage() {
   } | null>(null);
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["signup-whitelist"],
+    queryKey: queryKeys.whitelist.all,
     queryFn: () => signupWhitelistService.getEntries(),
   });
 
@@ -44,7 +45,9 @@ export default function DashboardWhitelistPage() {
     try {
       await signupWhitelistService.addEntry(normalizedEmail, user.id);
       setEmail("");
-      await queryClient.invalidateQueries({ queryKey: ["signup-whitelist"] });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.whitelist.all,
+      });
       toast.success("Email berhasil ditambahkan ke whitelist.");
     } catch (submitError) {
       const message =
@@ -63,7 +66,9 @@ export default function DashboardWhitelistPage() {
     setIsDeleting(true);
     try {
       await signupWhitelistService.removeEntry(selectedDelete.id);
-      await queryClient.invalidateQueries({ queryKey: ["signup-whitelist"] });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.whitelist.all,
+      });
       toast.success("Email berhasil dihapus dari whitelist.");
       setSelectedDelete(null);
     } catch (deleteError) {

@@ -1,33 +1,28 @@
-export type PaginateData<Data> = {
-  data_per_page: Data;
-  meta: {
-    page: number;
-    max_page: number;
-  };
-};
-
-export interface PaginatedApiResponse<DataType> {
-  code: number;
-  status: boolean;
-  message: string;
-  data: PaginateData<DataType>;
+export interface ApiSuccess<T> {
+  success: true;
+  data: T;
+  request_id?: string;
 }
 
-export type ApiResponse<T> = {
-  message: string;
-  status: boolean;
-  code: number;
-  data: T;
-};
+export interface ApiFailure {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+  };
+  request_id?: string;
+}
 
-export type ApiError = {
-  code: number;
-  status: boolean | number;
-  message: string;
-};
+export type ApiEnvelope<T> = ApiSuccess<T> | ApiFailure;
 
-export type UninterceptedApiError = {
-  code: number;
-  status: boolean;
-  message: string | Record<string, string[]>;
-};
+export interface ApiPage<T> {
+  items: T[];
+  pagination: {
+    page: number;
+    page_size: number;
+    total_items: number;
+    total_pages: number;
+    has_next_page: boolean;
+    has_previous_page: boolean;
+  };
+}

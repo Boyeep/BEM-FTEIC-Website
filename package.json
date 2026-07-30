@@ -14,9 +14,9 @@
     "format:write": "biome format --write .",
     "check": "biome check .",
     "check:write": "biome check --write .",
-    "validate": "pnpm check && pnpm typecheck",
+    "validate": "pnpm check && pnpm typecheck && pnpm test",
     "prepare": "husky install",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -40,7 +40,7 @@
     "@biomejs/biome": "1.8.3",
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
-    "@types/node": "^20",
+    "@types/node": "^20.19.43",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.0.1",
@@ -49,7 +49,8 @@
     "postcss": "^8.5.25",
     "scheduler": "^0.23.0",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "pnpm": {
     "overrides": {

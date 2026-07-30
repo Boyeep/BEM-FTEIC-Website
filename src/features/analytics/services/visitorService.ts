@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
+import { ApiSuccess } from "@/types/api";
 
 const VISITOR_ID_KEY = "site_visitor_id";
 
@@ -22,24 +23,17 @@ export const visitorService = {
     const visitorId = getBrowserVisitorId();
     if (!visitorId) return;
 
-    const payload = {
+    await api.post("/visitors", {
       id: visitorId,
-      last_seen_at: new Date().toISOString(),
-      last_path: pathname,
+      path: pathname,
       user_agent:
-        typeof window !== "undefined" ? window.navigator.userAgent : null,
-    };
-
-    await supabase.from("site_visitors").upsert(payload, { onConflict: "id" });
+        typeof window !== "undefined" ? window.navigator.userAgent : "",
+    });
   },
 
   getVisitorCount: async (): Promise<number> => {
-    const { data, error } = await supabase.rpc("get_visitor_count");
-
-    if (error) {
-      throw new Error(error.message || "Failed to fetch visitor count");
-    }
-
-    return Number(data) || 0;
+    const { data } =
+      await api.get<ApiSuccess<{ count: number }>>("/visitors/count");
+    return Number(data.data.count) || 0;
   },
 };

@@ -11,12 +11,13 @@ import {
   getRichContentWordCount,
 } from "@/features/content/richContent";
 import { api } from "@/lib/api";
+import { listParams, mapApiPagination } from "@/lib/pagination";
 import {
   getPublicProfileById,
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
-import { supabase } from "@/lib/supabase";
-import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { uploadImageToAPI } from "@/lib/upload";
+import { ApiPage, ApiSuccess } from "@/types/api";
 
 type BlogRow = {
   id: string;
@@ -31,32 +32,6 @@ type BlogRow = {
   created_at: string;
   created_by?: string | null;
 };
-
-type APIEnvelope<T> = { success: boolean; data: T };
-
-function paginateBlogs(
-  rows: BlogRow[],
-  page: number,
-  limit: number,
-): BlogListResponse {
-  const safePage = Math.max(1, Math.floor(page || 1));
-  const safeLimit = Math.max(1, Math.floor(limit || 10));
-  const totalItems = rows.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
-  const normalizedPage = Math.min(safePage, totalPages);
-  const start = (normalizedPage - 1) * safeLimit;
-  return {
-    items: rows.slice(start, start + safeLimit).map(mapRowToSummary),
-    pagination: {
-      page: normalizedPage,
-      limit: safeLimit,
-      totalItems,
-      totalPages,
-      hasNextPage: normalizedPage < totalPages,
-      hasPreviousPage: normalizedPage > 1,
-    },
-  };
-}
 
 function estimateReadingTimeMinutes(content: string) {
   const words = getRichContentWordCount(content);
@@ -139,64 +114,21 @@ export const blogService = {
     page: number,
     limit: number,
   ): Promise<BlogListResponse> => {
-    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
-    const safeLimit =
-      Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : 6;
-    const from = (safePage - 1) * safeLimit;
-    const to = from + safeLimit - 1;
-
-    const { data, count, error } = await supabase
-      .from("blogs")
-      .select(
-        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at,created_by",
-        { count: "exact" },
-      )
-      .eq("status", "PUBLISHED")
-      .order("published_at", { ascending: false })
-      .range(from, to);
-
-    if (error) {
-      throw new Error(error.message || "Failed to fetch blogs");
-    }
-
-    const totalItems = count || 0;
-    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
-    const normalizedPage = Math.min(safePage, totalPages);
-
+    const { data } = await api.get<ApiSuccess<ApiPage<BlogRow>>>("/blogs/", {
+      params: listParams(page, limit),
+    });
     const items = await resolveAuthorProfiles(
-      ((data || []) as BlogRow[]).map(mapRowToSummary),
+      data.data.items.map(mapRowToSummary),
     );
-
     return {
       items,
-      pagination: {
-        page: normalizedPage,
-        limit: safeLimit,
-        totalItems,
-        totalPages,
-        hasNextPage: normalizedPage < totalPages,
-        hasPreviousPage: normalizedPage > 1,
-      },
+      pagination: mapApiPagination(data.data),
     };
   },
 
   getPublicBlogById: async (id: string): Promise<BlogDetailResponse> => {
-    const normalizedId = id.trim();
-    const { data, error } = await supabase
-      .from("blogs")
-      .select(
-        "id,title,excerpt,author,category,cover_image,published_at,content,status,created_at,created_by",
-      )
-      .eq("id", normalizedId)
-      .eq("status", "PUBLISHED")
-      .limit(1)
-      .maybeSingle();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Blog post not found.");
-    }
-
-    const mapped = mapRowToBlog(data as BlogRow);
+    const { data } = await api.get<ApiSuccess<BlogRow>>(`/blogs/${id.trim()}`);
+    const mapped = mapRowToBlog(data.data);
     const profile = await resolveAuthorProfile(mapped.createdBy);
 
     return {
@@ -212,14 +144,18 @@ export const blogService = {
     page: number,
     limit: number,
   ): Promise<BlogListResponse> => {
-    const { data } = await api.get<APIEnvelope<BlogRow[]>>("/admin/blogs");
-    const result = paginateBlogs(data.data || [], page, limit);
-    result.items = await resolveAuthorProfiles(result.items);
-    return result;
+    const { data } = await api.get<ApiSuccess<ApiPage<BlogRow>>>(
+      "/admin/blogs",
+      { params: listParams(page, limit) },
+    );
+    return {
+      items: await resolveAuthorProfiles(data.data.items.map(mapRowToSummary)),
+      pagination: mapApiPagination(data.data),
+    };
   },
 
   getDashboardBlogById: async (id: string): Promise<BlogDetailResponse> => {
-    const { data } = await api.get<APIEnvelope<BlogRow>>(
+    const { data } = await api.get<ApiSuccess<BlogRow>>(
       `/admin/blogs/${id.trim()}`,
     );
     const mapped = mapRowToBlog(data.data);
@@ -247,7 +183,7 @@ export const blogService = {
     authorName: string,
     createdBy: string,
   ): Promise<BlogDetailResponse> => {
-    const { data } = await api.post<APIEnvelope<BlogRow>>("/admin/blogs", {
+    const { data } = await api.post<ApiSuccess<BlogRow>>("/admin/blogs", {
       title: payload.title,
       excerpt: buildExcerpt(payload.content),
       author: authorName.trim(),
@@ -273,14 +209,9 @@ export const blogService = {
       status: payload.status,
       published_at: existing.item.publishedAt,
     });
-    if (existing.item.coverImage !== payload.coverImage) {
-      await deleteImageFromAPI(existing.item.coverImage);
-    }
   },
 
   deleteBlog: async (id: string): Promise<void> => {
-    const existing = await blogService.getDashboardBlogById(id);
     await api.delete(`/admin/blogs/${id}`);
-    await deleteImageFromAPI(existing.item.coverImage);
   },
 };

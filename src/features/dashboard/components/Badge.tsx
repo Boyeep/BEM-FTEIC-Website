@@ -1,4 +1,10 @@
-type BadgeVariant = "published" | "archived" | "ongoing" | "ended";
+type BadgeVariant =
+  | "draft"
+  | "published"
+  | "archived"
+  | "upcoming"
+  | "ongoing"
+  | "ended";
 
 interface BadgeProps {
   label: string;
@@ -6,9 +12,11 @@ interface BadgeProps {
 }
 
 const VARIANT_CLASS: Record<BadgeVariant, string> = {
+  draft: "border-amber-600 text-amber-700 bg-amber-50",
   published: "border-blue-600 text-blue-600 bg-blue-50",
   archived: "border-gray-500 text-gray-700 bg-gray-100",
   ongoing: "border-blue-600 text-blue-600 bg-blue-50",
+  upcoming: "border-violet-600 text-violet-700 bg-violet-50",
   ended: "border-zinc-700 text-zinc-700 bg-zinc-100",
 };
 

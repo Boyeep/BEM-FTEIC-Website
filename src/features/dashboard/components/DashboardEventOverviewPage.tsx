@@ -11,6 +11,7 @@ import { getRichContentPreview } from "@/features/content/richContent";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
 import { eventService } from "@/features/event/services/eventService";
+import { queryKeys } from "@/lib/queryKeys";
 
 const PAGE_SIZE = 8;
 
@@ -31,8 +32,8 @@ export default function DashboardEventOverviewPage() {
     try {
       await eventService.deleteEvent(selectedDeleteId);
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["dashboard-events"] }),
-        queryClient.invalidateQueries({ queryKey: ["events"] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.admin.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.all }),
       ]);
       toast.success("Event berhasil dihapus.");
       setSelectedDeleteId(null);

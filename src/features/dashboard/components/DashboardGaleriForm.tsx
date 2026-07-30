@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronLeft, Upload } from "lucide-react";
+import { ChevronDown, ChevronLeft, Upload } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,18 @@ import toast from "react-hot-toast";
 import ImageCropModal from "@/components/form/ImageCropModal";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { galeriService } from "@/features/galeri/services/galeriService";
+import { GaleriDepartment } from "@/features/galeri/types";
+import { queryKeys } from "@/lib/queryKeys";
+
+const DEPARTMENT_OPTIONS: GaleriDepartment[] = [
+  "all",
+  "teknik_elektro",
+  "teknik_informatika",
+  "sistem_informasi",
+  "teknik_komputer",
+  "teknik_biomedik",
+  "teknologi_informasi",
+];
 
 interface DashboardGaleriFormProps {
   mode: "create" | "edit";
@@ -19,6 +31,7 @@ interface DashboardGaleriFormProps {
     link: string;
     takenAt: string;
     imageUrl: string;
+    category: GaleriDepartment;
   };
 }
 
@@ -37,6 +50,9 @@ export default function DashboardGaleriForm({
     initialValues?.takenAt?.slice(0, 10) ?? "",
   );
   const [imageUrl, setImageUrl] = useState(initialValues?.imageUrl ?? "");
+  const [category, setCategory] = useState<GaleriDepartment>(
+    initialValues?.category ?? "all",
+  );
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [pendingCropFile, setPendingCropFile] = useState<File | null>(null);
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState("");
@@ -88,6 +104,7 @@ export default function DashboardGaleriForm({
             link,
             takenAt,
             imageUrl: finalImageUrl,
+            category,
           },
           user.id,
         );
@@ -99,13 +116,16 @@ export default function DashboardGaleriForm({
           link,
           takenAt,
           imageUrl: finalImageUrl,
+          category,
         });
         toast.success("Galeri berhasil diperbarui.");
       }
 
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["galeri"] }),
-        queryClient.invalidateQueries({ queryKey: ["dashboard-galeri"] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.gallery.all }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.gallery.admin.all,
+        }),
       ]);
 
       router.push("/dashboard/galeri/overview");
@@ -157,6 +177,31 @@ export default function DashboardGaleriForm({
               placeholder="Enter the link for the photo"
               className="h-12 w-full border border-[#C8C8C8] bg-transparent px-4 text-base text-black placeholder:text-black/55 outline-none"
             />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-2xl font-medium text-black">
+              DEPARTMENT
+            </label>
+            <label className="group relative block">
+              <select
+                value={category}
+                onChange={(event) =>
+                  setCategory(event.target.value as GaleriDepartment)
+                }
+                className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
+              >
+                {DEPARTMENT_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option.replaceAll("_", " ").toUpperCase()}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black"
+              />
+            </label>
           </div>
 
           <div>

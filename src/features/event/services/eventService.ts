@@ -8,12 +8,13 @@ import {
   UpsertEventPayload,
 } from "@/features/event/types";
 import { api } from "@/lib/api";
+import { listParams, mapApiPagination } from "@/lib/pagination";
 import {
   getPublicProfileById,
   getPublicProfilesByIds,
 } from "@/lib/public-profiles";
-import { supabase } from "@/lib/supabase";
-import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { uploadImageToAPI } from "@/lib/upload";
+import { ApiPage, ApiSuccess } from "@/types/api";
 
 type EventRow = {
   id: string;
@@ -24,35 +25,10 @@ type EventRow = {
   cover_image: string;
   event_date: string;
   status: EventStatus;
+  publication_status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   created_at: string;
   created_by?: string | null;
 };
-type APIEnvelope<T> = { success: boolean; data: T };
-
-function paginateEvents(
-  rows: EventRow[],
-  page: number,
-  limit: number,
-): EventListResponse {
-  const safePage = Math.max(1, Math.floor(page || 1));
-  const safeLimit = Math.max(1, Math.floor(limit || 10));
-  const totalItems = rows.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
-  const normalizedPage = Math.min(safePage, totalPages);
-  const start = (normalizedPage - 1) * safeLimit;
-  return {
-    items: rows.slice(start, start + safeLimit).map(mapRowToSummary),
-    pagination: {
-      page: normalizedPage,
-      limit: safeLimit,
-      totalItems,
-      totalPages,
-      hasNextPage: normalizedPage < totalPages,
-      hasPreviousPage: normalizedPage > 1,
-    },
-  };
-}
-
 function mapRowToSummary(row: EventRow): EventSummary {
   return {
     id: row.id,
@@ -63,6 +39,7 @@ function mapRowToSummary(row: EventRow): EventSummary {
     coverImage: row.cover_image,
     eventDate: row.event_date,
     status: row.status,
+    publicationStatus: row.publication_status,
     createdBy: row.created_by ?? null,
   };
 }
@@ -120,11 +97,6 @@ export const eventService = {
       department?: EventDepartmentCategory;
     },
   ): Promise<EventListResponse> => {
-    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
-    const safeLimit =
-      Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : 8;
-    const from = (safePage - 1) * safeLimit;
-    const to = from + safeLimit - 1;
     const isValidDate = (value?: string) =>
       Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
     const rawStartDate = isValidDate(filters?.startDate)
@@ -145,74 +117,29 @@ export const eventService = {
     const sortBy: EventSortBy = filters?.sortBy || "latest";
     const department = filters?.department;
 
-    let query = supabase
-      .from("events")
-      .select(
-        "id,title,description,author,category,cover_image,event_date,status,created_at,created_by",
-        { count: "exact" },
-      );
-    query = query.eq("status", "PUBLISHED");
-
-    if (startDate) {
-      query = query.gte("event_date", startDate);
-    }
-
-    if (endDate) {
-      query = query.lte("event_date", endDate);
-    }
-
-    if (department) {
-      query = query.eq("category", department);
-    }
-
-    if (sortBy === "oldest") {
-      query = query.order("event_date", { ascending: true });
-    } else if (sortBy === "title_asc") {
-      query = query.order("title", { ascending: true });
-    } else if (sortBy === "title_desc") {
-      query = query.order("title", { ascending: false });
-    } else {
-      query = query.order("event_date", { ascending: false });
-    }
-
-    const { data, count, error } = await query.range(from, to);
-
-    if (error) {
-      throw new Error(error.message || "Failed to fetch events");
-    }
-
-    const totalItems = count || 0;
-    const totalPages = Math.max(1, Math.ceil(totalItems / safeLimit));
-    const normalizedPage = Math.min(safePage, totalPages);
-
+    const { data } = await api.get<ApiSuccess<ApiPage<EventRow>>>("/events/", {
+      params: {
+        ...listParams(page, limit),
+        category: department,
+        start_date: startDate,
+        end_date: endDate,
+        sort: sortBy,
+      },
+    });
     const items = await resolveAuthorProfiles(
-      ((data || []) as EventRow[]).map(mapRowToSummary),
+      data.data.items.map(mapRowToSummary),
     );
-
     return {
       items,
-      pagination: {
-        page: normalizedPage,
-        limit: safeLimit,
-        totalItems,
-        totalPages,
-        hasNextPage: normalizedPage < totalPages,
-        hasPreviousPage: normalizedPage > 1,
-      },
+      pagination: mapApiPagination(data.data),
     };
   },
 
   getPublicEventById: async (id: string): Promise<EventDetailResponse> => {
-    const { data, error } = await supabase
-      .from("events")
-      .select(
-        "id,title,description,author,category,cover_image,event_date,status,created_at,created_by",
-      )
-      .eq("id", id.trim())
-      .eq("status", "PUBLISHED")
-      .maybeSingle();
-    if (error || !data) throw new Error(error?.message || "Event not found.");
-    const mapped = mapRowToSummary(data as EventRow);
+    const { data } = await api.get<ApiSuccess<EventRow>>(
+      `/events/${id.trim()}`,
+    );
+    const mapped = mapRowToSummary(data.data);
     const profile = await resolveAuthorProfile(mapped.createdBy);
     return {
       item: {
@@ -227,14 +154,18 @@ export const eventService = {
     page: number,
     limit: number,
   ): Promise<EventListResponse> => {
-    const { data } = await api.get<APIEnvelope<EventRow[]>>("/admin/events");
-    const result = paginateEvents(data.data || [], page, limit);
-    result.items = await resolveAuthorProfiles(result.items);
-    return result;
+    const { data } = await api.get<ApiSuccess<ApiPage<EventRow>>>(
+      "/admin/events",
+      { params: listParams(page, limit) },
+    );
+    return {
+      items: await resolveAuthorProfiles(data.data.items.map(mapRowToSummary)),
+      pagination: mapApiPagination(data.data),
+    };
   },
 
   getDashboardEventById: async (id: string): Promise<EventDetailResponse> => {
-    const { data } = await api.get<APIEnvelope<EventRow>>(
+    const { data } = await api.get<ApiSuccess<EventRow>>(
       `/admin/events/${id.trim()}`,
     );
     const mapped = mapRowToSummary(data.data);
@@ -262,7 +193,7 @@ export const eventService = {
     authorName: string,
     createdBy: string,
   ): Promise<EventDetailResponse> => {
-    const { data } = await api.post<APIEnvelope<EventRow>>("/admin/events", {
+    const { data } = await api.post<ApiSuccess<EventRow>>("/admin/events", {
       title: payload.title,
       description: payload.description,
       author: authorName.trim(),
@@ -270,6 +201,7 @@ export const eventService = {
       cover_image: payload.coverImage || "",
       event_date: payload.eventDate,
       status: payload.status,
+      publication_status: payload.publicationStatus,
     });
     void createdBy;
     return { item: mapRowToSummary(data.data) };
@@ -288,15 +220,11 @@ export const eventService = {
       cover_image: payload.coverImage,
       event_date: payload.eventDate,
       status: payload.status,
+      publication_status: payload.publicationStatus,
     });
-    if (existing.item.coverImage !== payload.coverImage) {
-      await deleteImageFromAPI(existing.item.coverImage);
-    }
   },
 
   deleteEvent: async (id: string): Promise<void> => {
-    const existing = await eventService.getDashboardEventById(id);
     await api.delete(`/admin/events/${id}`);
-    await deleteImageFromAPI(existing.item.coverImage);
   },
 };

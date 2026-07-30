@@ -12,16 +12,10 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { blogService } from "@/features/blog/services/blogService";
 import { BlogStatus } from "@/features/blog/types";
 import RichContentEditor from "@/features/dashboard/components/RichContentEditor";
+import { EVENT_DEPARTMENTS } from "@/features/event/department";
+import { queryKeys } from "@/lib/queryKeys";
 
-const DEPARTMENT_OPTIONS = [
-  "FTEIC",
-  "TEKNIK ELEKTRO",
-  "TEKNIK INFORMATIKA",
-  "SISTEM INFORMASI",
-  "TEKNIK KOMPUTER",
-  "TEKNIK BIOMEDIK",
-  "TEKNOLOGI INFORMASI",
-];
+const DEPARTMENT_OPTIONS = EVENT_DEPARTMENTS.map((item) => item.category);
 
 interface DashboardBlogFormProps {
   mode: "create" | "edit";
@@ -123,9 +117,8 @@ export default function DashboardBlogForm({
       }
 
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["blogs"] }),
-        queryClient.invalidateQueries({ queryKey: ["blog"] }),
-        queryClient.invalidateQueries({ queryKey: ["dashboard-blogs"] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.blogs.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.blogs.admin.all }),
       ]);
 
       router.push("/dashboard/blog/overview");
@@ -260,6 +253,7 @@ export default function DashboardBlogForm({
                 }
                 className="h-12 w-full appearance-none border border-[#C8C8C8] bg-transparent px-3 pr-12 text-sm text-black outline-none"
               >
+                <option value="DRAFT">DRAFT</option>
                 <option value="PUBLISHED">PUBLISHED</option>
                 <option value="ARCHIVED">ARCHIVED</option>
               </select>

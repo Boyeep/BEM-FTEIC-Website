@@ -2,14 +2,13 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 import { DEFAULT_ERROR_MESSAGE } from "@/lib/error-handler/constants";
-import { parseApiMessage } from "@/lib/error-handler/message";
 import {
   getErrorRedirectPath,
   redirectToErrorPage,
 } from "@/lib/error-handler/redirect";
-import { UninterceptedApiError } from "@/types/api";
+import { ApiFailure } from "@/types/api";
 
-function handleAxiosError(error: AxiosError<UninterceptedApiError>): void {
+function handleAxiosError(error: AxiosError<ApiFailure>): void {
   const statusCode = error.response?.status;
   const redirectPath = getErrorRedirectPath(statusCode);
 
@@ -18,13 +17,13 @@ function handleAxiosError(error: AxiosError<UninterceptedApiError>): void {
     return;
   }
 
-  const message = parseApiMessage(error.response?.data?.message);
+  const message = error.response?.data?.error?.message;
   toast.error(message || error.message || DEFAULT_ERROR_MESSAGE);
 }
 
 export function handleError(error: unknown): void {
   if (error instanceof AxiosError) {
-    handleAxiosError(error as AxiosError<UninterceptedApiError>);
+    handleAxiosError(error as AxiosError<ApiFailure>);
     return;
   }
 

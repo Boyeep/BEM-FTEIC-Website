@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getEvents } from "@/features/event/api/get-events";
 import { EventDepartmentCategory, EventSortBy } from "@/features/event/types";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseEventsOptions {
   page: number;
@@ -23,7 +24,14 @@ export function useEvents({
   department,
 }: UseEventsOptions) {
   return useQuery({
-    queryKey: ["events", page, limit, startDate, endDate, sortBy, department],
+    queryKey: queryKeys.events.list(
+      page,
+      limit,
+      startDate,
+      endDate,
+      sortBy,
+      department,
+    ),
     queryFn: () =>
       getEvents({ page, limit, startDate, endDate, sortBy, department }),
     placeholderData: keepPreviousData,

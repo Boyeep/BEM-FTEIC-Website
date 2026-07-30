@@ -10,6 +10,7 @@ import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmMod
 import GaleriPagination from "@/features/galeri/components/GaleriPagination";
 import { useDashboardGaleri } from "@/features/galeri/hooks/useDashboardGaleri";
 import { galeriService } from "@/features/galeri/services/galeriService";
+import { queryKeys } from "@/lib/queryKeys";
 
 const PAGE_SIZE = 6;
 
@@ -30,8 +31,10 @@ export default function DashboardGaleriOverviewPage() {
     try {
       await galeriService.deleteGaleri(selectedDeleteId);
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["dashboard-galeri"] }),
-        queryClient.invalidateQueries({ queryKey: ["galeri"] }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.gallery.admin.all,
+        }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.gallery.all }),
       ]);
       toast.success("Galeri berhasil dihapus.");
       setSelectedDeleteId(null);

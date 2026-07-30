@@ -1,6 +1,4 @@
-// authService
-// Contains authentication-related API calls (login, signup, verify email).
-// Centralizes all auth HTTP requests.
+import { User as SupabaseUser } from "@supabase/supabase-js";
 
 import { profileService } from "@/features/auth/services/profileService";
 import { syncServerSession } from "@/features/auth/services/serverSessionService";
@@ -24,6 +22,39 @@ async function ensureCurrentSessionIsWhitelisted(email?: string | null) {
   }
 }
 
+async function finalizeAdminSession(user: SupabaseUser, accessToken: string) {
+  await ensureCurrentSessionIsWhitelisted(user.email);
+
+  let profile = null;
+  try {
+    profile = await profileService.ensureForUser(user);
+  } catch {
+    profile = null;
+  }
+  if (profile?.role !== "admin") {
+    await supabase.auth.signOut();
+    throw new Error("Akun ini tidak memiliki role admin.");
+  }
+  await syncServerSession(accessToken);
+
+  const fallbackUsername =
+    typeof user.user_metadata?.username === "string"
+      ? user.user_metadata.username
+      : user.email || "";
+
+  return {
+    id: user.id,
+    email: profile?.email || user.email || "",
+    username: profile?.username || fallbackUsername,
+    avatarUrl:
+      profile?.avatar_url ||
+      (typeof user.user_metadata?.avatar_url === "string"
+        ? user.user_metadata.avatar_url
+        : null),
+    createdAt: user.created_at,
+  };
+}
+
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const normalizedEmail = await signupWhitelistService.ensureEmailWhitelisted(
@@ -40,37 +71,8 @@ export const authService = {
       throw new Error(error?.message || "Login failed");
     }
 
-    await ensureCurrentSessionIsWhitelisted(data.user.email);
-
-    let profile = null;
-    try {
-      profile = await profileService.ensureForUser(data.user);
-    } catch {
-      profile = null;
-    }
-    if (profile?.role !== "admin") {
-      await supabase.auth.signOut();
-      throw new Error("Akun ini tidak memiliki role admin.");
-    }
-    await syncServerSession(data.session.access_token);
-
-    const fallbackUsername =
-      typeof data.user.user_metadata?.username === "string"
-        ? data.user.user_metadata.username
-        : data.user.email || "";
-
     return {
-      user: {
-        id: data.user.id,
-        email: profile?.email || data.user.email || "",
-        username: profile?.username || fallbackUsername,
-        avatarUrl:
-          profile?.avatar_url ||
-          (typeof data.user.user_metadata?.avatar_url === "string"
-            ? data.user.user_metadata.avatar_url
-            : null),
-        createdAt: data.user.created_at,
-      },
+      user: await finalizeAdminSession(data.user, data.session.access_token),
       accessToken: data.session.access_token,
     };
   },
@@ -148,38 +150,9 @@ export const authService = {
       throw new Error(error?.message || "Failed to create session");
     }
 
-    await ensureCurrentSessionIsWhitelisted(user.email);
-
-    let profile = null;
-    try {
-      profile = await profileService.ensureForUser(user);
-    } catch {
-      profile = null;
-    }
-    if (profile?.role !== "admin") {
-      await supabase.auth.signOut();
-      throw new Error("Akun ini tidak memiliki role admin.");
-    }
-    await syncServerSession(session.access_token);
-
-    const fallbackUsername =
-      typeof user.user_metadata?.username === "string"
-        ? user.user_metadata.username
-        : user.email || "";
-
     return {
       message: "Email verified successfully!",
-      user: {
-        id: user.id,
-        email: profile?.email || user.email || "",
-        username: profile?.username || fallbackUsername,
-        avatarUrl:
-          profile?.avatar_url ||
-          (typeof user.user_metadata?.avatar_url === "string"
-            ? user.user_metadata.avatar_url
-            : null),
-        createdAt: user.created_at,
-      },
+      user: await finalizeAdminSession(user, session.access_token),
       accessToken: session.access_token,
     };
   },

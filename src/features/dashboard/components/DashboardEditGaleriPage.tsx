@@ -41,6 +41,7 @@ export default function DashboardEditGaleriPage({
         link: data.item.link,
         takenAt: data.item.takenAt,
         imageUrl: data.item.imageUrl,
+        category: data.item.category,
       }}
     />
   );

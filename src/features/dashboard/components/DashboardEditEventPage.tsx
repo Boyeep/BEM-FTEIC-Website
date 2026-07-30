@@ -43,6 +43,7 @@ export default function DashboardEditEventPage({
         coverImage: data.item.coverImage,
         eventDate: data.item.eventDate,
         status: data.item.status,
+        publicationStatus: data.item.publicationStatus,
       }}
     />
   );

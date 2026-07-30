@@ -1,4 +1,7 @@
-export type EventStatus = "ONGOING" | "ENDED";
+import { Pagination } from "@/lib/pagination";
+
+export type EventStatus = "UPCOMING" | "ONGOING" | "ENDED";
+export type PublicationStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 export type EventSortBy = "latest" | "oldest" | "title_asc" | "title_desc";
 export type EventDepartmentCategory =
   | "FTEIC"
@@ -19,21 +22,13 @@ export interface EventSummary {
   coverImage: string;
   eventDate: string;
   status: EventStatus;
+  publicationStatus: PublicationStatus;
   createdBy?: string | null;
-}
-
-export interface EventPagination {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
 }
 
 export interface EventListResponse {
   items: EventSummary[];
-  pagination: EventPagination;
+  pagination: Pagination;
 }
 
 export interface EventDetailResponse {
@@ -55,5 +50,6 @@ export interface UpsertEventPayload {
   category: string;
   eventDate: string;
   status: EventStatus;
+  publicationStatus: PublicationStatus;
   coverImage?: string;
 }

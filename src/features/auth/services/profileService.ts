@@ -2,6 +2,7 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 
 import { api } from "@/lib/api";
 import { deleteImageFromAPI, uploadImageToAPI } from "@/lib/upload";
+import { ApiSuccess } from "@/types/api";
 
 type ProfileRow = {
   id: string;
@@ -11,7 +12,6 @@ type ProfileRow = {
   updated_at?: string;
   role?: "member" | "admin";
 };
-type APIEnvelope<T> = { success: boolean; data: T };
 
 const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
   id: user.id,
@@ -28,7 +28,7 @@ const mapFallbackProfile = (user: SupabaseUser): ProfileRow => ({
 
 export const profileService = {
   getById: async (userId: string): Promise<ProfileRow | null> => {
-    const { data } = await api.get<APIEnvelope<ProfileRow>>("/me");
+    const { data } = await api.get<ApiSuccess<ProfileRow>>("/me");
     void userId;
     return data.data;
   },
@@ -40,7 +40,7 @@ export const profileService = {
 
   updateName: async (userId: string, username: string): Promise<ProfileRow> => {
     const current = await profileService.getById(userId);
-    const { data } = await api.put<APIEnvelope<ProfileRow>>("/me", {
+    const { data } = await api.put<ApiSuccess<ProfileRow>>("/me", {
       username,
       avatar_url: current?.avatar_url || "",
     });
@@ -51,7 +51,7 @@ export const profileService = {
     const publicUrl = await uploadImageToAPI(file);
 
     const current = await profileService.getById(userId);
-    const { data } = await api.put<APIEnvelope<ProfileRow>>("/me", {
+    const { data } = await api.put<ApiSuccess<ProfileRow>>("/me", {
       username: current?.username || "Admin",
       avatar_url: publicUrl,
     });

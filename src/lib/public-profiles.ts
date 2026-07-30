@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
+import { ApiSuccess } from "@/types/api";
 
 export type PublicProfileRow = {
   id: string;
@@ -6,61 +7,21 @@ export type PublicProfileRow = {
   avatar_url?: string | null;
 };
 
-async function querySingleProfile(
-  source: "public_profiles" | "profiles",
-  id: string,
-) {
-  const { data, error } = await supabase
-    .from(source)
-    .select("id,username,avatar_url")
-    .eq("id", id)
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return data as PublicProfileRow;
-}
-
-async function queryProfileList(
-  source: "public_profiles" | "profiles",
-  ids: string[],
-) {
-  const { data, error } = await supabase
-    .from(source)
-    .select("id,username,avatar_url")
-    .in("id", ids);
-
-  if (error || !data) {
+export async function getPublicProfilesByIds(ids: string[]) {
+  const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
+  if (uniqueIds.length === 0) {
     return [];
   }
-
-  return (data || []) as PublicProfileRow[];
+  const { data } = await api.get<ApiSuccess<PublicProfileRow[]>>("/profiles", {
+    params: { ids: uniqueIds.join(",") },
+  });
+  return data.data;
 }
 
 export async function getPublicProfileById(id?: string | null) {
-  if (!id) return null;
-
-  const fromPublicView = await querySingleProfile("public_profiles", id);
-  if (fromPublicView) {
-    return fromPublicView;
+  if (!id) {
+    return null;
   }
-
-  return querySingleProfile("profiles", id);
-}
-
-export async function getPublicProfilesByIds(ids: string[]) {
-  if (ids.length === 0) {
-    return [];
-  }
-
-  const uniqueIds = Array.from(new Set(ids));
-  const fromPublicView = await queryProfileList("public_profiles", uniqueIds);
-  if (fromPublicView.length > 0) {
-    return fromPublicView;
-  }
-
-  return queryProfileList("profiles", uniqueIds);
+  const profiles = await getPublicProfilesByIds([id]);
+  return profiles[0] || null;
 }

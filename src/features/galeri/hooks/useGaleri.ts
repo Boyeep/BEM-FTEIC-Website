@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getGaleri } from "@/features/galeri/api/get-galeri";
 import { GaleriDepartment, GaleriSortBy } from "@/features/galeri/types";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseGaleriOptions {
   page: number;
@@ -19,7 +20,7 @@ export function useGaleri({
   department = "all",
 }: UseGaleriOptions) {
   return useQuery({
-    queryKey: ["galeri", page, limit, sortBy, department],
+    queryKey: queryKeys.gallery.list(page, limit, sortBy, department),
     queryFn: () => getGaleri({ page, limit, sortBy, department }),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60,

@@ -3,7 +3,13 @@ import Link from "next/link";
 
 import Badge from "@/features/dashboard/components/Badge";
 
-export type ActionStatus = "PUBLISHED" | "ARCHIVED" | "ONGOING" | "ENDED";
+export type ActionStatus =
+  | "DRAFT"
+  | "PUBLISHED"
+  | "ARCHIVED"
+  | "UPCOMING"
+  | "ONGOING"
+  | "ENDED";
 
 export interface ActionRow {
   id: string;
@@ -22,12 +28,16 @@ interface ActionTableProps {
 
 function toBadgeVariant(status: ActionStatus) {
   switch (status) {
+    case "DRAFT":
+      return "draft";
     case "PUBLISHED":
       return "published";
     case "ARCHIVED":
       return "archived";
     case "ONGOING":
       return "ongoing";
+    case "UPCOMING":
+      return "upcoming";
     case "ENDED":
       return "ended";
   }

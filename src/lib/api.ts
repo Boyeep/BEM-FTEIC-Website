@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 import { supabase } from "@/lib/supabase";
-import { UninterceptedApiError } from "@/types/api";
+import { ApiFailure } from "@/types/api";
 
 export const baseURL =
   process.env.NEXT_PUBLIC_RUN_MODE === "development"
@@ -39,28 +39,10 @@ api.interceptors.response.use(
   (config) => {
     return config;
   },
-  (error: AxiosError<UninterceptedApiError>) => {
-    const backendError = error.response?.data as UninterceptedApiError & {
-      error?: { message?: string };
-    };
+  (error: AxiosError<ApiFailure>) => {
+    const backendError = error.response?.data;
     if (backendError?.error?.message) {
       return Promise.reject(new Error(backendError.error.message));
-    }
-    // parse error
-    if (error.response?.data.message) {
-      return Promise.reject({
-        ...error,
-        response: {
-          ...error.response,
-          data: {
-            ...error.response.data,
-            message:
-              typeof error.response.data.message === "string"
-                ? error.response.data.message
-                : Object.values(error.response.data.message)[0][0],
-          },
-        },
-      });
     }
     return Promise.reject(error);
   },

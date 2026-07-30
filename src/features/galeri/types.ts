@@ -15,20 +15,12 @@ export interface GaleriItem {
   link: string;
   imageUrl: string;
   takenAt: string;
-}
-
-export interface GaleriPagination {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
+  category: GaleriDepartment;
 }
 
 export interface GaleriListResponse {
   items: GaleriItem[];
-  pagination: GaleriPagination;
+  pagination: Pagination;
 }
 
 export interface GaleriDetailResponse {
@@ -47,4 +39,6 @@ export interface UpsertGaleriPayload {
   link: string;
   takenAt: string;
   imageUrl?: string;
+  category: GaleriDepartment;
 }
+import { Pagination } from "@/lib/pagination";

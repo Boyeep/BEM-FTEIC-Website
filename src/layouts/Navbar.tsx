@@ -7,34 +7,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { EVENT_NAV_ITEMS } from "@/features/event/department";
+import { KABINET_NAV_ITEMS } from "@/features/kabinet/navigation";
 import clsxm from "@/lib/clsxm";
-
-const kabinetItems = [
-  { label: "STRUKTUR", href: "/kabinet/struktur" },
-  { label: "BPH", href: "/kabinet/bph" },
-  { label: "ORGANIZATIONAL AFFAIRS", href: "/kabinet/organizational-affairs" },
-  { label: "DEPARTMENT SECRETARY", href: "/kabinet/department-secretary" },
-  { label: "INTERNAL AFFAIRS", href: "/kabinet/internal-affairs" },
-  { label: "EXTERNAL AFFAIRS", href: "/kabinet/external-affairs" },
-  { label: "ENTREPRENEURSHIP", href: "/kabinet/entrepreneurship" },
-  {
-    label: "STUDENT RESOURCE DEVELOPMENT",
-    href: "/kabinet/student-resource-development",
-  },
-  {
-    label: "SOCIAL AFFAIRS AND COMMUNITY",
-    href: "/kabinet/social-affairs-and-community",
-  },
-  {
-    label: "RESEARCH AND TECHNOLOGY",
-    href: "/kabinet/research-and-technology",
-  },
-];
 
 function DropdownList({
   items,
 }: {
-  items: { label: string; href: string }[];
+  items: readonly { label: string; href: string }[];
 }) {
   return (
     <div className="w-[320px] border border-black/20 bg-[#FCD704]">
@@ -225,7 +204,7 @@ export default function Navbar() {
                   >
                     <div className="overflow-hidden">
                       <div className="border-t border-black/20 bg-[#FCD704]">
-                        {kabinetItems.map((item) => (
+                        {KABINET_NAV_ITEMS.map((item) => (
                           <Link
                             key={`mobile-kabinet-${item.label}`}
                             href={item.href}
@@ -337,7 +316,7 @@ export default function Navbar() {
                     openMenu === "kabinet" ? "scale-100" : "scale-95",
                   )}
                 >
-                  <DropdownList items={kabinetItems} />
+                  <DropdownList items={KABINET_NAV_ITEMS} />
                 </div>
               </div>
             </div>

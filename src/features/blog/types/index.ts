@@ -1,4 +1,6 @@
-export type BlogStatus = "PUBLISHED" | "ARCHIVED";
+import { Pagination } from "@/lib/pagination";
+
+export type BlogStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 export interface BlogSummary {
   id: string;
@@ -19,18 +21,9 @@ export interface Blog extends BlogSummary {
   content: string;
 }
 
-export interface BlogPagination {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
 export interface BlogListResponse {
   items: BlogSummary[];
-  pagination: BlogPagination;
+  pagination: Pagination;
 }
 
 export interface BlogDetailResponse {

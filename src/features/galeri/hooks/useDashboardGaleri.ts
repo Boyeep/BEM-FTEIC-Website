@@ -3,6 +3,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { galeriService } from "@/features/galeri/services/galeriService";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseDashboardGaleriOptions {
   page: number;
@@ -14,7 +15,7 @@ export function useDashboardGaleri({
   limit = 6,
 }: UseDashboardGaleriOptions) {
   return useQuery({
-    queryKey: ["dashboard-galeri", page, limit],
+    queryKey: queryKeys.gallery.admin.list(page, limit),
     queryFn: () => galeriService.getDashboardGaleri(page, limit),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 30,

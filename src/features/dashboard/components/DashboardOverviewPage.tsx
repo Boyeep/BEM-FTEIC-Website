@@ -18,6 +18,7 @@ import StatCard from "@/features/dashboard/components/StatCard";
 import { useDashboardEvents } from "@/features/event/hooks/useDashboardEvents";
 import { eventService } from "@/features/event/services/eventService";
 import { useDashboardGaleri } from "@/features/galeri/hooks/useDashboardGaleri";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function DashboardOverviewPage() {
   const queryClient = useQueryClient();
@@ -56,15 +57,19 @@ export default function DashboardOverviewPage() {
       if (deleteTarget.type === "blog") {
         await blogService.deleteBlog(deleteTarget.id);
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["dashboard-blogs"] }),
-          queryClient.invalidateQueries({ queryKey: ["blogs"] }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.blogs.admin.all,
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.blogs.all }),
         ]);
         toast.success("Blog berhasil dihapus.");
       } else {
         await eventService.deleteEvent(deleteTarget.id);
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["dashboard-events"] }),
-          queryClient.invalidateQueries({ queryKey: ["events"] }),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.events.admin.all,
+          }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.events.all }),
         ]);
         toast.success("Event berhasil dihapus.");
       }

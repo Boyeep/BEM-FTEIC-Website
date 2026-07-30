@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
+import { ApiSuccess } from "@/types/api";
 
 type SignupWhitelistRow = {
   id: string;
@@ -7,7 +8,6 @@ type SignupWhitelistRow = {
   created_at: string;
   created_by?: string | null;
 };
-type APIEnvelope<T> = { success: boolean; data: T };
 
 export interface SignupWhitelistEntry {
   id: string;
@@ -112,7 +112,7 @@ export const signupWhitelistService = {
 
   getEntries: async (): Promise<SignupWhitelistEntry[]> => {
     const { data } =
-      await api.get<APIEnvelope<SignupWhitelistRow[]>>("/admin/whitelist");
+      await api.get<ApiSuccess<SignupWhitelistRow[]>>("/admin/whitelist");
     return (data.data || []).map(mapRowToEntry);
   },
 
@@ -126,7 +126,7 @@ export const signupWhitelistService = {
       throw new Error("Masukkan email yang valid.");
     }
 
-    const { data } = await api.post<APIEnvelope<SignupWhitelistRow>>(
+    const { data } = await api.post<ApiSuccess<SignupWhitelistRow>>(
       "/admin/whitelist",
       { email: normalizedEmail },
     );

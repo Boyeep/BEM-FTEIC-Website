@@ -10,6 +10,7 @@ import Pagination from "@/features/blog/components/Pagination";
 import { useDashboardBlogs } from "@/features/blog/hooks/useDashboardBlogs";
 import { blogService } from "@/features/blog/services/blogService";
 import DeleteConfirmModal from "@/features/dashboard/components/DeleteConfirmModal";
+import { queryKeys } from "@/lib/queryKeys";
 
 const PAGE_SIZE = 8;
 
@@ -30,8 +31,8 @@ export default function DashboardBlogOverviewPage() {
     try {
       await blogService.deleteBlog(selectedDeleteId);
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["dashboard-blogs"] }),
-        queryClient.invalidateQueries({ queryKey: ["blogs"] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.blogs.admin.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.blogs.all }),
       ]);
       toast.success("Blog berhasil dihapus.");
       setSelectedDeleteId(null);
