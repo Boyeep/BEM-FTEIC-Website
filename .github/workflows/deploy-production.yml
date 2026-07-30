@@ -54,8 +54,8 @@ jobs:
             --exclude=.next \
             --exclude=node_modules \
             --exclude=.env.local \
-            --exclude=frontend-source.tar.gz \
-            -czf frontend-source.tar.gz .
+            -czf "$RUNNER_TEMP/frontend-source.tar.gz" .
+          mv "$RUNNER_TEMP/frontend-source.tar.gz" frontend-source.tar.gz
 
       - name: Upload source to VPS
         uses: appleboy/scp-action@v1.0.0
