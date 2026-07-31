@@ -24,7 +24,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const hideFooter = isAuthRoute || isKabinetStrukturPage || isDashboardPage;
 
   useEffect(() => {
-    void visitorService.trackVisit(pathname);
+    void visitorService.trackVisit(pathname).catch(() => {
+      // Visitor analytics must not interrupt navigation when the API is unavailable.
+    });
   }, [pathname]);
 
   useEffect(() => {

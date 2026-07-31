@@ -64,8 +64,8 @@ export default function HeroSection() {
       }}
     >
       <Image
-        src="/images/Homepage-FTEIC-Group-Image.webp"
-        alt="Keluarga BEM FTEIC ITS"
+        src="/images/Homepage-Hero-Image.webp"
+        alt="Pengurus BEM FTEIC ITS"
         fill
         priority
         sizes="100vw"
