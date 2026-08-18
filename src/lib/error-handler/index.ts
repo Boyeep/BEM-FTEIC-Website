@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 import { DEFAULT_ERROR_MESSAGE } from "@/lib/error-handler/constants";
@@ -21,9 +21,16 @@ function handleAxiosError(error: AxiosError<ApiFailure>): void {
   toast.error(message || error.message || DEFAULT_ERROR_MESSAGE);
 }
 
+function isAxiosError(error: unknown): error is AxiosError<ApiFailure> {
+  return (
+    error instanceof Error &&
+    (error as AxiosError<ApiFailure>).isAxiosError === true
+  );
+}
+
 export function handleError(error: unknown): void {
-  if (error instanceof AxiosError) {
-    handleAxiosError(error as AxiosError<ApiFailure>);
+  if (isAxiosError(error)) {
+    handleAxiosError(error);
     return;
   }
 

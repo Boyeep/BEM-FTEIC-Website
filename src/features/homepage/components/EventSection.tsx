@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -49,9 +50,12 @@ function DepartmentCardFace({
       ].join(" ")}
     >
       <div className="relative h-56 w-full overflow-hidden bg-white">
-        <img
+        <Image
           src={slide.imageSrc}
           alt={slide.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, calc(100vw - 3rem)"
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
