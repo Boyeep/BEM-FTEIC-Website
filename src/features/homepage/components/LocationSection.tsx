@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 const departments = [
@@ -8,7 +9,7 @@ const departments = [
     address: "PQCW+7WH, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Informatika+ITS/data=!4m2!3m1!1s0x0:0x2b2bcdafc68c9a28?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-teknik-informatika.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-informatika.jpeg",
     marker: { x: "60%", y: "42%" },
   },
   {
@@ -16,7 +17,7 @@ const departments = [
     address: "Kampus ITS, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Sistem+Informasi+ITS/data=!4m2!3m1!1s0x0:0x83df57e6a93ef2c2?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-sistem-informasi.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-sistem-informasi.jpeg",
     marker: { x: "57%", y: "48%" },
   },
   {
@@ -24,7 +25,7 @@ const departments = [
     address: "PQ8W+9M4, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Biomedik+FTE+ITS/data=!4m2!3m1!1s0x0:0x60ffe474f4c725e6?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-teknik-biomedik.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-biomedik.jpeg",
     marker: { x: "58%", y: "68%" },
   },
   {
@@ -32,7 +33,7 @@ const departments = [
     address: "Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "http://google.com/maps/place/Departemen+Teknik+Komputer/data=!4m2!3m1!1s0x0:0xfa255422237d84eb?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-teknik-komputer.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-komputer.jpeg",
     marker: { x: "58%", y: "72%" },
   },
   {
@@ -41,7 +42,7 @@ const departments = [
       "Gedung B, C & AJ Kampus Institut Teknologi Sepuluh Nopember, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60111",
     mapsUrl:
       "https://www.google.com/maps/place/Departemen+Teknik+Elektro/data=!4m2!3m1!1s0x0:0xced029db5d680974?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-teknik-elektro.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-teknik-elektro.jpeg",
     marker: { x: "56%", y: "74%" },
   },
   {
@@ -50,7 +51,7 @@ const departments = [
       "Gedung Tower 2 ITS, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117",
     mapsUrl:
       "https://www.google.com/maps/place/Gedung+Tower+2+ITS/data=!4m2!3m1!1s0x0:0xd021ec310d46b640?sa=X&ved=1t:2428&ictx=111",
-    imageSrc: "images/event-departemen-image/Gedung-teknologi-informasi.jpeg",
+    imageSrc: "/images/event-departemen-image/Gedung-teknologi-informasi.jpeg",
     marker: { x: "52%", y: "74%" },
   },
 ];
@@ -71,9 +72,12 @@ export default function LocationSection() {
     <section className="bg-[#F3F3F3] py-16">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-[1.25fr_0.9fr]">
         <div className="relative h-[540px] w-full overflow-hidden border border-[#C7D2FE] bg-[#E6E6E6] md:h-[700px]">
-          <img
-            src="/images/Homepage_Location-Section_Image.png"
+          <Image
+            src="/images/Homepage_Location-Section_Image.webp"
             alt="ITS map"
+            fill
+            sizes="(min-width: 768px) 56vw, 100vw"
+            loading="lazy"
             className="h-full w-full object-cover opacity-35"
           />
 
@@ -108,36 +112,32 @@ export default function LocationSection() {
         </div>
 
         <div className="overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-          >
-            {departments.map((department) => (
-              <article key={department.name} className="w-full shrink-0">
-                <div className="h-[310px] w-full overflow-hidden bg-white">
-                  <img
-                    src={department.imageSrc}
-                    alt={department.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <h3 className="mt-8 text-5xl font-extrabold text-[#1D4ED8]">
-                  {department.name}
-                </h3>
-                <p className="mt-4 max-w-[95%] text-2xl leading-relaxed text-black/90">
-                  {department.address}
-                </p>
-                <a
-                  href={department.mapsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="relative mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
-                >
-                  View on Google Maps ↗
-                </a>
-              </article>
-            ))}
-          </div>
+          <article key={active.name} className="animate-page-enter w-full">
+            <div className="relative h-[310px] w-full overflow-hidden bg-white">
+              <Image
+                src={active.imageSrc}
+                alt={active.name}
+                fill
+                sizes="(min-width: 768px) 40vw, 100vw"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <h3 className="mt-8 text-5xl font-extrabold text-[#1D4ED8]">
+              {active.name}
+            </h3>
+            <p className="mt-4 max-w-[95%] text-2xl leading-relaxed text-black/90">
+              {active.address}
+            </p>
+            <a
+              href={active.mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="relative mt-6 inline-block text-sm font-medium uppercase tracking-wide text-black/70 hover:text-black after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full"
+            >
+              View on Google Maps ↗
+            </a>
+          </article>
 
           <div className="mt-6 flex justify-end gap-4">
             <button

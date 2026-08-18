@@ -1,7 +1,7 @@
 "use client";
 
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+import { useEffect, useRef } from "react";
 
 import clsxm from "@/lib/clsxm";
 
@@ -23,25 +23,36 @@ export default function ScrollReveal({
   ...rest
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduceMotion.matches) {
-      setIsVisible(true);
-      return;
-    }
-
     const element = ref.current;
-    if (!element) return;
+    if (!element || reduceMotion.matches || !element.animate) return;
+
+    const rect = element.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) return;
+
+    let animation: Animation | null = null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
 
-        setIsVisible(true);
+        animation = element.animate(
+          [
+            {
+              opacity: 0,
+              transform: "translate3d(0, 16px, 0) scale(0.995)",
+            },
+            { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)" },
+          ],
+          {
+            duration: 320,
+            delay,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            fill: "backwards",
+          },
+        );
         observer.disconnect();
       },
       {
@@ -54,23 +65,15 @@ export default function ScrollReveal({
 
     return () => {
       observer.disconnect();
+      animation?.cancel();
     };
-  }, [rootMargin, threshold]);
+  }, [delay, rootMargin, threshold]);
 
   return (
     <div
       ref={ref}
-      className={clsxm(
-        "scroll-reveal",
-        isVisible ? "scroll-reveal-visible" : "scroll-reveal-hidden",
-        className,
-      )}
-      style={
-        {
-          ...style,
-          "--scroll-reveal-delay": `${delay}ms`,
-        } as CSSProperties
-      }
+      className={clsxm("scroll-reveal", className)}
+      style={style}
       {...rest}
     >
       {children}

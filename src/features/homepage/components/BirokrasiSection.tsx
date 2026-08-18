@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function BirokrasiSection() {
@@ -14,9 +16,12 @@ export default function BirokrasiSection() {
           <div className="mt-10">
             <ScrollReveal delay={70 + 5 * 25} className="h-full w-full">
               <article className="flex h-full flex-col items-center gap-6 md:flex-row md:items-center md:justify-center md:gap-7">
-                <div className="h-72 w-full shrink-0 overflow-hidden rounded-[1.35rem] bg-[#E6E6E6] md:h-96 md:w-96 md:rounded-none">
-                  <img
+                <div className="relative h-72 w-full shrink-0 overflow-hidden rounded-[1.35rem] bg-[#E6E6E6] md:h-96 md:w-96 md:rounded-none">
+                  <Image
                     src="/images/Homepage-Dekan-FTEIC.jpeg"
+                    fill
+                    sizes="(min-width: 768px) 384px, 100vw"
+                    loading="lazy"
                     className="h-full w-full object-cover"
                     alt="Dekan FTEIC"
                   />
