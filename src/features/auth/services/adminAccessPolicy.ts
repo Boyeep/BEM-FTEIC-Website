@@ -6,8 +6,4 @@ export const adminAccessPolicy = {
     await supabaseAuthGateway.signOut();
     throw new Error("Akun ini tidak memiliki role admin.");
   },
-  rejectSession: async (error: unknown): Promise<never> => {
-    await supabaseAuthGateway.signOut();
-    throw error;
-  },
 };

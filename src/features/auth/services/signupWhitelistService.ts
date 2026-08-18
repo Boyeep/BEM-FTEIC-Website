@@ -16,25 +16,14 @@ export interface SignupWhitelistEntry {
   createdBy?: string | null;
 }
 
-export type WhitelistAccessContext = "signup" | "login" | "session";
-
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
-function getWhitelistAccessErrorMessage(context: WhitelistAccessContext) {
-  if (context === "signup") {
-    return "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses signup.";
-  }
-
-  if (context === "session") {
-    return "Akses akun ini sudah dicabut dari whitelist. Hubungi admin dashboard untuk meminta akses login kembali.";
-  }
-
-  return "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses login.";
-}
+const SIGNUP_ACCESS_ERROR_MESSAGE =
+  "Email ini belum di-whitelist. Hubungi admin dashboard untuk meminta akses signup.";
 
 function mapRowToEntry(row: SignupWhitelistRow): SignupWhitelistEntry {
   return {
@@ -68,10 +57,6 @@ export const signupWhitelistService = {
     return EMAIL_PATTERN.test(normalizeEmail(email));
   },
 
-  getAccessErrorMessage(context: WhitelistAccessContext) {
-    return getWhitelistAccessErrorMessage(context);
-  },
-
   isEmailWhitelisted: async (email: string): Promise<boolean> => {
     const normalizedEmail = normalizeEmail(email);
 
@@ -90,10 +75,7 @@ export const signupWhitelistService = {
     return Boolean(data);
   },
 
-  ensureEmailWhitelisted: async (
-    email: string,
-    context: WhitelistAccessContext = "login",
-  ): Promise<string> => {
+  ensureEmailCanSignUp: async (email: string): Promise<string> => {
     const normalizedEmail = normalizeEmail(email);
 
     if (!EMAIL_PATTERN.test(normalizedEmail)) {
@@ -104,7 +86,7 @@ export const signupWhitelistService = {
       await signupWhitelistService.isEmailWhitelisted(normalizedEmail);
 
     if (!isWhitelisted) {
-      throw new Error(getWhitelistAccessErrorMessage(context));
+      throw new Error(SIGNUP_ACCESS_ERROR_MESSAGE);
     }
 
     return normalizedEmail;
