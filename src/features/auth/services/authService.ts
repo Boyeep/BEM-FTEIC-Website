@@ -13,10 +13,13 @@ import { supabaseAuthGateway } from "./supabaseAuthGateway";
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const normalizedEmail = await signupWhitelistService.ensureEmailWhitelisted(
+    const normalizedEmail = signupWhitelistService.normalizeEmail(
       credentials.email,
-      "login",
     );
+
+    if (!signupWhitelistService.isValidEmail(normalizedEmail)) {
+      throw new Error("Masukkan email yang valid.");
+    }
 
     const { data, error } = await supabaseAuthGateway.signIn(
       normalizedEmail,
@@ -34,9 +37,8 @@ export const authService = {
   },
 
   signup: async (payload: SignupRequest): Promise<SignupResponse> => {
-    const normalizedEmail = await signupWhitelistService.ensureEmailWhitelisted(
+    const normalizedEmail = await signupWhitelistService.ensureEmailCanSignUp(
       payload.email,
-      "signup",
     );
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;

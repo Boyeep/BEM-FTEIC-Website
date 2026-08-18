@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { getWhitelistedDashboardUser } from "@/features/auth/services/serverAuthAccess";
+import { getAdminDashboardUser } from "@/features/auth/services/serverAuthAccess";
 
 import AdminShell from "./AdminShell";
 
@@ -18,7 +18,7 @@ export default async function AdminLayout({
 }: {
   children: ReactNode;
 }) {
-  const user = await getWhitelistedDashboardUser();
+  const user = await getAdminDashboardUser();
 
   if (!user) {
     redirect("/login");

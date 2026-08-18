@@ -4,7 +4,6 @@ import { adminAccessPolicy } from "./adminAccessPolicy";
 import { mapAuthenticatedUser } from "./authenticatedUserMapper";
 import { profileService } from "./profileService";
 import { syncServerSession } from "./serverSessionService";
-import { signupWhitelistService } from "./signupWhitelistService";
 
 type PendingFinalization = {
   key: string;
@@ -14,15 +13,6 @@ type PendingFinalization = {
 let pendingFinalization: PendingFinalization | null = null;
 
 async function runFinalization(user: SupabaseUser, accessToken: string) {
-  try {
-    await signupWhitelistService.ensureEmailWhitelisted(
-      user.email || "",
-      "session",
-    );
-  } catch (error) {
-    return adminAccessPolicy.rejectSession(error);
-  }
-
   const profile = await profileService.ensureForUser(user);
   await adminAccessPolicy.assertAdmin(profile?.role);
   await syncServerSession(accessToken);

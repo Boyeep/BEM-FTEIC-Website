@@ -7,7 +7,7 @@ async function getAuthCookieToken() {
   return cookieStore.get("bem_fteic_session")?.value || null;
 }
 
-export async function getWhitelistedDashboardUser() {
+export async function getAdminDashboardUser() {
   const token = await getAuthCookieToken();
 
   if (!token) {
