@@ -1,27 +1,7 @@
+import { api } from "@/lib/api";
 import { ApiSuccess } from "@/types/api";
 
 const VISITOR_ID_KEY = "site_visitor_id";
-const PUBLIC_API_BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? process.env.NEXT_PUBLIC_API_URL_DEV
-    : process.env.NEXT_PUBLIC_API_URL_PROD;
-
-function getPublicApiUrl(path: string) {
-  if (!PUBLIC_API_BASE_URL) {
-    throw new Error("Missing public API base URL");
-  }
-
-  return new URL(
-    path.replace(/^\//, ""),
-    `${PUBLIC_API_BASE_URL.replace(/\/$/, "")}/`,
-  ).toString();
-}
-
-async function assertSuccessfulResponse(response: Response) {
-  if (!response.ok) {
-    throw new Error(`Visitor API request failed with ${response.status}`);
-  }
-}
 
 function getBrowserVisitorId() {
   if (typeof window === "undefined") return null;
@@ -43,27 +23,17 @@ export const visitorService = {
     const visitorId = getBrowserVisitorId();
     if (!visitorId) return;
 
-    const response = await fetch(getPublicApiUrl("/visitors"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: visitorId,
-        path: pathname,
-        user_agent:
-          typeof window !== "undefined" ? window.navigator.userAgent : "",
-      }),
-      credentials: "omit",
-      keepalive: true,
+    await api.post("/visitors", {
+      id: visitorId,
+      path: pathname,
+      user_agent:
+        typeof window !== "undefined" ? window.navigator.userAgent : "",
     });
-    await assertSuccessfulResponse(response);
   },
 
   getVisitorCount: async (): Promise<number> => {
-    const response = await fetch(getPublicApiUrl("/visitors/count"), {
-      credentials: "omit",
-    });
-    await assertSuccessfulResponse(response);
-    const data = (await response.json()) as ApiSuccess<{ count: number }>;
+    const { data } =
+      await api.get<ApiSuccess<{ count: number }>>("/visitors/count");
     return Number(data.data.count) || 0;
   },
 };

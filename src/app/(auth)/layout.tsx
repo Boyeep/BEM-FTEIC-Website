@@ -3,8 +3,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import AuthSessionSync from "@/features/auth/components/AuthSessionSync";
-
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -15,7 +13,6 @@ export const metadata: Metadata = {
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-[#5172E8] to-[#DCE6FF] p-4 font-inter">
-      <AuthSessionSync />
       <main className="w-full flex justify-center items-center">
         {children}
       </main>

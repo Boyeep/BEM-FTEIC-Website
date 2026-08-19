@@ -6,95 +6,61 @@ import { useEffect, useRef } from "react";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function HeroSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<number | null>(null);
-  const pendingPointerRef = useRef<
-    { clientX: number; clientY: number } | "center" | null
-  >(null);
-  const isHeroVisibleRef = useRef(true);
-  const reduceMotionRef = useRef(false);
+  const currentPositionRef = useRef({ x: 50, y: 50 });
+  const targetPositionRef = useRef({ x: 50, y: 50 });
 
   useEffect(() => {
-    const sectionElement = sectionRef.current;
-    if (!sectionElement) return;
+    const textElement = textRef.current;
+    if (!textElement) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncMotionPreference = () => {
-      reduceMotionRef.current = reduceMotion.matches;
+    const animate = () => {
+      const current = currentPositionRef.current;
+      const target = targetPositionRef.current;
+
+      current.x += (target.x - current.x) * 0.01;
+      current.y += (target.y - current.y) * 0.01;
+
+      textElement.style.setProperty("--shine-x", `${current.x.toFixed(2)}%`);
+      textElement.style.setProperty("--shine-y", `${current.y.toFixed(2)}%`);
+
+      frameRef.current = window.requestAnimationFrame(animate);
     };
-    syncMotionPreference();
-    reduceMotion.addEventListener("change", syncMotionPreference);
 
-    const observer = new IntersectionObserver(([entry]) => {
-      isHeroVisibleRef.current = Boolean(entry?.isIntersecting);
-
-      if (!entry?.isIntersecting && frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-        frameRef.current = null;
-        pendingPointerRef.current = null;
-      }
-    });
-    observer.observe(sectionElement);
+    textElement.style.setProperty("--shine-x", "50%");
+    textElement.style.setProperty("--shine-y", "50%");
+    frameRef.current = window.requestAnimationFrame(animate);
 
     return () => {
-      observer.disconnect();
-      reduceMotion.removeEventListener("change", syncMotionPreference);
       if (frameRef.current !== null) {
         window.cancelAnimationFrame(frameRef.current);
       }
     };
   }, []);
 
-  const scheduleShineUpdate = (
-    pointer: { clientX: number; clientY: number } | "center",
-  ) => {
-    if (!isHeroVisibleRef.current || reduceMotionRef.current) return;
+  const updateShineTarget = (clientX: number, clientY: number) => {
+    const textElement = textRef.current;
+    if (!textElement) return;
 
-    pendingPointerRef.current = pointer;
-    if (frameRef.current !== null) return;
+    const rect = textElement.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
 
-    frameRef.current = window.requestAnimationFrame(() => {
-      frameRef.current = null;
-
-      const textElement = textRef.current;
-      const pendingPointer = pendingPointerRef.current;
-      pendingPointerRef.current = null;
-      if (!textElement || !pendingPointer || !isHeroVisibleRef.current) return;
-
-      if (pendingPointer === "center") {
-        textElement.style.setProperty("--shine-x", "50%");
-        textElement.style.setProperty("--shine-y", "50%");
-        return;
-      }
-
-      const rect = textElement.getBoundingClientRect();
-      const x = ((pendingPointer.clientX - rect.left) / rect.width) * 100;
-      const y = ((pendingPointer.clientY - rect.top) / rect.height) * 100;
-
-      textElement.style.setProperty(
-        "--shine-x",
-        `${Math.min(140, Math.max(-40, x)).toFixed(2)}%`,
-      );
-      textElement.style.setProperty(
-        "--shine-y",
-        `${Math.min(140, Math.max(-40, y)).toFixed(2)}%`,
-      );
-    });
+    targetPositionRef.current = {
+      x: Math.min(140, Math.max(-40, x)),
+      y: Math.min(140, Math.max(-40, y)),
+    };
   };
 
   return (
     <section
-      ref={sectionRef}
       className="relative min-h-[100svh]"
-      onPointerMove={(event) => {
-        scheduleShineUpdate({
-          clientX: event.clientX,
-          clientY: event.clientY,
-        });
+      onMouseMove={(event) => {
+        updateShineTarget(event.clientX, event.clientY);
       }}
-      onPointerLeave={() => {
-        scheduleShineUpdate("center");
+      onMouseLeave={() => {
+        targetPositionRef.current = { x: 50, y: 50 };
       }}
     >
       <Image
