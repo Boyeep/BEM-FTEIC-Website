@@ -4,7 +4,6 @@ import HomePageContent from "@/features/homepage/components/HomePageContent";
 import { createCanonicalMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createCanonicalMetadata("/");
-export const revalidate = 300;
 
 export default function Home() {
   return <HomePageContent />;

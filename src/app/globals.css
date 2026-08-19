@@ -110,6 +110,25 @@ body::-webkit-scrollbar-thumb:hover {
     background: #ffdf4d;
   }
 
+  .scroll-reveal {
+    --scroll-reveal-delay: 0ms;
+    --scroll-reveal-distance: 20px;
+    --scroll-reveal-duration: 920ms;
+    --scroll-reveal-scale-from: 0.992;
+    will-change: opacity, transform;
+  }
+
+  .scroll-reveal-hidden {
+    opacity: 0;
+    transform: translate3d(0, var(--scroll-reveal-distance), 0)
+      scale(var(--scroll-reveal-scale-from));
+  }
+
+  .scroll-reveal-visible {
+    animation: scroll-reveal-enter var(--scroll-reveal-duration)
+      cubic-bezier(0.16, 1, 0.3, 1) var(--scroll-reveal-delay) both;
+  }
+
   .text-metallic {
     background-image: linear-gradient(
       120deg,
@@ -144,8 +163,27 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+@keyframes scroll-reveal-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--scroll-reveal-distance), 0)
+      scale(var(--scroll-reveal-scale-from));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-page-enter {
+  .scroll-reveal,
+  .scroll-reveal-hidden,
+  .scroll-reveal-visible {
+    opacity: 1;
+    filter: none;
+    transform: none;
     animation: none;
+    will-change: auto;
   }
 }

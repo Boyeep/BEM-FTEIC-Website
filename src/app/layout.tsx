@@ -74,6 +74,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: JSON.stringify(organizationJsonLd),
           }}
         />
+        <noscript>
+          <style>{`
+            .scroll-reveal,
+            .scroll-reveal-hidden,
+            .scroll-reveal-visible {
+              opacity: 1 !important;
+              filter: none !important;
+              transform: none !important;
+              animation: none !important;
+            }
+          `}</style>
+        </noscript>
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
